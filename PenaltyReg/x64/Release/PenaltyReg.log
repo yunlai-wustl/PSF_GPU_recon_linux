@@ -1,0 +1,24 @@
+﻿Build started 7/28/2022 1:53:19 PM.
+     1>Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\PenaltyReg\PenaltyReg.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt data_fit.cpp penalty.cpp
+         data_fit.cpp
+         penalty.cpp
+     1>penalty.cpp(65): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>penalty.cpp(85): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>penalty.cpp(99): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>penalty.cpp(138): warning C4244: 'return' : conversion from 'double' to 'float', possible loss of data
+     1>penalty.cpp(174): warning C4244: '*=' : conversion from 'double' to 'float', possible loss of data
+     1>penalty.cpp(175): warning C4244: '*=' : conversion from 'double' to 'float', possible loss of data
+     1>penalty.cpp(176): warning C4244: '*=' : conversion from 'double' to 'float', possible loss of data
+     1>penalty.cpp(203): warning C4244: '*=' : conversion from 'double' to 'float', possible loss of data
+     1>penalty.cpp(184): warning C4101: 'z_ind' : unreferenced local variable
+       Lib:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\Lib.exe /OUT:"L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\PenaltyReg.lib" /NOLOGO /MACHINE:X64 /LTCG x64\Release\data_fit.obj
+         x64\Release\penalty.obj
+         PenaltyReg.vcxproj -> L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\PenaltyReg.lib
+     1>Done Building Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\PenaltyReg\PenaltyReg.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.15

@@ -1,0 +1,15 @@
+﻿Build started 5/10/2022 12:21:37 PM.
+     1>Project "J:\work\data\Outsert Project\reconstruction_random_correction\conversion_reconstruction_Cpp_smaller_format\PETLink_data_conversion\PETLink_data_conversion.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _CRT_SECURE_NO_WARNINGS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt PETLink_conversion_main.cpp
+         PETLink_conversion_main.cpp
+     1>j:\work\data\outsert project\reconstruction_random_correction\conversion_reconstruction_cpp_smaller_format\petlink_data_conversion\petlink_conversion_main.cpp(80): warning C4101: 't' : unreferenced local variable
+     1>j:\work\data\outsert project\reconstruction_random_correction\conversion_reconstruction_cpp_smaller_format\petlink_data_conversion\petlink_conversion_main.cpp(21): warning C4101: 'file_name' : unreferenced local variable
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"J:\work\data\Outsert Project\reconstruction_random_correction\conversion_reconstruction_Cpp_smaller_format\Debug\PETLink_data_conversion.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"J:\work\data\Outsert Project\reconstruction_random_correction\conversion_reconstruction_Cpp_smaller_format\Debug\PETLink_data_conversion.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"J:\work\data\Outsert Project\reconstruction_random_correction\conversion_reconstruction_Cpp_smaller_format\Debug\PETLink_data_conversion.lib" /MACHINE:X86 Debug\PETLink_conversion_main.obj
+         PETLink_data_conversion.vcxproj -> J:\work\data\Outsert Project\reconstruction_random_correction\conversion_reconstruction_Cpp_smaller_format\Debug\PETLink_data_conversion.exe
+     1>Done Building Project "J:\work\data\Outsert Project\reconstruction_random_correction\conversion_reconstruction_Cpp_smaller_format\PETLink_data_conversion\PETLink_data_conversion.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:07.83

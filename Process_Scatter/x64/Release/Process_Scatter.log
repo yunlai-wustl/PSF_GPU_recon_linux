@@ -1,0 +1,27 @@
+﻿Build started 7/27/2022 2:21:32 PM.
+     1>Project "J:\work\data\Outsert Project\reconstruction_for_scatter_correction_using_simulation_data_outsert\conversion_reconstruction_Cpp_smaller_format\Process_Scatter\Process_Scatter.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt process_scatter.cpp
+         process_scatter.cpp
+     1>process_scatter.cpp(8): warning C4103: 'j:\work\data\outsert project\reconstruction_for_scatter_correction_using_simulation_data_outsert\conversion_reconstruction_cpp_smaller_format\process_scatter\process_scatter.cpp' : alignment changed after including header, may be due to missing #pragma pack(pop)
+     1>process_scatter.cpp(150): warning C4244: '=' : conversion from '__int64' to 'int', possible loss of data
+     1>process_scatter.cpp(195): warning C4244: '=' : conversion from '__int64' to 'int', possible loss of data
+     1>process_scatter.cpp(225): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+     1>process_scatter.cpp(231): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>process_scatter.cpp(318): warning C4267: '=' : conversion from 'size_t' to 'int', possible loss of data
+     1>process_scatter.cpp(332): warning C4267: '=' : conversion from 'size_t' to 'int', possible loss of data
+     1>process_scatter.cpp(358): warning C4244: '=' : conversion from '__int64' to 'int', possible loss of data
+     1>process_scatter.cpp(384): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+     1>process_scatter.cpp(390): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>process_scatter.cpp(412): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>process_scatter.cpp(465): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"J:\work\data\Outsert Project\reconstruction_for_scatter_correction_using_simulation_data_outsert\conversion_reconstruction_Cpp_smaller_format\x64\Release\Process_Scatter.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"J:\work\data\Outsert Project\reconstruction_for_scatter_correction_using_simulation_data_outsert\conversion_reconstruction_Cpp_smaller_format\x64\Release\Process_Scatter.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"J:\work\data\Outsert Project\reconstruction_for_scatter_correction_using_simulation_data_outsert\conversion_reconstruction_Cpp_smaller_format\x64\Release\Process_Scatter.lib" /MACHINE:X64 x64\Release\process_scatter.obj
+         Generating code
+         Finished generating code
+         Process_Scatter.vcxproj -> J:\work\data\Outsert Project\reconstruction_for_scatter_correction_using_simulation_data_outsert\conversion_reconstruction_Cpp_smaller_format\x64\Release\Process_Scatter.exe
+     1>Done Building Project "J:\work\data\Outsert Project\reconstruction_for_scatter_correction_using_simulation_data_outsert\conversion_reconstruction_Cpp_smaller_format\Process_Scatter\Process_Scatter.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:04.96

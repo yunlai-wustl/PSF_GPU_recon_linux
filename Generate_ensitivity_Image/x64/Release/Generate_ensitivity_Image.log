@@ -1,0 +1,24 @@
+﻿Build started 7/28/2022 1:21:26 PM.
+     1>Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\Generate_ensitivity_Image\Generate_ensitivity_Image.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0/include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt Sensitivity_Image_CUDA.cpp
+         Sensitivity_Image_CUDA.cpp
+     1>Sensitivity_Image_CUDA.cpp(100): warning C4101: 'usingTOF' : unreferenced local variable
+     1>Sensitivity_Image_CUDA.cpp(64): warning C4101: 'i' : unreferenced local variable
+     1>Sensitivity_Image_CUDA.cpp(90): warning C4101: 'total_event_count' : unreferenced local variable
+     1>Sensitivity_Image_CUDA.cpp(319): warning C4101: 'event_ptr' : unreferenced local variable
+       Link:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\Sensitivity_Image_CUDA.exe" /NOLOGO /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0/lib/x64" cuda.lib cudart.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\Sensitivity_Image_CUDA.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\Sensitivity_Image_CUDA.lib" /MACHINE:X64 x64\Release\Sensitivity_Image_CUDA.obj
+         "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\proj_functions_CUDA.lib"
+         "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\Solution_Items.lib"
+         Generating code
+     1>l:\work\data\outsert project\system_alignment\recon_code\recon_code\solution_items\pet_data.cpp(1187): warning C4715: 'PET_data::_create_full_coincidence_LST_data' : not all control paths return a value
+     1>l:\work\data\outsert project\system_alignment\recon_code\recon_code\solution_items\pet_data.cpp(1012): warning C4715: 'PET_data::_create_full_coincidence_LST_data_normblock' : not all control paths return a value
+         Finished generating code
+     1>proj_functions_CUDA.lib(cuda_em_recon.cu.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'proj_functions_CUDA.lib(cuda_em_recon.cu.obj)' or at 'L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\vc120.pdb'; linking object as if no debug info
+         Generate_ensitivity_Image.vcxproj -> L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\Sensitivity_Image_CUDA.exe
+     1>Done Building Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\Generate_ensitivity_Image\Generate_ensitivity_Image.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:04.89

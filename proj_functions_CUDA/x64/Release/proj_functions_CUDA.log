@@ -1,0 +1,665 @@
+﻿Build started 7/28/2022 1:52:54 PM.
+     1>Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\proj_functions_CUDA\proj_functions_CUDA.vcxproj" on node 2 (Build target(s)).
+     1>AddCudaCompileDeps:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\cl.exe /E /nologo /showIncludes /TP /D__CUDACC__ /DWIN32 /DWIN64 /DNDEBUG /D_CONSOLE /D_MBCS /I"C:\ProgramData\NVIDIA Corporation\CUDA Samples\v8.0\common\inc" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include" /I. /FIcuda_runtime.h /c "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\proj_functions_CUDA\cuda_em_recon.cu" 
+     1>Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\proj_functions_CUDA\proj_functions_CUDA.vcxproj" (1) is building "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\proj_functions_CUDA\proj_functions_CUDA.vcxproj" (1:2) on node 2 (CudaBuildCore target(s)).
+     1>CudaBuildCore:
+         Compiling CUDA source file cuda_em_recon.cu...
+         cmd.exe /C "C:\Users\yunlai\AppData\Local\Temp\1\tmpe5ddb13d15934bd789ae052d4939c4a9.cmd"
+         "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin\nvcc.exe" -gencode=arch=compute_35,code=\"sm_35,compute_35\" --use-local-env --cl-version 2013 -ccbin "D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64"  -I"C:\ProgramData\NVIDIA Corporation\CUDA Samples\v8.0\common\inc" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include"     --keep-dir x64\Release -maxrregcount=0 --ptxas-options=-v --machine 64 --compile -cudart static     -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /FS /Zi  /MD " -o x64\Release\cuda_em_recon.cu.obj "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\proj_functions_CUDA\cuda_em_recon.cu"
+         
+         L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\proj_functions_CUDA>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin\nvcc.exe" -gencode=arch=compute_35,code=\"sm_35,compute_35\" --use-local-env --cl-version 2013 -ccbin "D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64"  -I"C:\ProgramData\NVIDIA Corporation\CUDA Samples\v8.0\common\inc" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include"     --keep-dir x64\Release -maxrregcount=0 --ptxas-options=-v --machine 64 --compile -cudart static     -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /FS /Zi  /MD " -o x64\Release\cuda_em_recon.cu.obj "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\proj_functions_CUDA\cuda_em_recon.cu" 
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(150): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(305): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(463): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(631): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(793): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(793): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(950): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(950): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1111): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1111): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1112): warning : variable "sc_coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1271): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1271): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1272): warning : variable "sc_coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1434): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1434): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1590): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1590): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1749): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1749): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1750): warning : variable "sc_coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1908): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1908): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1908): warning : variable "count" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1909): warning : variable "sc_coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2075): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2075): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2233): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2233): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2388): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2388): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2549): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2549): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2706): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2706): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2707): warning : variable "sc_coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2870): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2870): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2871): warning : variable "sc_coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(3031): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(3031): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(3032): warning : variable "sc_coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(3198): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(3198): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(3199): warning : variable "sc_coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(3675): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(3840): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(4003): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(4166): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(4329): warning : variable "geom" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(4330): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(4503): warning : variable "geom" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(4504): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5194): warning : variable "count" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning : variable "src_x_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning : variable "src_y_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning : variable "src_z_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning : variable "dest_x_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning : variable "dest_y_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning : variable "dest_z_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5198): warning : variable "coeff_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5199): warning : variable "snorm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5199): warning : variable "dnorm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5199): warning : variable "centm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning : variable "angle_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning : variable "angle_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning : variable "cos_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning : variable "cos_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning : variable "coeff_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning : variable "coeff_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5203): warning : variable "position" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5238): warning : variable "m" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5691): warning : variable "count" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning : variable "src_x_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning : variable "src_y_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning : variable "src_z_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning : variable "dest_x_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning : variable "dest_y_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning : variable "dest_z_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5695): warning : variable "coeff_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5696): warning : variable "snorm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5696): warning : variable "dnorm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5696): warning : variable "centm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning : variable "angle_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning : variable "angle_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning : variable "cos_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning : variable "cos_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning : variable "coeff_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning : variable "coeff_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5700): warning : variable "position" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5735): warning : variable "m" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6254): warning : variable "current_time" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6177): warning : variable "count" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning : variable "src_x_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning : variable "src_y_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning : variable "src_z_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning : variable "dest_x_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning : variable "dest_y_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning : variable "dest_z_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6182): warning : variable "coeff_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6184): warning : variable "snorm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6184): warning : variable "dnorm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6184): warning : variable "centm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning : variable "angle_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning : variable "angle_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning : variable "cos_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning : variable "cos_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning : variable "coeff_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning : variable "coeff_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6188): warning : variable "position" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6225): warning : variable "m" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6696): warning : specifiers after comma between declarations are nonstandard
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning : variable "src_x_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning : variable "src_y_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning : variable "src_z_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning : variable "dest_x_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning : variable "dest_y_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning : variable "dest_z_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6694): warning : variable "coeff_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6695): warning : variable "snorm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6695): warning : variable "dnorm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6695): warning : variable "centm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning : variable "angle_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning : variable "angle_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning : variable "cos_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning : variable "cos_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning : variable "coeff_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning : variable "coeff_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6699): warning : variable "position" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6734): warning : variable "m" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7519): warning : variable "streamD" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7520): warning : variable "eventB" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7520): warning : variable "eventC" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7520): warning : variable "eventD" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7524): warning : variable "milliseconds3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7529): warning : variable "eventStart3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7529): warning : variable "eventStop3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7537): warning : variable "output_file" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8252): warning : variable "streamD" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8253): warning : variable "eventB" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8253): warning : variable "eventC" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8253): warning : variable "eventD" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8257): warning : variable "milliseconds3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8262): warning : variable "eventStart3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8262): warning : variable "eventStop3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8270): warning : variable "output_file" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9008): warning : variable "eventB" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9008): warning : variable "eventC" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9019): warning : variable "output_file" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9237): warning : variable "eventB" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9237): warning : variable "eventC" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9248): warning : variable "output_file" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9476): warning : variable "streamD" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9477): warning : variable "eventB" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9477): warning : variable "eventC" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9477): warning : variable "eventD" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9479): warning : variable "eventStart3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9479): warning : variable "eventStop3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9488): warning : variable "output_file" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9492): warning : variable "milliseconds3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9917): warning : variable "streamD" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9918): warning : variable "eventB" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9918): warning : variable "eventC" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9918): warning : variable "eventD" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9920): warning : variable "eventStart3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9920): warning : variable "eventStop3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9929): warning : variable "output_file" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9933): warning : variable "milliseconds3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(150): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(305): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(463): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(631): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(793): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(793): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(950): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(950): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1111): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1111): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1112): warning : variable "sc_coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1271): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1271): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1272): warning : variable "sc_coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1434): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1434): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1590): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1590): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1749): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1749): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1750): warning : variable "sc_coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1908): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1908): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1908): warning : variable "count" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(1909): warning : variable "sc_coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2075): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2075): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2233): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2233): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2388): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2388): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2549): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2549): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2706): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2706): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2707): warning : variable "sc_coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2870): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2870): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(2871): warning : variable "sc_coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(3031): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(3031): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(3032): warning : variable "sc_coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(3198): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(3198): warning : variable "c" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(3199): warning : variable "sc_coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(3675): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(3840): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(4003): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(4166): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(4329): warning : variable "geom" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(4330): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(4503): warning : variable "geom" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(4504): warning : variable "coeff" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5194): warning : variable "count" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning : variable "src_x_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning : variable "src_y_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning : variable "src_z_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning : variable "dest_x_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning : variable "dest_y_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning : variable "dest_z_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5198): warning : variable "coeff_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5199): warning : variable "snorm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5199): warning : variable "dnorm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5199): warning : variable "centm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning : variable "angle_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning : variable "angle_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning : variable "cos_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning : variable "cos_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning : variable "coeff_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning : variable "coeff_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5203): warning : variable "position" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5238): warning : variable "m" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5691): warning : variable "count" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning : variable "src_x_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning : variable "src_y_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning : variable "src_z_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning : variable "dest_x_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning : variable "dest_y_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning : variable "dest_z_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5695): warning : variable "coeff_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5696): warning : variable "snorm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5696): warning : variable "dnorm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5696): warning : variable "centm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning : variable "angle_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning : variable "angle_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning : variable "cos_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning : variable "cos_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning : variable "coeff_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning : variable "coeff_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5700): warning : variable "position" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5735): warning : variable "m" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6254): warning : variable "current_time" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6177): warning : variable "count" was set but never used
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning : variable "src_x_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning : variable "src_y_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning : variable "src_z_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning : variable "dest_x_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning : variable "dest_y_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning : variable "dest_z_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6182): warning : variable "coeff_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6184): warning : variable "snorm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6184): warning : variable "dnorm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6184): warning : variable "centm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning : variable "angle_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning : variable "angle_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning : variable "cos_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning : variable "cos_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning : variable "coeff_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning : variable "coeff_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6188): warning : variable "position" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6225): warning : variable "m" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6696): warning : specifiers after comma between declarations are nonstandard
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning : variable "src_x_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning : variable "src_y_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning : variable "src_z_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning : variable "dest_x_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning : variable "dest_y_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning : variable "dest_z_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6694): warning : variable "coeff_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6695): warning : variable "snorm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6695): warning : variable "dnorm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6695): warning : variable "centm_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning : variable "angle_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning : variable "angle_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning : variable "cos_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning : variable "cos_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning : variable "coeff_s_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning : variable "coeff_d_z" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6699): warning : variable "position" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6734): warning : variable "m" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7519): warning : variable "streamD" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7520): warning : variable "eventB" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7520): warning : variable "eventC" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7520): warning : variable "eventD" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7524): warning : variable "milliseconds3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7529): warning : variable "eventStart3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7529): warning : variable "eventStop3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7537): warning : variable "output_file" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8252): warning : variable "streamD" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8253): warning : variable "eventB" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8253): warning : variable "eventC" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8253): warning : variable "eventD" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8257): warning : variable "milliseconds3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8262): warning : variable "eventStart3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8262): warning : variable "eventStop3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8270): warning : variable "output_file" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9008): warning : variable "eventB" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9008): warning : variable "eventC" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9019): warning : variable "output_file" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9237): warning : variable "eventB" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9237): warning : variable "eventC" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9248): warning : variable "output_file" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9476): warning : variable "streamD" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9477): warning : variable "eventB" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9477): warning : variable "eventC" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9477): warning : variable "eventD" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9479): warning : variable "eventStart3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9479): warning : variable "eventStop3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9488): warning : variable "output_file" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9492): warning : variable "milliseconds3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9917): warning : variable "streamD" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9918): warning : variable "eventB" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9918): warning : variable "eventC" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9918): warning : variable "eventD" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9920): warning : variable "eventStart3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9920): warning : variable "eventStop3" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9929): warning : variable "output_file" was declared but never referenced
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9933): warning : variable "milliseconds3" was declared but never referenced
+         ptxas info    : 1723 bytes gmem
+         ptxas info    : Compiling entry function '_Z49_TOF_b_ratio_proj_lst_cuda_x_kernel_scatter_attenPfS_S_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z49_TOF_b_ratio_proj_lst_cuda_x_kernel_scatter_attenPfS_S_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 60 registers, 24176 bytes smem, 360 bytes cmem[0], 32 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z31_b_ratio_proj_lst_cuda_x_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z31_b_ratio_proj_lst_cuda_x_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 57 registers, 24144 bytes smem, 352 bytes cmem[0], 32 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z30_bproj_atten_lst_cuda_x_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z30_bproj_atten_lst_cuda_x_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 57 registers, 24144 bytes smem, 352 bytes cmem[0], 24 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z36_TOF_fproj_lst_cuda_y_kernel_scatterPfS_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z36_TOF_fproj_lst_cuda_y_kernel_scatterPfS_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 39 registers, 24168 bytes smem, 352 bytes cmem[0], 24 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z41_TOF_b_ratio_proj_lst_cuda_x_kernel_attenPfS_S_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z41_TOF_b_ratio_proj_lst_cuda_x_kernel_attenPfS_S_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 60 registers, 24168 bytes smem, 360 bytes cmem[0], 32 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z19update_image_kernelPfS_S_S_P22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z19update_image_kernelPfS_S_S_P22PARAMETERS_IN_DEVICE_t
+             8 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 18 registers, 360 bytes cmem[0], 4 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z30_fproj_atten_lst_cuda_x_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z30_fproj_atten_lst_cuda_x_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 41 registers, 24136 bytes smem, 352 bytes cmem[0], 24 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z36_TOF_fproj_lst_cuda_x_kernel_scatterPfS_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z36_TOF_fproj_lst_cuda_x_kernel_scatterPfS_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 39 registers, 24168 bytes smem, 352 bytes cmem[0], 24 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z43_TOF_b_ratio_proj_lst_cuda_x_kernel_scatterPfS_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z43_TOF_b_ratio_proj_lst_cuda_x_kernel_scatterPfS_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 59 registers, 24168 bytes smem, 352 bytes cmem[0], 32 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z24_fproj_lst_cuda_x_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z24_fproj_lst_cuda_x_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 38 registers, 24144 bytes smem, 352 bytes cmem[0], 16 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z38_fproj_atten_lst_cuda_x_kernel_scatterPfS_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z38_fproj_atten_lst_cuda_x_kernel_scatterPfS_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 41 registers, 24136 bytes smem, 352 bytes cmem[0], 24 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z28_TOF_fproj_lst_cuda_y_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z28_TOF_fproj_lst_cuda_y_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 38 registers, 24160 bytes smem, 352 bytes cmem[0], 24 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z28_bproj_one_lst_cuda_x_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z28_bproj_one_lst_cuda_x_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 55 registers, 24128 bytes smem, 352 bytes cmem[0], 16 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z28_TOF_fproj_lst_cuda_x_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z28_TOF_fproj_lst_cuda_x_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 38 registers, 24160 bytes smem, 352 bytes cmem[0], 24 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z35_TOF_b_ratio_proj_lst_cuda_x_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z35_TOF_b_ratio_proj_lst_cuda_x_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 59 registers, 24160 bytes smem, 352 bytes cmem[0], 32 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z38setForwardProjectionValueToZero_kernelPfi' for 'sm_35'
+         ptxas info    : Function properties for _Z38setForwardProjectionValueToZero_kernelPfi
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 7 registers, 332 bytes cmem[0]
+         ptxas info    : Compiling entry function '_Z35_bproj_atten_lst_cuda_x_kernel_normPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_tS_' for 'sm_35'
+         ptxas info    : Function properties for _Z35_bproj_atten_lst_cuda_x_kernel_normPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_tS_
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 59 registers, 24152 bytes smem, 360 bytes cmem[0], 24 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z41_TOF_b_ratio_proj_lst_cuda_y_kernel_attenPfS_S_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z41_TOF_b_ratio_proj_lst_cuda_y_kernel_attenPfS_S_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 57 registers, 24168 bytes smem, 360 bytes cmem[0], 32 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z21multiply_image_kernelPfS_P22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z21multiply_image_kernelPfS_P22PARAMETERS_IN_DEVICE_t
+             8 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 18 registers, 344 bytes cmem[0]
+         ptxas info    : Compiling entry function '_Z30_fproj_atten_lst_cuda_y_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z30_fproj_atten_lst_cuda_y_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 38 registers, 24136 bytes smem, 352 bytes cmem[0], 24 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z42_TOF_fproj_lst_cuda_x_kernel_scatter_attenPfS_S_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z42_TOF_fproj_lst_cuda_x_kernel_scatter_attenPfS_S_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 41 registers, 24176 bytes smem, 360 bytes cmem[0], 24 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z49_TOF_b_ratio_proj_lst_cuda_y_kernel_scatter_attenPfS_S_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z49_TOF_b_ratio_proj_lst_cuda_y_kernel_scatter_attenPfS_S_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 56 registers, 24176 bytes smem, 360 bytes cmem[0], 32 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z31_b_ratio_proj_lst_cuda_y_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z31_b_ratio_proj_lst_cuda_y_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 54 registers, 24144 bytes smem, 352 bytes cmem[0], 32 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z42_TOF_fproj_lst_cuda_y_kernel_scatter_attenPfS_S_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z42_TOF_fproj_lst_cuda_y_kernel_scatter_attenPfS_S_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 41 registers, 24176 bytes smem, 360 bytes cmem[0], 24 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z21setImageToZero_kernelPfP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z21setImageToZero_kernelPfP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 8 registers, 336 bytes cmem[0]
+         ptxas info    : Compiling entry function '_Z30_bproj_atten_lst_cuda_y_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z30_bproj_atten_lst_cuda_y_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 57 registers, 24144 bytes smem, 352 bytes cmem[0], 24 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z43_TOF_b_ratio_proj_lst_cuda_y_kernel_scatterPfS_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z43_TOF_b_ratio_proj_lst_cuda_y_kernel_scatterPfS_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 57 registers, 24168 bytes smem, 352 bytes cmem[0], 32 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z24_fproj_lst_cuda_y_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z24_fproj_lst_cuda_y_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 38 registers, 24144 bytes smem, 352 bytes cmem[0], 16 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z38_fproj_atten_lst_cuda_y_kernel_scatterPfS_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z38_fproj_atten_lst_cuda_y_kernel_scatterPfS_P16LST_LORs_scatterP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 38 registers, 24136 bytes smem, 352 bytes cmem[0], 24 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z34_TOF_fproj_lst_cuda_y_kernel_attenPfS_S_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z34_TOF_fproj_lst_cuda_y_kernel_attenPfS_S_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 40 registers, 24168 bytes smem, 360 bytes cmem[0], 24 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z28_bproj_one_lst_cuda_y_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z28_bproj_one_lst_cuda_y_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 53 registers, 24128 bytes smem, 352 bytes cmem[0], 16 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z34_TOF_fproj_lst_cuda_x_kernel_attenPfS_S_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z34_TOF_fproj_lst_cuda_x_kernel_attenPfS_S_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 40 registers, 24168 bytes smem, 360 bytes cmem[0], 24 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z35_TOF_b_ratio_proj_lst_cuda_y_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t' for 'sm_35'
+         ptxas info    : Function properties for _Z35_TOF_b_ratio_proj_lst_cuda_y_kernelPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_t
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 57 registers, 24160 bytes smem, 352 bytes cmem[0], 32 bytes cmem[2]
+         ptxas info    : Compiling entry function '_Z17vector_sum_of_logPfiS_' for 'sm_35'
+         ptxas info    : Function properties for _Z17vector_sum_of_logPfiS_
+             8 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 18 registers, 4 bytes smem, 344 bytes cmem[0]
+         ptxas info    : Compiling entry function '_Z35_bproj_atten_lst_cuda_y_kernel_normPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_tS_' for 'sm_35'
+         ptxas info    : Function properties for _Z35_bproj_atten_lst_cuda_y_kernel_normPfS_P8LST_LORsP22PARAMETERS_IN_DEVICE_tS_
+             0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+         ptxas info    : Used 57 registers, 24152 bytes smem, 360 bytes cmem[0], 24 bytes cmem[2]
+         cuda_em_recon.cu
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5115): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5116): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5117): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5119): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5120): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5121): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5144): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5145): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5149): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5150): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5154): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5155): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5159): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5160): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5357): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5402): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5403): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5448): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5449): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5501): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5502): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5541): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5542): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning C4101: 'src_y_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning C4101: 'dest_x_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning C4101: 'src_z_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5203): warning C4101: 'position' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning C4101: 'cos_s_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5199): warning C4101: 'centm_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning C4101: 'dest_y_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning C4101: 'cos_d_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning C4101: 'angle_d_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning C4101: 'src_x_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning C4101: 'angle_s_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5199): warning C4101: 'dnorm_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5197): warning C4101: 'dest_z_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5198): warning C4101: 'coeff_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning C4101: 'coeff_s_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5199): warning C4101: 'snorm_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5201): warning C4101: 'coeff_d_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5843): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5888): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5889): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5934): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5935): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5987): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5988): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6027): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6028): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning C4101: 'src_y_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning C4101: 'dest_x_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning C4101: 'src_z_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5700): warning C4101: 'position' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning C4101: 'cos_s_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5696): warning C4101: 'centm_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning C4101: 'dest_y_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning C4101: 'cos_d_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning C4101: 'angle_d_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning C4101: 'src_x_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning C4101: 'angle_s_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5696): warning C4101: 'dnorm_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5694): warning C4101: 'dest_z_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5695): warning C4101: 'coeff_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning C4101: 'coeff_s_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5696): warning C4101: 'snorm_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(5698): warning C4101: 'coeff_d_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6254): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6396): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6397): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6442): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6443): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6496): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6497): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6536): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6537): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning C4101: 'src_y_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning C4101: 'dest_x_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning C4101: 'src_z_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6188): warning C4101: 'position' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning C4101: 'cos_s_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6184): warning C4101: 'centm_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning C4101: 'dest_y_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning C4101: 'cos_d_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning C4101: 'angle_d_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning C4101: 'src_x_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning C4101: 'angle_s_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6184): warning C4101: 'dnorm_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6181): warning C4101: 'dest_z_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6182): warning C4101: 'coeff_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning C4101: 'coeff_s_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6184): warning C4101: 'snorm_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6186): warning C4101: 'coeff_d_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6761): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6851): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6896): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6897): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6904): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6941): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6942): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6949): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6964): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6994): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6995): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7002): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7033): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7034): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7042): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7055): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning C4101: 'src_y_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning C4101: 'dest_x_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning C4101: 'src_z_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6699): warning C4101: 'position' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning C4101: 'cos_s_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6695): warning C4101: 'centm_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning C4101: 'dest_y_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning C4101: 'cos_d_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning C4101: 'angle_d_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning C4101: 'src_x_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning C4101: 'angle_s_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6695): warning C4101: 'dnorm_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6693): warning C4101: 'dest_z_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6694): warning C4101: 'coeff_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning C4101: 'coeff_s_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6695): warning C4101: 'snorm_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(6697): warning C4101: 'coeff_d_z' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7537): warning C4101: 'output_file' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7520): warning C4101: 'eventD' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7529): warning C4101: 'eventStop3' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7520): warning C4101: 'eventB' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7520): warning C4101: 'eventC' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7519): warning C4101: 'streamD' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(7529): warning C4101: 'eventStart3' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8270): warning C4101: 'output_file' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8253): warning C4101: 'eventD' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8262): warning C4101: 'eventStop3' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8253): warning C4101: 'eventB' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8253): warning C4101: 'eventC' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8252): warning C4101: 'streamD' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(8262): warning C4101: 'eventStart3' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9019): warning C4101: 'output_file' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9008): warning C4101: 'eventB' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9008): warning C4101: 'eventC' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9248): warning C4101: 'output_file' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9237): warning C4101: 'eventB' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9237): warning C4101: 'eventC' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9488): warning C4101: 'output_file' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9477): warning C4101: 'eventD' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9479): warning C4101: 'eventStop3' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9477): warning C4101: 'eventB' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9477): warning C4101: 'eventC' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9476): warning C4101: 'streamD' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9479): warning C4101: 'eventStart3' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9929): warning C4101: 'output_file' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9918): warning C4101: 'eventD' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9920): warning C4101: 'eventStop3' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9918): warning C4101: 'eventB' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9918): warning C4101: 'eventC' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9917): warning C4101: 'streamD' : unreferenced local variable
+     1>L:/work/data/Outsert Project/system_alignment/recon_code/recon_code/proj_functions_CUDA/cuda_em_recon.cu(9920): warning C4101: 'eventStart3' : unreferenced local variable
+     1>Done Building Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\proj_functions_CUDA\proj_functions_CUDA.vcxproj" (CudaBuildCore target(s)).
+     1>Lib:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\Lib.exe /OUT:"L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\proj_functions_CUDA.lib" /NOLOGO /MACHINE:X64 /LTCG x64\Release\cuda_em_recon.cu.obj
+         proj_functions_CUDA.vcxproj -> L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\proj_functions_CUDA.lib
+       PostBuildEvent:
+         echo copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin\cudart*.dll" "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\"
+         copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin\cudart*.dll" "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\"
+         :VCEnd
+         copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin\cudart*.dll" "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\"
+         C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin\cudart32_80.dll
+         C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin\cudart64_80.dll
+                 2 file(s) copied.
+     1>Done Building Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\proj_functions_CUDA\proj_functions_CUDA.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:20.01

@@ -1,0 +1,29 @@
+﻿Build started 11/24/2015 3:44:25 PM.
+     1>Project "D:\Dropbox\CodeDev\PETRecon\MCAnalysis\MCAnalysis.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Dropbox\CodeDev\PETRecon\Release\MCAnalysis.exe" /NOLOGO /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.5/lib/Win32" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Dropbox\CodeDev\PETRecon\Release\MCAnalysis.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Dropbox\CodeDev\PETRecon\Release\MCAnalysis.lib" /MACHINE:X86 /SAFESEH Release\MCAnalysis.obj
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "public: void __thiscall PET_data::ReadFromFile(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (?ReadFromFile@PET_data@@QAEXV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "public: int __thiscall PET_data::GetDataListLength(void)" (?GetDataListLength@PET_data@@QAEHXZ)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "public: __thiscall PET_data::~PET_data(void)" (??1PET_data@@QAE@XZ)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "public: __thiscall PET_data::PET_data(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,enum PET_data_type)" (??0PET_data@@QAE@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4PET_data_type@@@Z)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "private: void __thiscall Config::RequiredKeyNotFound(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?RequiredKeyNotFound@Config@@AAEXABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "private: float __thiscall Config::ConvertFromString<float>(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (??$ConvertFromString@M@Config@@AAEMABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "private: int __thiscall Config::ConvertFromString<int>(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (??$ConvertFromString@H@Config@@AAEHABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "private: class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > __thiscall Config::ConvertFromString<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > >(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (??$ConvertFromString@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Config@@AAE?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV12@@Z)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "public: __thiscall Config::~Config(void)" (??1Config@@QAE@XZ)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "public: __thiscall Config::Config(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Config@@QAE@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "public: __thiscall PET_geometry::~PET_geometry(void)" (??1PET_geometry@@QAE@XZ)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "public: __thiscall PET_geometry::PET_geometry(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0PET_geometry@@QAE@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0@Z)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > __cdecl CommandLine::GetProgramName(char * const)" (?GetProgramName@CommandLine@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAD@Z)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "public: void __thiscall MC_data_analysis::write_to_file(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (?write_to_file@MC_data_analysis@@QAEXV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "public: __thiscall MC_data_analysis::~MC_data_analysis(void)" (??1MC_data_analysis@@QAE@XZ)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "public: __thiscall MC_data_analysis::MC_data_analysis(class PET_data,class PET_geometry)" (??0MC_data_analysis@@QAE@VPET_data@@VPET_geometry@@@Z)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "public: __thiscall PET_LST_event::~PET_LST_event(void)" (??1PET_LST_event@@QAE@XZ)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "public: __thiscall ImageArray<float>::~ImageArray<float>(void)" (??1?$ImageArray@M@@QAE@XZ)
+     1>MCAnalysis.obj : error LNK2001: unresolved external symbol "public: __thiscall ImageArray<float>::ImageArray<float>(void)" (??0?$ImageArray@M@@QAE@XZ)
+     1>D:\Dropbox\CodeDev\PETRecon\Release\MCAnalysis.exe : fatal error LNK1120: 19 unresolved externals
+     1>Done Building Project "D:\Dropbox\CodeDev\PETRecon\MCAnalysis\MCAnalysis.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.21

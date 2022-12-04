@@ -1,0 +1,17 @@
+﻿Build started 7/28/2022 1:04:07 PM.
+     1>Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\image_update_CUDA\image_update_CUDA.vcxproj" on node 2 (Build target(s)).
+     1>Lib:
+         image_update_CUDA.vcxproj -> L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\image_update_CUDA.lib
+       PostBuildEvent:
+         echo copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin\cudart*.dll" "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\"
+         copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin\cudart*.dll" "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\"
+         :VCEnd
+         copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin\cudart*.dll" "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\"
+         C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin\cudart32_80.dll
+         C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin\cudart64_80.dll
+                 2 file(s) copied.
+     1>Done Building Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\image_update_CUDA\image_update_CUDA.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.28

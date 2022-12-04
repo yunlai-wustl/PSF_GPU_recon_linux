@@ -1,0 +1,30 @@
+﻿Build started 7/28/2022 12:59:15 PM.
+     1>Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\Singles_Sorting\Singles_Sorting.vcxproj" on node 5 (Build target(s)).
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D _CRT_SECURE_NO_WARNINGS /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt singles_sorting.cpp
+         singles_sorting.cpp
+     1>singles_sorting.cpp(242): warning C4244: '=' : conversion from '__int64' to 'int', possible loss of data
+     1>singles_sorting.cpp(271): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>singles_sorting.cpp(272): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>singles_sorting.cpp(273): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>singles_sorting.cpp(98): warning C4101: 'usingTOF' : unreferenced local variable
+     1>singles_sorting.cpp(88): warning C4101: 'total_event_count' : unreferenced local variable
+       Link:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\Singles_Sorting.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\Singles_Sorting.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\Singles_Sorting.lib" /MACHINE:X64 x64\Release\singles_sorting.obj
+     1>singles_sorting.obj : error LNK2001: unresolved external symbol "private: void __cdecl Config::RequiredKeyNotFound(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?RequiredKeyNotFound@Config@@AEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+     1>singles_sorting.obj : error LNK2001: unresolved external symbol "private: float __cdecl Config::ConvertFromString<float>(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (??$ConvertFromString@M@Config@@AEAAMAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+     1>singles_sorting.obj : error LNK2001: unresolved external symbol "private: int __cdecl Config::ConvertFromString<int>(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (??$ConvertFromString@H@Config@@AEAAHAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+     1>singles_sorting.obj : error LNK2001: unresolved external symbol "private: class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > __cdecl Config::ConvertFromString<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > >(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (??$ConvertFromString@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Config@@AEAA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV12@@Z)
+     1>singles_sorting.obj : error LNK2001: unresolved external symbol "public: __cdecl Config::~Config(void)" (??1Config@@QEAA@XZ)
+     1>singles_sorting.obj : error LNK2001: unresolved external symbol "public: __cdecl Config::Config(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Config@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+     1>singles_sorting.obj : error LNK2001: unresolved external symbol "public: __cdecl PET_geometry::~PET_geometry(void)" (??1PET_geometry@@QEAA@XZ)
+     1>singles_sorting.obj : error LNK2001: unresolved external symbol "public: __cdecl PET_geometry::PET_geometry(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0PET_geometry@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0@Z)
+     1>singles_sorting.obj : error LNK2001: unresolved external symbol "class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > __cdecl CommandLine::GetProgramName(char * const)" (?GetProgramName@CommandLine@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QEAD@Z)
+     1>singles_sorting.obj : error LNK2001: unresolved external symbol "public: __cdecl ImageArray<float>::~ImageArray<float>(void)" (??1?$ImageArray@M@@QEAA@XZ)
+     1>singles_sorting.obj : error LNK2001: unresolved external symbol "public: __cdecl ImageArray<float>::ImageArray<float>(void)" (??0?$ImageArray@M@@QEAA@XZ)
+     1>L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\Singles_Sorting.exe : fatal error LNK1120: 11 unresolved externals
+     1>Done Building Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\Singles_Sorting\Singles_Sorting.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:02.56

@@ -1,0 +1,563 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sensitivity_Image_CUDA.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Solution_Items\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\yvals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\ammintrin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\armintr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\assert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\builtin_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\channel_descriptor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Solution_Items\command_line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\common_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\ConcurrencySal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\crtdbg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\crtdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\crtwrn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\ctype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\cuda_device_runtime_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\cuda_profiler_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\cuda_runtime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\cuda_runtime_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\cuda_surface_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\cuda_texture_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PenaltyReg\data_fit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\device_atomic_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\device_atomic_functions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\device_double_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\device_double_functions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\device_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\device_functions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\device_functions_decls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\device_launch_parameters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\device_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\driver_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\driver_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\eh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\emmintrin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\errno.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\float.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\crt\func_macro.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Solution_Items\GATE_data_structure.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Solution_Items\global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\host_config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\host_defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Solution_Items\ImageArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\immintrin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\intrin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\library_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\limits.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\locale.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\malloc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\numeric\mat3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\math_constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\math_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\math_functions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\math_functions_dbl_ptx3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\math_functions_dbl_ptx3.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\mm3dnow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\mmintrin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\nmmintrin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\omp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PenaltyReg\penalty.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Solution_Items\PET_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Solution_Items\PET_DATA_scatter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Solution_Items\PET_geometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Solution_Items\PET_LST_event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Solution_Items\PET_LST_event_scatter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Solution_Items\PET_movement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\pmmintrin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\sal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\setjmp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\setjmpex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\share.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\sm_20_atomic_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\sm_20_atomic_functions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\sm_20_intrinsics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\sm_20_intrinsics.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\sm_30_intrinsics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\sm_30_intrinsics.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\sm_32_atomic_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\sm_32_atomic_functions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\sm_32_intrinsics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\sm_32_intrinsics.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\sm_35_atomic_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\sm_35_intrinsics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\sm_60_atomic_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\sm_60_atomic_functions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\sm_61_intrinsics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\sm_61_intrinsics.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\smmintrin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\CodeAnalysis\sourceannotations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\sys\stat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdarg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stddef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdlib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\surface_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\surface_indirect_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\surface_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\texture_fetch_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\texture_indirect_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\texture_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\time.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Solution_Items\time_period.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\tmmintrin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\sys\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\use_ansi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\vadefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\numeric\vec2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\numeric\vec3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\vector_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\vector_functions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\vector_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\wchar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Windows Kits\8.1\Include\shared\winapifamily.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\wmmintrin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xatomic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xatomic0.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xkeycheck.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocinfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xmmintrin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xtgmath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\ymath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\sys\stat.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\swprintf.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\time.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\wtime.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\algorithm">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\array">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\cerrno">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\cfloat">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\climits">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\cmath">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\cstdarg">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\cstddef">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\cstdio">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\cstdlib">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\cstring">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="..\proj_functions_CUDA\cuda_common_header.cuh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="..\proj_functions_CUDA\cuda_em_recon.cuh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\cwchar">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\exception">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\functional">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="..\image_update_CUDA\image_update_CUDA.cuh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\initializer_list">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\ios">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\iosfwd">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\iostream">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\istream">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\iterator">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\limits">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\map">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\new">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\ostream">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\sstream">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdexcept">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\streambuf">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\system_error">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\tuple">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\type_traits">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\typeinfo">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\utility">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\vector">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xdebug">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xfacet">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xfunctional">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xiosbase">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocale">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocinfo">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocnum">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xmemory">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xmemory0">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xrefwrap">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xstddef">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xstring">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xtr1common">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xtree">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xutility">
+      <Filter>Header Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>

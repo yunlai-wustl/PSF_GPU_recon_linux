@@ -1,0 +1,26 @@
+﻿Build started 7/28/2022 12:59:14 PM.
+     1>Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\Generate_Decay_Map\Generate_Decay_Map.vcxproj" on node 4 (Build target(s)).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(388,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (Generate_Decay_Map.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D _CRT_SECURE_NO_WARNINGS /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt generate_data.cpp
+         generate_data.cpp
+     1>generate_data.cpp(7): warning C4103: 'l:\work\data\outsert project\system_alignment\recon_code\recon_code\generate_decay_map\generate_data.cpp' : alignment changed after including header, may be due to missing #pragma pack(pop)
+     1>generate_data.cpp(100): warning C4244: '=' : conversion from '__int64' to 'int', possible loss of data
+     1>generate_data.cpp(132): warning C4244: '=' : conversion from '__int64' to 'int', possible loss of data
+     1>generate_data.cpp(293): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+     1>generate_data.cpp(50): warning C4101: 'true_coincidence' : unreferenced local variable
+     1>generate_data.cpp(41): warning C4101: 'pos_list' : unreferenced local variable
+     1>generate_data.cpp(38): warning C4101: 'y' : unreferenced local variable
+     1>generate_data.cpp(38): warning C4101: 'x' : unreferenced local variable
+     1>generate_data.cpp(45): warning C4101: 'i' : unreferenced local variable
+     1>generate_data.cpp(38): warning C4101: 'z' : unreferenced local variable
+       Link:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\Generate_data_files.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\Generate_data_files.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\Generate_data_files.lib" /MACHINE:X64 x64\Release\generate_data.obj
+         Generating code
+         Finished generating code
+         Generate_Decay_Map.vcxproj -> L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\Generate_data_files.exe
+     1>Done Building Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\Generate_Decay_Map\Generate_Decay_Map.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:04.56

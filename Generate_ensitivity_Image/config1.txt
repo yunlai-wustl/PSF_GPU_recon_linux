@@ -1,0 +1,86 @@
+DAT_PATH = ./DAT/
+IMG_PATH = ./IMG/
+NORM_PATH = ./NORM/
+
+# geometry configuration files
+#############################
+Detector description file = geometry_openGATE.txt
+
+Insert Movement file = movement_Gate_perfect.txt
+
+# data sorting files
+#############################
+Number of files = 4
+Type of data = nontof
+Data list file = data_list_GATE_all.txt
+Time seperation = 100
+List mode data output file name = 1-panel_200s_bkg_3IS.lst
+
+# data and image files
+#############################
+Emission data file = don't care
+Scattered data file = data_scatter.dat
+Initial image file = 1-panel_.img
+Attenuation image file = body_atten_map.img
+Sensitivity image file = sensitivity_image.img
+Normalization Emission image file = normalization_emission_map.img
+Normalization Emission data file = uniform_cylinder.lst
+Output image prefix = 10-18-2017
+
+# run setup
+###########
+Number of cores = 4
+Number of GPUs = 1
+Start number of GPU = 0
+End number of GPU = 0
+Number of iterations = 20
+Starting iteration = 1
+Number of subsets = 1
+Image write frequency = 2
+
+# data selection
+################
+Data source = Compact Coincidence
+Time start = 0
+Time stop = 180
+
+Time start SS = 0
+Time stop SS = 180
+
+Time start IS = 0
+Time stop IS = 180
+
+# geometry parameters
+############
+NUMX = 400		# Voxels in X direction
+NUMY = 400		# Voxels in Y direction
+NUMZ = 224		# Voxels in Z direction
+XSAMP = 1.0		# Sampling in X direction
+YSAMP = 1.0		# Sampling in Y direction
+ZSAMP = 1.0		# Sampling in Z direction
+XOFFSET = 0		# Offset in X direction in mm
+YOFFSET = 0		# Offset in Y direction in mm
+ZOFFSET = 0		# Offset in Z direction in mm
+TOF resolution = 500		# Coincidence TOF resolution in (ps)
+Reconstruction Radius = 256	# Radius that indicates all the activity are inside (in mm)
+FWHM SS = 2.0
+FWHM IS = 0.95
+FWHM II = 0.5
+
+# reconstruction 
+################
+Reconstruction use initial image = 0
+Reconstruction use randoms = 0
+Reconstruction use scatter = 0
+Reconstruction use normalization = 1
+Reconstruction use TOF = 0
+
+Reconstruction using penalty = 0  # 10  0.01 # 10 0.015 # 20 0.008 # 10 0.005 #100 0.01 # 20 0.005
+Beta = 10
+Delta = 0.01
+C1 = 0
+C2 = 0
+
+Spherical Voxel Ratio = 1.5
+Export Negative Log Likelihood = 0
+Export Precision = 20

@@ -1,0 +1,28 @@
+﻿Build started 4/6/2022 5:49:50 PM.
+     1>Project "D:\one drive\OneDrive - Washington University in St. Louis\Research\code_git\Outsert Project\conversion_reconstruction_Cpp\Sensitivity_IMAGE_CUDA_CBM\Sensitivity_IMAGE_CUDA_CBM.vcxproj" on node 2 (Rebuild target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Sensitivity_IMG_CBM.cpp
+         Sensitivity_IMG_CBM.cpp
+     1>d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\proj_functions_cuda\cuda_common_header.cuh(13): error C3861: 'cudaMallocManaged': identifier not found
+     1>d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\proj_functions_cuda\cuda_common_header.cuh(14): error C3861: 'cudaDeviceSynchronize': identifier not found
+     1>d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\proj_functions_cuda\cuda_common_header.cuh(19): error C3861: 'cudaDeviceSynchronize': identifier not found
+     1>d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\proj_functions_cuda\cuda_common_header.cuh(20): error C3861: 'cudaFree': identifier not found
+     1>d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\sensitivity_image_cuda_cbm\sensitivity_img_cbm.cpp(255): error C2148: total size of array must not exceed 0x7fffffff bytes
+     1>d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\sensitivity_image_cuda_cbm\sensitivity_img_cbm.cpp(255): error C2512: 'main::cudaDeviceProp' : no appropriate default constructor available
+     1>d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\sensitivity_image_cuda_cbm\sensitivity_img_cbm.cpp(261): error C3861: 'cudaGetDeviceCount': identifier not found
+     1>d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\sensitivity_image_cuda_cbm\sensitivity_img_cbm.cpp(272): error C3861: 'cudaDeviceReset': identifier not found
+     1>d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\sensitivity_image_cuda_cbm\sensitivity_img_cbm.cpp(274): error C3861: 'cudaDeviceGetPCIBusId': identifier not found
+     1>d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\sensitivity_image_cuda_cbm\sensitivity_img_cbm.cpp(275): error C2036: 'main::cudaDeviceProp *' : unknown size
+     1>d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\sensitivity_image_cuda_cbm\sensitivity_img_cbm.cpp(275): error C3861: 'cudaGetDeviceProperties': identifier not found
+     1>d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\sensitivity_image_cuda_cbm\sensitivity_img_cbm.cpp(277): error C2036: 'main::cudaDeviceProp *' : unknown size
+     1>d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\sensitivity_image_cuda_cbm\sensitivity_img_cbm.cpp(277): error C2027: use of undefined type 'main::cudaDeviceProp'
+                 d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\sensitivity_image_cuda_cbm\sensitivity_img_cbm.cpp(255) : see declaration of 'main::cudaDeviceProp'
+     1>d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\sensitivity_image_cuda_cbm\sensitivity_img_cbm.cpp(277): error C2228: left of '.name' must have class/struct/union
+                 d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\sensitivity_image_cuda_cbm\sensitivity_img_cbm.cpp(255) : see declaration of 'main::cudaDeviceProp'
+     1>d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\sensitivity_image_cuda_cbm\sensitivity_img_cbm.cpp(277): error C2228: left of '.pciBusID' must have class/struct/union
+     1>d:\one drive\onedrive - washington university in st. louis\research\code_git\outsert project\conversion_reconstruction_cpp\sensitivity_image_cuda_cbm\sensitivity_img_cbm.cpp(280): error C3861: 'cudaGetDevice': identifier not found
+     1>Done Building Project "D:\one drive\OneDrive - Washington University in St. Louis\Research\code_git\Outsert Project\conversion_reconstruction_Cpp\Sensitivity_IMAGE_CUDA_CBM\Sensitivity_IMAGE_CUDA_CBM.vcxproj" (Rebuild target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:02.95

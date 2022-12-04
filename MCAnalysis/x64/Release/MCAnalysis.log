@@ -1,0 +1,19 @@
+﻿Build started 7/28/2022 12:59:15 PM.
+     1>Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\MCAnalysis\MCAnalysis.vcxproj" on node 9 (Build target(s)).
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0/include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt MCAnalysis.cpp
+         MCAnalysis.cpp
+     1>MCAnalysis.cpp(73): warning C4101: 'usingTOF' : unreferenced local variable
+     1>MCAnalysis.cpp(44): warning C4101: 'i' : unreferenced local variable
+     1>MCAnalysis.cpp(58): warning C4101: 'penalty_fn' : unreferenced local variable
+       Link:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\MCAnalysis.exe" /NOLOGO /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0/lib/x64" cuda.lib cudart.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\MCAnalysis.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\MCAnalysis.lib" /MACHINE:X64 x64\Release\MCAnalysis.obj
+         "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\Solution_Items.lib"
+         Generating code
+         Finished generating code
+         MCAnalysis.vcxproj -> L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\MCAnalysis.exe
+     1>Done Building Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\MCAnalysis\MCAnalysis.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:07.71

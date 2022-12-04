@@ -1,0 +1,46 @@
+﻿Build started 7/28/2022 1:21:15 PM.
+     1>Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\Solution_Items\Solution_Items.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D _CRT_SECURE_NO_WARNINGS /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt ImageArray.cpp MC_data_analysis.cpp PET_LST_event.cpp PET_data.cpp PET_data_scatter.cpp PET_geometry.cpp PET_movement.cpp config.cpp crystal_attenuation_map.cpp
+         ImageArray.cpp
+         MC_data_analysis.cpp
+         PET_LST_event.cpp
+         PET_data.cpp
+     1>PET_data.cpp(480): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>PET_data.cpp(586): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>PET_data.cpp(743): warning C4101: 's' : unreferenced local variable
+     1>PET_data.cpp(743): warning C4101: 'd' : unreferenced local variable
+     1>PET_data.cpp(825): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+     1>PET_data.cpp(1452): warning C4244: '=' : conversion from '__int64' to 'long', possible loss of data
+     1>PET_data.cpp(1737): warning C4101: 'unit_index' : unreferenced local variable
+     1>PET_data.cpp(1737): warning C4101: 'block_index' : unreferenced local variable
+         PET_data_scatter.cpp
+     1>PET_data_scatter.cpp(338): warning C4101: 's' : unreferenced local variable
+     1>PET_data_scatter.cpp(338): warning C4101: 'd' : unreferenced local variable
+         PET_geometry.cpp
+     1>PET_geometry.cpp(253): warning C4267: 'initializing' : conversion from 'size_t' to 'int', possible loss of data
+         PET_movement.cpp
+     1>PET_movement.cpp(170): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>PET_movement.cpp(177): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>PET_movement.cpp(184): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>PET_movement.cpp(213): warning C4267: 'initializing' : conversion from 'size_t' to 'int', possible loss of data
+         config.cpp
+         crystal_attenuation_map.cpp
+     1>crystal_attenuation_map.cpp(25): warning C4267: '=' : conversion from 'size_t' to 'int', possible loss of data
+       Lib:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\Lib.exe /OUT:"L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\Solution_Items.lib" /NOLOGO /MACHINE:X64 /LTCG x64\Release\command_line.obj
+         x64\Release\config.obj
+         x64\Release\crystal_attenuation_map.obj
+         x64\Release\ImageArray.obj
+         x64\Release\MC_data_analysis.obj
+         x64\Release\PET_data_scatter.obj
+         x64\Release\PET_movement.obj
+         x64\Release\PET_data.obj
+         x64\Release\PET_geometry.obj
+         x64\Release\PET_LST_event.obj
+         Solution_Items.vcxproj -> L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\x64\Release\Solution_Items.lib
+     1>Done Building Project "L:\work\data\Outsert Project\system_alignment\recon_code\recon_code\Solution_Items\Solution_Items.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:10.64
