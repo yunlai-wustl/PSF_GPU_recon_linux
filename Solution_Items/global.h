@@ -19,7 +19,14 @@
 #define SMALLEST_ALLOWED 1e-8
 #define MAX_GPU 8
 #define NUM_SCANNER_CRYSTALS 60800
-#define NUM_INSERT_CRYSTALS 65536
+#define NUM_INSERT_CRYSTALS 57600
+#define PSF_OUTSERT_P2 0.003 
+#define PSF_OUTSERT_P1 -0.004
+#define PSF_OUTSERT_P0 1.6245
+
+#define PSF_SCANNER_P2 1
+#define PSF_SCANNER_P1 1
+#define PSF_SCANNER_P0 1
 
 
 typedef enum { FORWARD, BACKWARD }proj_direction;

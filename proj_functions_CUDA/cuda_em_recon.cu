@@ -174,7 +174,7 @@ __global__ _fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_events
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -202,7 +202,7 @@ __global__ _fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_events
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_coeff = _events_x_dominant_uvm->coeff;
+		ptr_FWHM = _events_x_dominant_uvm->coeff;
 		
 		num_lines = _events_x_dominant_uvm->num_lines;
 		/*
@@ -240,7 +240,7 @@ __global__ _fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_events
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 			
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -329,7 +329,7 @@ __global__ _fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_events
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -358,7 +358,7 @@ __global__ _fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_events
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_coeff = _events_y_dominant_uvm->coeff;
+		ptr_FWHM = _events_y_dominant_uvm->coeff;
 	
 		num_lines = _events_y_dominant_uvm->num_lines;
 		/*
@@ -396,7 +396,7 @@ __global__ _fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_events
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 		
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -487,7 +487,7 @@ __global__ _b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
@@ -518,7 +518,7 @@ __global__ _b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_coeff = _events_x_dominant_uvm->coeff;
+		ptr_FWHM = _events_x_dominant_uvm->coeff;
 		
 		num_lines = _events_x_dominant_uvm->num_lines;
 		/*
@@ -556,7 +556,7 @@ __global__ _b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 			
 
 			//TOF_dist = ptr_TOF_dist[event_index];
@@ -655,7 +655,7 @@ __global__ _b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z; 
-	__shared__ float *ptr_coeff; 
+	__shared__ float *ptr_FWHM; 
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -684,7 +684,7 @@ __global__ _b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_coeff= _events_y_dominant_uvm->coeff;
+		ptr_FWHM= _events_y_dominant_uvm->coeff;
 	
 		num_lines = _events_y_dominant_uvm->num_lines;
 		/*
@@ -721,7 +721,7 @@ __global__ _b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 		
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -791,6 +791,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_ev
 	int event_index, current_slice, sub_slice;
 	float src_x, src_y, src_z, dest_x, dest_y, dest_z;
 	int coeff, c;
+	float current_FWHM,current_Alpha,current_FWHM_sigma_inv; //for PSF
 	float dir_x, dir_y, dir_z;
 	float TOF_dist;
 	float dist_to_TOF_center;
@@ -817,7 +818,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_ev
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -847,7 +848,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_ev
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_coeff = _events_x_dominant_uvm->coeff;
+		ptr_FWHM = _events_x_dominant_uvm->coeff;
 
 		ptr_TOF_dist = _events_x_dominant_uvm->TOF_dist;
 		num_lines = _events_x_dominant_uvm->num_lines;
@@ -877,11 +878,14 @@ __global__ _TOF_fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_ev
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 
 			TOF_dist = ptr_TOF_dist[event_index];
 
-
+			current_FWHM = ptr_FWHM[event_index];
+			current_FWHM_sigma_inv = 4 * log(2.0) / (current_FWHM*current_FWHM);
+		    current_Alpha =0.93943727 / current_FWHM;
+		    
 			//only do the computation if current event line intersects current slice
 			if (src_x<intersection_x - voxel_size_x && dest_x>intersection_x + voxel_size_x){
 				dir_x = dest_x - src_x;
@@ -924,7 +928,9 @@ __global__ _TOF_fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_ev
 							point_line_distance_square = projection_vector_y*projection_vector_y + projection_vector_z*projection_vector_z - dot_product*dot_product;
 
 							//increment = current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] * 0.569;
-							increment = current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t * GLOBAL_SCALE;
+							//increment = current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t * GLOBAL_SCALE;
+							increment = current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] * __expf(-point_line_distance_square*current_FWHM_sigma_inv) * current_Alpha * t * GLOBAL_SCALE;;
+
 							forward_sum += increment;
 							//forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] * 0.569 ;
 							//atomicAdd(&fp_value[event_index],weight);
@@ -946,6 +952,7 @@ void
 __global__ _TOF_fproj_lst_cuda_x_kernel_atten(float* image, float* fp_x, float* atten_per_event, LST_LORs *_events_x_dominant_uvm, PARAMETERS_IN_DEVICE_t* parameters_device){
 	int event_index, current_slice, sub_slice;
 	float src_x, src_y, src_z, dest_x, dest_y, dest_z;
+	float current_FWHM,current_Alpha,current_FWHM_sigma_inv; //for PSF
 	int coeff, c;
 	float dir_x, dir_y, dir_z;
 	float TOF_dist;
@@ -973,7 +980,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_atten(float* image, float* fp_x, float* 
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -1004,7 +1011,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_atten(float* image, float* fp_x, float* 
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_coeff = _events_x_dominant_uvm->coeff;
+		ptr_FWHM = _events_x_dominant_uvm->coeff;
 
 		ptr_TOF_dist = _events_x_dominant_uvm->TOF_dist;
 		num_lines = _events_x_dominant_uvm->num_lines;
@@ -1035,8 +1042,9 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_atten(float* image, float* fp_x, float* 
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
-
+			current_FWHM = ptr_FWHM[event_index];
+			current_FWHM_sigma_inv = 4 * log(2.0) / (current_FWHM*current_FWHM);
+		    current_Alpha =0.93943727 / current_FWHM; //2sqrt(log(2)/pi)/FWHM
 			TOF_dist = ptr_TOF_dist[event_index];
 
 
@@ -1083,8 +1091,9 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_atten(float* image, float* fp_x, float* 
 							dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
 							point_line_distance_square = projection_vector_y*projection_vector_y + projection_vector_z*projection_vector_z - dot_product*dot_product;
 
-							forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t * GLOBAL_SCALE;
-
+							//forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t * GLOBAL_SCALE;
+							//PSF
+							forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] * __expf(-point_line_distance_square*current_FWHM_sigma_inv) * current_Alpha * t * GLOBAL_SCALE;
 							//atomicAdd(&fp_value[event_index],weight);
 						}
 					}
@@ -1134,7 +1143,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_scatter(float* image, float* fp_x, LST_L
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
 	__shared__ float *ptr_sc_coeff;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -1164,7 +1173,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_scatter(float* image, float* fp_x, LST_L
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_coeff = _events_x_dominant_uvm->coeff;
+		ptr_FWHM = _events_x_dominant_uvm->coeff;
 		ptr_sc_coeff = _events_x_dominant_uvm->sc_coeff;
 
 		ptr_TOF_dist = _events_x_dominant_uvm->TOF_dist;
@@ -1195,7 +1204,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_scatter(float* image, float* fp_x, LST_L
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 			sc_coeff = ptr_sc_coeff[event_index];
 
 			TOF_dist = ptr_TOF_dist[event_index];
@@ -1294,7 +1303,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_scatter_atten(float* image, float* fp_x,
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
 	__shared__ float *ptr_sc_coeff;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -1325,7 +1334,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_scatter_atten(float* image, float* fp_x,
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_coeff = _events_x_dominant_uvm->coeff;
+		ptr_FWHM = _events_x_dominant_uvm->coeff;
 		ptr_sc_coeff = _events_x_dominant_uvm->sc_coeff;
 
 		ptr_TOF_dist = _events_x_dominant_uvm->TOF_dist;
@@ -1357,7 +1366,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_scatter_atten(float* image, float* fp_x,
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 			sc_coeff = ptr_sc_coeff[event_index];
 
 			TOF_dist = ptr_TOF_dist[event_index];
@@ -1428,6 +1437,7 @@ void
 __global__ _TOF_fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_events_y_dominant_uvm, PARAMETERS_IN_DEVICE_t* parameters_device){
 	int event_index, current_slice, sub_slice;
 	float src_x, src_y, src_z, dest_x, dest_y, dest_z;
+	float current_FWHM,current_Alpha,current_FWHM_sigma_inv; //for PSF
 	int coeff, c;
 	float dir_x, dir_y, dir_z;
 	float TOF_dist;
@@ -1455,7 +1465,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_ev
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -1485,7 +1495,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_ev
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_coeff = _events_y_dominant_uvm->coeff;
+		ptr_FWHM = _events_y_dominant_uvm->coeff;
 		
 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
 		num_lines = _events_y_dominant_uvm->num_lines;
@@ -1516,8 +1526,9 @@ __global__ _TOF_fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_ev
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
-		
+			current_FWHM = ptr_FWHM[event_index];
+			current_FWHM_sigma_inv = 4 * log(2.0) / (current_FWHM*current_FWHM);
+		    current_Alpha =0.93943727 / current_FWHM;		
 			TOF_dist = ptr_TOF_dist[event_index];
 
 			
@@ -1562,8 +1573,9 @@ __global__ _TOF_fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_ev
 								projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
 								dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
 								point_line_distance_square = projection_vector_x*projection_vector_x + projection_vector_z*projection_vector_z - dot_product*dot_product;
-								increment = current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA  * t * GLOBAL_SCALE;
-							    forward_sum += increment;
+								//increment = current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA  * t * GLOBAL_SCALE;
+								increment = current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] * __expf(-point_line_distance_square*current_FWHM_sigma_inv) * current_Alpha * t * GLOBAL_SCALE;
+								forward_sum += increment;
 								//forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] ;
 								//atomicAdd(&fp_value[event_index],weight);
 
@@ -1584,6 +1596,7 @@ void
 __global__ _TOF_fproj_lst_cuda_y_kernel_atten(float* image, float* fp_y, float* atten_per_event, LST_LORs *_events_y_dominant_uvm, PARAMETERS_IN_DEVICE_t* parameters_device){
 	int event_index, current_slice, sub_slice;
 	float src_x, src_y, src_z, dest_x, dest_y, dest_z;
+	float current_FWHM,current_Alpha,current_FWHM_sigma_inv; //for PSF
 	int coeff, c;
 	float dir_x, dir_y, dir_z;
 	float TOF_dist;
@@ -1611,7 +1624,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_atten(float* image, float* fp_y, float* 
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -1642,7 +1655,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_atten(float* image, float* fp_y, float* 
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_coeff = _events_y_dominant_uvm->coeff;
+		ptr_FWHM = _events_y_dominant_uvm->coeff;
 
 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
 		num_lines = _events_y_dominant_uvm->num_lines;
@@ -1674,8 +1687,10 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_atten(float* image, float* fp_y, float* 
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
-
+			current_FWHM = ptr_FWHM[event_index];
+			current_FWHM_sigma_inv = 4 * log(2.0) / (current_FWHM*current_FWHM);
+		    current_Alpha =0.93943727 / current_FWHM;
+			
 			TOF_dist = ptr_TOF_dist[event_index];
 
 
@@ -1723,7 +1738,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_atten(float* image, float* fp_y, float* 
 							dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
 							point_line_distance_square = projection_vector_x*projection_vector_x + projection_vector_z*projection_vector_z - dot_product*dot_product;
 
-							forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA  * t * GLOBAL_SCALE;
+							forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] * __expf(-point_line_distance_square*current_FWHM_sigma_inv) * current_Alpha  * t * GLOBAL_SCALE;
 
 							//atomicAdd(&fp_value[event_index],weight);
 
@@ -1771,7 +1786,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_scatter(float* image, float* fp_y, LST_L
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	__shared__ float *ptr_sc_coeff;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -1802,7 +1817,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_scatter(float* image, float* fp_y, LST_L
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_coeff = _events_y_dominant_uvm->coeff;
+		ptr_FWHM = _events_y_dominant_uvm->coeff;
 		ptr_sc_coeff = _events_y_dominant_uvm->sc_coeff;
 
 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
@@ -1834,7 +1849,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_scatter(float* image, float* fp_y, LST_L
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 			sc_coeff = ptr_sc_coeff[event_index];
 
 			TOF_dist = ptr_TOF_dist[event_index];
@@ -1930,7 +1945,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_scatter_atten(float* image, float* fp_y,
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	__shared__ float *ptr_sc_coeff;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -1962,7 +1977,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_scatter_atten(float* image, float* fp_y,
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_coeff = _events_y_dominant_uvm->coeff;
+		ptr_FWHM = _events_y_dominant_uvm->coeff;
 		ptr_sc_coeff = _events_y_dominant_uvm->sc_coeff;
 
 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
@@ -1996,7 +2011,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_scatter_atten(float* image, float* fp_y,
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 			sc_coeff = ptr_sc_coeff[event_index];
 
 			TOF_dist = ptr_TOF_dist[event_index];
@@ -2069,6 +2084,7 @@ void
 __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_events_x_dominant_uvm, PARAMETERS_IN_DEVICE_t* parameters_device){
 	int event_index, current_slice, sub_slice;
 	float src_x, src_y, src_z, dest_x, dest_y, dest_z;
+	float current_FWHM,current_Alpha,current_FWHM_sigma_inv; //for PSF
     int coeff, c;
 	float dir_x, dir_y, dir_z;
 	float TOF_dist;
@@ -2096,7 +2112,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LO
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -2127,7 +2143,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LO
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
 		ptr_TOF_dist = _events_x_dominant_uvm->TOF_dist;
-		ptr_coeff = _events_x_dominant_uvm->coeff;
+		ptr_FWHM = _events_x_dominant_uvm->coeff;
 	
         num_lines = _events_x_dominant_uvm->num_lines;
 		image_ptr = image;
@@ -2154,8 +2170,10 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LO
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
-			
+			current_FWHM = ptr_FWHM[event_index];
+			current_FWHM_sigma_inv = 4 * log(2.0) / (current_FWHM*current_FWHM);
+		    current_Alpha =0.93943727 / current_FWHM;
+		    			
 			TOF_dist = ptr_TOF_dist[event_index];
 
 			//only do the computation if current event line intersects current slice
@@ -2203,7 +2221,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LO
 							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
 							dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
 							point_line_distance_square = projection_vector_y*projection_vector_y + projection_vector_z*projection_vector_z - dot_product*dot_product;
-							weight = t * backward_ratio * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * GLOBAL_SCALE;
+							weight = t * backward_ratio * __expf(-point_line_distance_square*current_FWHM_sigma_inv) * current_Alpha * GLOBAL_SCALE;
 							//weight = backward_ratio * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t;
 							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] ,( weight/solid_angle_ratio ));
 						}
@@ -2228,6 +2246,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LO
 	int event_index, current_slice, sub_slice;
 	float src_x, src_y, src_z, dest_x, dest_y, dest_z;
 	int coeff, c;
+	float current_FWHM,current_Alpha,current_FWHM_sigma_inv; //for PSF
 	float dir_x, dir_y, dir_z;
 	float TOF_dist;
 	float dist_to_TOF_center;
@@ -2254,7 +2273,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LO
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -2284,7 +2303,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LO
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_coeff = _events_y_dominant_uvm->coeff;
+		ptr_FWHM = _events_y_dominant_uvm->coeff;
 		
 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
 		num_lines = _events_y_dominant_uvm->num_lines;
@@ -2311,8 +2330,10 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LO
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
-			
+			current_FWHM = ptr_FWHM[event_index];
+			current_FWHM_sigma_inv = 4 * log(2.0) / (current_FWHM*current_FWHM);
+		    current_Alpha =0.93943727 / current_FWHM;
+		    
 			TOF_dist = ptr_TOF_dist[event_index];
 
 			//only do the computation if current event line intersects current slice
@@ -2358,7 +2379,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LO
 							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
 							dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
 							point_line_distance_square = projection_vector_x*projection_vector_x + projection_vector_z*projection_vector_z - dot_product*dot_product;
-							weight = t * backward_ratio * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * GLOBAL_SCALE;
+							weight = t * backward_ratio * __expf(-point_line_distance_square*current_FWHM_sigma_inv) * current_Alpha * GLOBAL_SCALE;
 							//weight = backward_ratio * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t;
 							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x], (weight/solid_angle_ratio));
 						}
@@ -2382,6 +2403,7 @@ void
 __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_atten(float* image, float* fp_x, float* atten_per_event, LST_LORs *_events_x_dominant_uvm, PARAMETERS_IN_DEVICE_t* parameters_device){
 	int event_index, current_slice, sub_slice;
 	float src_x, src_y, src_z, dest_x, dest_y, dest_z;
+	float current_FWHM,current_Alpha,current_FWHM_sigma_inv; //for PSF
 	int coeff, c;
 	float dir_x, dir_y, dir_z;
 	float TOF_dist;
@@ -2409,7 +2431,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_atten(float* image, float* fp_x, 
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -2441,7 +2463,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_atten(float* image, float* fp_x, 
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
 		ptr_TOF_dist = _events_x_dominant_uvm->TOF_dist;
-		ptr_coeff = _events_x_dominant_uvm->coeff;
+		ptr_FWHM = _events_x_dominant_uvm->coeff;
 
 		num_lines = _events_x_dominant_uvm->num_lines;
 		image_ptr = image;
@@ -2469,8 +2491,9 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_atten(float* image, float* fp_x, 
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
-
+			current_FWHM = ptr_FWHM[event_index];
+			current_FWHM_sigma_inv = 4 * log(2.0) / (current_FWHM*current_FWHM);
+		    current_Alpha =0.93943727 / current_FWHM;
 			TOF_dist = ptr_TOF_dist[event_index];
 
 			//only do the computation if current event line intersects current slice
@@ -2520,7 +2543,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_atten(float* image, float* fp_x, 
 							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
 							dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
 							point_line_distance_square = projection_vector_y*projection_vector_y + projection_vector_z*projection_vector_z - dot_product*dot_product;
-							weight = t * backward_ratio * __expf(-point_line_distance_square*SIGMA_INV - integral_mu) * ALPHA * GLOBAL_SCALE;
+							weight = t * backward_ratio * __expf(-point_line_distance_square*current_FWHM_sigma_inv - integral_mu) * current_Alpha * GLOBAL_SCALE;
 							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y],(weight / solid_angle_ratio));
 						}
 					}
@@ -2570,7 +2593,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_atten(float* image, float* fp_y, 
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value, *atten_factor;
@@ -2600,7 +2623,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_atten(float* image, float* fp_y, 
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_coeff = _events_y_dominant_uvm->coeff;
+		ptr_FWHM = _events_y_dominant_uvm->coeff;
 
 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
 		num_lines = _events_y_dominant_uvm->num_lines;
@@ -2628,7 +2651,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_atten(float* image, float* fp_y, 
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 
 			TOF_dist = ptr_TOF_dist[event_index];
 
@@ -2729,7 +2752,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_scatter(float* image, float* fp_x
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -2761,7 +2784,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_scatter(float* image, float* fp_x
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
 		ptr_TOF_dist = _events_x_dominant_uvm->TOF_dist;
-		ptr_coeff = _events_x_dominant_uvm->coeff;
+		ptr_FWHM = _events_x_dominant_uvm->coeff;
 		ptr_scatter_coeff = _events_x_dominant_uvm->sc_coeff;
 
 		num_lines = _events_x_dominant_uvm->num_lines;
@@ -2789,7 +2812,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_scatter(float* image, float* fp_x
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 			sc_coeff = ptr_scatter_coeff[event_index];
 
 			TOF_dist = ptr_TOF_dist[event_index];
@@ -2893,7 +2916,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_scatter(float* image, float* fp_y
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -2924,7 +2947,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_scatter(float* image, float* fp_y
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_coeff = _events_y_dominant_uvm->coeff;
+		ptr_FWHM = _events_y_dominant_uvm->coeff;
 		ptr_scatter_coeff = _events_y_dominant_uvm->sc_coeff;
 
 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
@@ -2952,7 +2975,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_scatter(float* image, float* fp_y
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 			sc_coeff = ptr_scatter_coeff[event_index];
 			TOF_dist = ptr_TOF_dist[event_index];
 
@@ -3053,7 +3076,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_scatter_atten(float* image, float
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -3086,7 +3109,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_scatter_atten(float* image, float
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
 		ptr_TOF_dist = _events_x_dominant_uvm->TOF_dist;
-		ptr_coeff = _events_x_dominant_uvm->coeff;
+		ptr_FWHM = _events_x_dominant_uvm->coeff;
 		ptr_sc_coeff = _events_x_dominant_uvm->sc_coeff;
 
 		num_lines = _events_x_dominant_uvm->num_lines;
@@ -3115,7 +3138,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_scatter_atten(float* image, float
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 			sc_coeff = ptr_sc_coeff[event_index];
 
 			TOF_dist = ptr_TOF_dist[event_index];
@@ -3220,7 +3243,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_scatter_atten(float* image, float
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -3252,7 +3275,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_scatter_atten(float* image, float
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_coeff = _events_y_dominant_uvm->coeff;
+		ptr_FWHM = _events_y_dominant_uvm->coeff;
 		ptr_sc_coeff = _events_y_dominant_uvm->sc_coeff;
 
 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
@@ -3281,7 +3304,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_scatter_atten(float* image, float
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 			sc_coeff = ptr_sc_coeff[event_index];
 
 			TOF_dist = ptr_TOF_dist[event_index];
@@ -3700,7 +3723,7 @@ __global__ _fproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -3728,7 +3751,7 @@ __global__ _fproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_coeff = _events_x_dominant_uvm->coeff;
+		ptr_FWHM = _events_x_dominant_uvm->coeff;
 	
 		num_lines = _events_x_dominant_uvm->num_lines;
 		/*
@@ -3767,7 +3790,7 @@ __global__ _fproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 		
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -3863,7 +3886,7 @@ __global__ _fproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -3892,7 +3915,7 @@ __global__ _fproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_coeff = _events_y_dominant_uvm->coeff;
+		ptr_FWHM = _events_y_dominant_uvm->coeff;
 		
 		num_lines = _events_y_dominant_uvm->num_lines;
 		/*
@@ -3931,7 +3954,7 @@ __global__ _fproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 			
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -4025,7 +4048,7 @@ __global__ _fproj_atten_lst_cuda_x_kernel_scatter(float* image, float* fp_x, LST
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -4053,7 +4076,7 @@ __global__ _fproj_atten_lst_cuda_x_kernel_scatter(float* image, float* fp_x, LST
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_coeff = _events_x_dominant_uvm->coeff;
+		ptr_FWHM = _events_x_dominant_uvm->coeff;
 
 		num_lines = _events_x_dominant_uvm->num_lines;
 		/*
@@ -4092,7 +4115,7 @@ __global__ _fproj_atten_lst_cuda_x_kernel_scatter(float* image, float* fp_x, LST
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -4188,7 +4211,7 @@ __global__ _fproj_atten_lst_cuda_y_kernel_scatter(float* image, float* fp_y, LST
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -4217,7 +4240,7 @@ __global__ _fproj_atten_lst_cuda_y_kernel_scatter(float* image, float* fp_y, LST
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_coeff = _events_y_dominant_uvm->coeff;
+		ptr_FWHM = _events_y_dominant_uvm->coeff;
 
 		num_lines = _events_y_dominant_uvm->num_lines;
 		/*
@@ -4256,7 +4279,7 @@ __global__ _fproj_atten_lst_cuda_y_kernel_scatter(float* image, float* fp_y, LST
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -4349,7 +4372,7 @@ __global__ _bproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -4378,7 +4401,7 @@ __global__ _bproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_coeff = _events_x_dominant_uvm->coeff;
+		ptr_FWHM = _events_x_dominant_uvm->coeff;
 		
 		num_lines = _events_x_dominant_uvm->num_lines;
 		/*
@@ -4418,7 +4441,7 @@ __global__ _bproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 
 			
 			//TOF_dist = ptr_TOF_dist[event_index];
@@ -4522,7 +4545,7 @@ __global__ _bproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -4551,7 +4574,7 @@ __global__ _bproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_coeff = _events_y_dominant_uvm->coeff;
+		ptr_FWHM = _events_y_dominant_uvm->coeff;
 		
 		num_lines = _events_y_dominant_uvm->num_lines;
 		/*
@@ -4589,7 +4612,7 @@ __global__ _bproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 		
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -4691,7 +4714,7 @@ __global__ _bproj_atten_lst_cuda_x_kernel_norm(float* image, float* fp_x, LST_LO
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_coeff; 
+	__shared__ float *ptr_FWHM; 
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -4721,7 +4744,7 @@ __global__ _bproj_atten_lst_cuda_x_kernel_norm(float* image, float* fp_x, LST_LO
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_coeff = _events_x_dominant_uvm->coeff;
+		ptr_FWHM = _events_x_dominant_uvm->coeff;
 
 		num_lines = _events_x_dominant_uvm->num_lines;
 		/*
@@ -4762,7 +4785,7 @@ __global__ _bproj_atten_lst_cuda_x_kernel_norm(float* image, float* fp_x, LST_LO
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -4864,7 +4887,7 @@ __global__ _bproj_atten_lst_cuda_y_kernel_norm(float* image, float* fp_y, LST_LO
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_coeff;
+	__shared__ float *ptr_FWHM;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -4894,7 +4917,7 @@ __global__ _bproj_atten_lst_cuda_y_kernel_norm(float* image, float* fp_y, LST_LO
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_coeff = _events_y_dominant_uvm->coeff;
+		ptr_FWHM = _events_y_dominant_uvm->coeff;
 
 		num_lines = _events_y_dominant_uvm->num_lines;
 		/*
@@ -4933,7 +4956,7 @@ __global__ _bproj_atten_lst_cuda_y_kernel_norm(float* image, float* fp_y, LST_LO
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_coeff[event_index];
+			coeff = ptr_FWHM[event_index];
 
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -5120,7 +5143,7 @@ cuda_em_recon::_Initialize_host_parameters(parameters_t p){
 	//printf("H_CENTER_Y = %f\n", parameters_host.H_CENTER_Y);
 	//printf("V_CENTER = %f\n", parameters_host.V_CENTER);
 
-	TOF_sigma = p.TOF_res*1.414213562f*0.15f / 2.354820045f;
+	TOF_sigma = p.TOF_res*0.15f / 2.354820045f;
 	parameters_host.TOF_inv = 1 / (2 * TOF_sigma*TOF_sigma);;
 	parameters_host.TOF_alpha = 0.39894228f / TOF_sigma;
 
@@ -5188,6 +5211,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 	float *src_x_z, *src_y_z, *src_z_z, *dest_x_z, *dest_y_z, *dest_z_z;
 	float *coeff_x, *coeff_y, *coeff_z;
 	float snorm_x, dnorm_x, centm_x, snorm_z, dnorm_z, centm_z, angle_s_x, angle_d_x, cos_s_x, cos_d_x;
+	float FWHM_s, FWHM_d; //FWHM of Detector response function of destination and sourse crystal
 	float coeffx, coeffy;
 	float snorm_y, dnorm_y, centm_y, angle_s_y, angle_d_y, angle_s_z, angle_d_z, cos_s_y, cos_d_y, cos_s_z, cos_d_z, coeff_s_z, coeff_d_z;
 
@@ -5398,14 +5422,25 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 
 				if ((angle_s_x >= 0 && angle_s_x <= 75) && (angle_d_x >= 0 && angle_d_x <= 75)){
 					//if ((angle_s_x <= 1 ) || (angle_d_x <= 1)){
+					
+					
+					if(current_lst_event.dest_id<NUM_SCANNER_CRYSTALS)
+						FWHM_d=PSF_SCANNER_P0 + PSF_SCANNER_P1*angle_d_x+PSF_SCANNER_P2*angle_d_x*angle_d_x;
+					else
+						FWHM_d=PSF_OUTSERT_P0 + PSF_OUTSERT_P1*angle_d_x+PSF_OUTSERT_P2*angle_d_x*angle_d_x;
 
-					coeffx = 1;
+
+					if(current_lst_event.src_id<NUM_SCANNER_CRYSTALS)
+						FWHM_s=PSF_SCANNER_P0 + PSF_SCANNER_P1*angle_s_x+PSF_SCANNER_P2*angle_s_x*angle_s_x;
+					else
+						FWHM_s=PSF_OUTSERT_P0 + PSF_OUTSERT_P1*angle_s_x+PSF_OUTSERT_P2*angle_s_x*angle_s_x;
+
+					coeffx = (float)sqrt(FWHM_d*FWHM_d+FWHM_s*FWHM_s);
 					
 					//cout << angle_s_x << " " << angle_d_x <<" " << cos_s_x<< " " << cos_d_x<< " " <<centm_x<<"\n";
-
-
 				}
 				else{
+					continue;
 					coeffx = 0;
 					
 					//cout << angle_s_x << " " << angle_d_x << " " << cos_s_x << " " << cos_d_x << " " << centm_x << "\n";
@@ -5444,13 +5479,26 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 
 				if ((angle_s_x >= 0 && angle_s_x <= 75) && (angle_d_x >= 0 && angle_d_x <= 75)){
 		          //if ((angle_s_x <= 1) || (angle_d_x <= 1)){
-					coeffx = 1;
+
+
+					if(current_lst_event.dest_id<NUM_SCANNER_CRYSTALS)
+						FWHM_d=PSF_SCANNER_P0 + PSF_SCANNER_P1*angle_d_x+PSF_SCANNER_P2*angle_d_x*angle_d_x;
+					else
+						FWHM_d=PSF_OUTSERT_P0 + PSF_OUTSERT_P1*angle_d_x+PSF_OUTSERT_P2*angle_d_x*angle_d_x;
+
+					if(current_lst_event.src_id<NUM_SCANNER_CRYSTALS)
+						FWHM_s=PSF_SCANNER_P0 + PSF_SCANNER_P1*angle_s_x+PSF_SCANNER_P2*angle_s_x*angle_s_x;
+					else
+						FWHM_s=PSF_OUTSERT_P0 + PSF_OUTSERT_P1*angle_s_x+PSF_OUTSERT_P2*angle_s_x*angle_s_x;
+
+					coeffx = (float)sqrt(FWHM_d*FWHM_d+FWHM_s*FWHM_s);
 					
 					//cout << angle_s_x << " " << angle_d_x << " " << cos_s_x << " " << cos_d_x << " " << centm_x << "\n";
 
 
 				}
 				else{
+					continue;
 					coeffx = 0;
 					
 					//cout << angle_s_x << " " << angle_d_x << " " << cos_s_x << " " << cos_d_x << " " << centm_x << "\n";
@@ -5497,12 +5545,22 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 
 				if ((angle_s_y >= 0 && angle_s_y <= 75) && (angle_d_y >= 0 && angle_d_y <= 75)){
 					//if ((angle_s_y <= 1 ) || (angle_d_y <= 1 )){
+					if(current_lst_event.dest_id<NUM_SCANNER_CRYSTALS)
+						FWHM_d=PSF_SCANNER_P0 + PSF_SCANNER_P1*angle_d_y+PSF_SCANNER_P2*angle_d_y*angle_d_y;
+					else
+						FWHM_d=PSF_OUTSERT_P0 + PSF_OUTSERT_P1*angle_d_y+PSF_OUTSERT_P2*angle_d_y*angle_d_y;
 
-					coeffy = 1;
+					if(current_lst_event.src_id<NUM_SCANNER_CRYSTALS)
+						FWHM_s=PSF_SCANNER_P0 + PSF_SCANNER_P1*angle_s_y+PSF_SCANNER_P2*angle_s_y*angle_s_y;
+					else
+						FWHM_s=PSF_OUTSERT_P0 + PSF_OUTSERT_P1*angle_s_y+PSF_OUTSERT_P2*angle_s_y*angle_s_y;
+
+					coeffy = (float)sqrt(FWHM_d*FWHM_d+FWHM_s*FWHM_s);
 					
 					//cout << angle_s_y << " " << angle_d_y << " " << cos_s_y << " " << cos_d_y << " " << centm_y << "\n";
 				}
 				else{
+					continue;
 					coeffy = 0;
 				
 					//cout << angle_s_y << " " << angle_d_y << " " << cos_s_y << " " << cos_d_y << " " << centm_y << "\n";
@@ -5539,14 +5597,24 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 				
 					//if((angle_s_y <= 1 ) || (angle_d_y <= 1 )){
 
+					if(current_lst_event.dest_id<NUM_SCANNER_CRYSTALS)
+						FWHM_d=PSF_SCANNER_P0 + PSF_SCANNER_P1*angle_d_y+PSF_SCANNER_P2*angle_d_y*angle_d_y;
+					else
+						FWHM_d=PSF_OUTSERT_P0 + PSF_OUTSERT_P1*angle_d_y+PSF_OUTSERT_P2*angle_d_y*angle_d_y;
 
-					coeffy = 1;
+					if(current_lst_event.src_id<NUM_SCANNER_CRYSTALS)
+						FWHM_s=PSF_SCANNER_P0 + PSF_SCANNER_P1*angle_s_y+PSF_SCANNER_P2*angle_s_y*angle_s_y;
+					else
+						FWHM_s=PSF_OUTSERT_P0 + PSF_OUTSERT_P1*angle_s_y+PSF_OUTSERT_P2*angle_s_y*angle_s_y;
+
+					coeffy = (float)sqrt(FWHM_d*FWHM_d+FWHM_s*FWHM_s);
 					
 					//cout << angle_s_y << " " << angle_d_y << " " << cos_s_y << " " << cos_d_y << " " << centm_y << "\n";
 				}
 				else{
 					coeffy = 0;
-					
+					continue;
+
 					//cout << angle_s_y << " " << angle_d_y << " " << cos_s_y << " " << cos_d_y << " " << centm_y << "\n";
 					//cout << "#";
 				}
@@ -8049,7 +8117,7 @@ cuda_em_recon::ComputeUpdateFactor(PET_geometry& detector, PET_movement& movemen
 		if (parameters_host.RANGE2 < 1)
 			parameters_host.RANGE2 = 1;
 		printf("H_CENTER_X = %f H_CENTER_Y = %f V_CENTER = %f\n", parameters_host.H_CENTER_X, parameters_host.H_CENTER_Y, parameters_host.V_CENTER);
-		printf("RANGE1 = %d RANGE2 = %d FWHM_IS = %f\n", parameters_host.RANGE1, parameters_host.RANGE2, parameters_host.FWHM_is);
+		printf("RANGE1 = %d RANGE2 = %d FWHM_II = %f\n", parameters_host.RANGE1, parameters_host.RANGE2, parameters_host.FWHM_ii);
 		cudaHostRegister(&parameters_host, sizeof(PARAMETERS_IN_DEVICE_t), 0);
 
 		for (device_id = _num_gpu_start; device_id <= _num_gpu_end; device_id++){

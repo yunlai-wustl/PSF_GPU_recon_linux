@@ -3,7 +3,7 @@ INCLUDE2= ../image_update_CUDA
 INCLUDE3= ../proj_functions_CUDA
 
 OBJ=../Objects
-TARGET = EM_recon_exe
+TARGET = EM_recon_psf
 
 CXX = g++
 NVCC = nvcc 
