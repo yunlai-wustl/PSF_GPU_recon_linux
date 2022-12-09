@@ -1000,8 +1000,8 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_atten(float* image, float* fp_x, float* 
 		V_CENTER = parameters_device->V_CENTER;
 		SIGMA_INV = parameters_device->FWHM_sigma_inv;
 		ALPHA = parameters_device->FWHM_alpha;
-		range1 = parameters_device->RANGE1;
-		range2 = parameters_device->RANGE2;
+		//range1 = parameters_device->RANGE1;
+		//range2 = parameters_device->RANGE2;
 		TOF_INV = parameters_device->TOF_inv;
 		TOF_ALPHA = parameters_device->TOF_alpha;
 
@@ -1047,6 +1047,8 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_atten(float* image, float* fp_x, float* 
 		    current_Alpha =0.93943727 / current_FWHM; //2sqrt(log(2)/pi)/FWHM
 			TOF_dist = ptr_TOF_dist[event_index];
 
+			range1 = current_FWHM*2;
+			range2 = current_FWHM*2;
 
 			//only do the computation if current event line intersects current slice
 			if (src_x<intersection_x - voxel_size_x && dest_x>intersection_x + voxel_size_x){
@@ -7658,8 +7660,10 @@ cuda_em_recon::ComputeUpdateFactor(PET_geometry& detector, PET_movement& movemen
 
 		parameters_host.FWHM_alpha = parameters_host.FWHM_alpha_ss;
 		parameters_host.FWHM_sigma_inv = parameters_host.FWHM_sigma_inv_ss;
-		parameters_host.RANGE1 = (int)(parameters_host.FWHM_ss / parameters_host.X_SAMP);
-		parameters_host.RANGE2 = (int)(parameters_host.FWHM_ss / parameters_host.Z_SAMP);
+		//parameters_host.RANGE1 = (int)(parameters_host.FWHM_ss / parameters_host.X_SAMP);
+		//parameters_host.RANGE2 = (int)(parameters_host.FWHM_ss / parameters_host.Z_SAMP);
+		parameters_host.RANGE1 = (int)(CRYSTAL_THICKNESS_SCANNER/2/parameters_host.X_SAMP);
+		parameters_host.RANGE2 = (int)(CRYSTAL_THICKNESS_SCANNER/2/parameters_host.Z_SAMP);
 		printf("H_CENTER_X = %f H_CENTER_Y = %f V_CENTER = %f\n", parameters_host.H_CENTER_X, parameters_host.H_CENTER_Y, parameters_host.V_CENTER);
 		printf("RANGE1 = %d RANGE2 = %d FWHM_SS = %f\n", parameters_host.RANGE1, parameters_host.RANGE2, parameters_host.FWHM_ss);
 		cudaHostRegister(&parameters_host, sizeof(PARAMETERS_IN_DEVICE_t), 0);
@@ -8112,8 +8116,10 @@ cuda_em_recon::ComputeUpdateFactor(PET_geometry& detector, PET_movement& movemen
 
 		parameters_host.FWHM_alpha = parameters_host.FWHM_alpha_ii;
 		parameters_host.FWHM_sigma_inv = parameters_host.FWHM_sigma_inv_ii;
-		parameters_host.RANGE1 = (int)(parameters_host.FWHM_ii / parameters_host.X_SAMP);
-		parameters_host.RANGE2 = (int)(parameters_host.FWHM_ii / parameters_host.Z_SAMP);
+		//parameters_host.RANGE1 = (int)(parameters_host.FWHM_ii / parameters_host.X_SAMP);
+		//parameters_host.RANGE2 = (int)(parameters_host.FWHM_ii / parameters_host.Z_SAMP);
+		parameters_host.RANGE1 = (int)(CRYSTAL_THICKNESS_INSERT/2/parameters_host.X_SAMP);
+		parameters_host.RANGE2 = (int)(CRYSTAL_THICKNESS_INSERT/2/parameters_host.Z_SAMP);
 		if (parameters_host.RANGE1 < 1)
 			parameters_host.RANGE1 = 1;
 		if (parameters_host.RANGE2 < 1)
