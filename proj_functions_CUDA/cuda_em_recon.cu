@@ -3175,8 +3175,8 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_scatter_atten(float* image, float
 
 				//compute the solid angle ratio w.r.t. the location of the intersection
 				solid_angle_ratio = 1 + 2 * fabsf(t - 0.5f);
-				//solid_angle_ratio = solid_angle_ratio*solid_angle_ratio;
-				solid_angle_ratio = 1*dist*dist ;
+				solid_angle_ratio = solid_angle_ratio*solid_angle_ratio*dist*dist;
+				//solid_angle_ratio = 1*dist*dist ;
 
 
 				//compute the distance to the TOF center
@@ -3339,8 +3339,8 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_scatter_atten(float* image, float
 
 				//compute the solid angle ratio w.r.t. the location of the intersection
 				solid_angle_ratio = 1 + 2 * fabsf(t - 0.5f);
-				//solid_angle_ratio = solid_angle_ratio*solid_angle_ratio;
-				solid_angle_ratio = 1*dist*dist;
+				solid_angle_ratio = solid_angle_ratio*solid_angle_ratio*dist*dist;
+				//solid_angle_ratio = 1*dist*dist;
 
 
 				//compute the distance to the TOF center
@@ -4346,8 +4346,7 @@ __global__ _bproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 	float area, dist_from_center, geom;
 	float coeff;
 	float dir_x, dir_y, dir_z;
-	//float TOF_dist;
-	//float dist_to_TOF_center;
+	float current_FWHM,current_Alpha,current_FWHM_sigma_inv; //for PSF
 	float unit_dir_vector_y, unit_dir_vector_z;
 	float projection_vector_y, projection_vector_z;
 	float dot_product;
@@ -4442,7 +4441,10 @@ __global__ _bproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
 			coeff = ptr_FWHM[event_index];
-
+			
+			current_FWHM = ptr_FWHM[event_index];
+			current_FWHM_sigma_inv = 4 * log(2.0) / (current_FWHM*current_FWHM);
+		    current_Alpha =0.93943727 / current_FWHM;
 			
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -4473,11 +4475,11 @@ __global__ _bproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 				intersection_index_z = (int)ceilf(intersection_z / voxel_size_z) + center_z;
 
 				//compute the solid angle ratio w.r.t. the location of the intersection
-				//solid_angle_ratio = 1 + 2 * fabsf(t - 0.5f);
-				//solid_angle_ratio = solid_angle_ratio*solid_angle_ratio*dist*dist;
+				solid_angle_ratio = 1 + 2 * fabsf(t - 0.5f);
+				solid_angle_ratio = solid_angle_ratio*solid_angle_ratio*dist*dist;
 				//solid_angle_ratio = 1 + 12 * (t - 0.5f) * (t - 0.5f);
-				solid_angle_ratio = 1 + fabsf(24 * (t - 0.5f) * (t - 0.5f) * (t - 0.5f));
-				solid_angle_ratio = 1*dist*dist;
+				//solid_angle_ratio = 1 + fabsf(24 * (t - 0.5f) * (t - 0.5f) * (t - 0.5f));
+				//solid_angle_ratio = 1*dist*dist;
 
 				//compute the distance to the TOF center
 				//dist_to_TOF_center = (0.5f-t)*dist - TOF_dist;
@@ -4493,7 +4495,7 @@ __global__ _bproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 							dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
 							point_line_distance_square = projection_vector_y*projection_vector_y + projection_vector_z*projection_vector_z - dot_product*dot_product;
 							//weight = t * backward_ratio * __expf( - point_line_distance_square*SIGMA_INV );
-							weight = __expf(-point_line_distance_square*SIGMA_INV - backward_ratio) * ALPHA * GLOBAL_SCALE ;
+							weight = __expf(-point_line_distance_square*current_FWHM_sigma_inv - backward_ratio) * current_Alpha * GLOBAL_SCALE ;
 							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y], weight / (solid_angle_ratio) );
 						}
 					}
@@ -4642,12 +4644,12 @@ __global__ _bproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 				intersection_index_z = (int)ceilf(intersection_z / voxel_size_z) + center_z;
 
 				//compute the solid angle ratio w.r.t. the location of the intersection
-				//solid_angle_ratio = 1 + 2 * fabsf(t - 0.5f);
-				//solid_angle_ratio = solid_angle_ratio*solid_angle_ratio*dist*dist;
+				solid_angle_ratio = 1 + 2 * fabsf(t - 0.5f);
+				solid_angle_ratio = solid_angle_ratio*solid_angle_ratio*dist*dist;
 
 				//solid_angle_ratio = 1 + 12 * (t - 0.5f) * (t - 0.5f);
-				solid_angle_ratio = 1 + fabsf(24 * (t - 0.5f) * (t - 0.5f) * (t - 0.5f));
-				solid_angle_ratio = 1*dist*dist;
+				//solid_angle_ratio = 1 + fabsf(24 * (t - 0.5f) * (t - 0.5f) * (t - 0.5f));
+				//solid_angle_ratio = 1*dist*dist;
 
 				//compute the distance to the TOF center
 				//dist_to_TOF_center = (0.5f-t)*dist - TOF_dist;
@@ -5191,8 +5193,8 @@ cuda_em_recon::_Initialize_host_parameters(parameters_t p){
 	//#define ALPHA 2.348593152f			//FWHM=0.4
 	*/
 
-	parameters_host.RANGE1 = (int)(LOR_FWHM / parameters_host.X_SAMP);
-	parameters_host.RANGE2 = (int)(LOR_FWHM / parameters_host.Z_SAMP);
+	parameters_host.RANGE1 = (int)(sqrt(2)*LOR_FWHM / parameters_host.X_SAMP+parameters_host.X_SAMP);
+	parameters_host.RANGE2 = (int)(sqrt(2)*LOR_FWHM / parameters_host.Z_SAMP+parameters_host.X_SAMP);
 
 	parameters_host.RANGE_atten_1 = (int)(LOR_FWHM / parameters_host.X_SAMP);;
 	parameters_host.RANGE_atten_2 = (int)(LOR_FWHM / parameters_host.Z_SAMP);
@@ -8224,7 +8226,7 @@ cuda_em_recon::ComputeUpdateFactor(PET_geometry& detector, PET_movement& movemen
 				checkCudaErrors(cudaStreamSynchronize(streamC[device_id]));
 				*/
 
-				checkCudaErrors(cudaEventSynchronize(eventStart1[device_id]));
+			checkCudaErrors(cudaEventSynchronize(eventStart1[device_id]));
 			checkCudaErrors(cudaEventSynchronize(eventStart2[device_id]));
 			checkCudaErrors(cudaEventSynchronize(eventStop1[device_id]));
 			checkCudaErrors(cudaEventSynchronize(eventStop2[device_id]));
