@@ -90,7 +90,7 @@ PET_geometry::read_detectors_file(const std::string filename){
 		vec[1] = (detector_crystal_list.at(block).geometry.normal_1[1]);
 		vec[2] = (detector_crystal_list.at(block).geometry.normal_1[2]);
 
-		shift_crystal_center(detector_crystal_list.at(block).geometry.center, 0.0, vec);//3.74
+		shift_crystal_center(detector_crystal_list.at(block).geometry.center,SCANNER_CRYTAL_SHIFT_DISTANCE_CENTER_TO_SURFACE, vec);//3.74
 	}
 
 	/*for (block = 17600; block < 40368; block++){
@@ -114,7 +114,7 @@ PET_geometry::read_detectors_file(const std::string filename){
 		vec[1] =  (detector_crystal_list.at(block).geometry.normal_1[1]);
 		vec[2] =  (detector_crystal_list.at(block).geometry.normal_1[2]);
 
-		shift_crystal_center(detector_crystal_list.at(block).geometry.center, 0.0, vec);//1.0
+		shift_crystal_center(detector_crystal_list.at(block).geometry.center, OUTSERT_CRYTAL_SHIFT_DISTANCE_CENTER_TO_SURFACE, vec);//1.0
 	}
 
 	/*for (block = 93568; block < 126336; block++){

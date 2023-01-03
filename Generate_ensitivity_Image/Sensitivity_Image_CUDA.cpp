@@ -714,14 +714,14 @@ int main(int argc, char *argv[]) {
 
 		cout << "\n Normalization Turned Off.  \n";
 		
-		int sn1 = NUM_SCANNER_CRYSTALS; // Starting crystal number of volume 1
-		int sn2 = NUM_SCANNER_CRYSTALS+NUM_INSERT_CRYSTALS/2; // Starting crystal number of volume 2
-		int fn1 = NUM_SCANNER_CRYSTALS+NUM_INSERT_CRYSTALS/2;
-		int fn2 = NUM_SCANNER_CRYSTALS+NUM_INSERT_CRYSTALS;
+		int sn1 = 0; // Starting crystal number of volume 1
+		int sn2 = 0; // Starting crystal number of volume 2
+		int fn1 = NUM_SCANNER_CRYSTALS;
+		int fn2 = NUM_SCANNER_CRYSTALS;
 		int tot_crystals1 = fn1 - sn1;
 		int tot_crystals2 = fn2 - sn2;
-		int num_steps1 = 1;
-		int num_steps2 = 1;
+		int num_steps1 = 2;
+		int num_steps2 = 2;
 		int step1 = tot_crystals1 / num_steps1;
 		int step2 = tot_crystals2 / num_steps2;
 		int* idx1 = new int[num_steps1];

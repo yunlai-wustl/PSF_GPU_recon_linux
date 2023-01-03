@@ -753,6 +753,10 @@ PET_data::_read_compact_coincidence_LST_data(const std::string inputfile_name, i
 				_current_bed_poistion = compact_coincidence_data[i].bed_position;
 			PET_LST_event current_event(compact_coincidence_data[i].crystal_index_1, compact_coincidence_data[i].crystal_index_2, (float)(1.5e11 * compact_coincidence_data[i].diff_time), (float)(compact_coincidence_data[i].time_1), 1, _current_bed_poistion);
 			//printf("%d %d\n", compact_coincidence_data[i].crystal_index_1, compact_coincidence_data[i].crystal_index_2);
+			if (compact_coincidence_data[i].crystal_index_1 < 0 || compact_coincidence_data[i].crystal_index_2 < 0|| \
+			compact_coincidence_data[i].crystal_index_1 >= NUM_SCANNER_CRYSTALS+NUM_INSERT_CRYSTALS \
+			||compact_coincidence_data[i].crystal_index_2 >= NUM_SCANNER_CRYSTALS+NUM_INSERT_CRYSTALS)
+				continue;
 			PET_LST_event_list.push_back(current_event);
 			if (compact_coincidence_data[i].crystal_index_1 < NUM_SCANNER_CRYSTALS && compact_coincidence_data[i].crystal_index_2 < NUM_SCANNER_CRYSTALS){
 				_num_ss_event++;
