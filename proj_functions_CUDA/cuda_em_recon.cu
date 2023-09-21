@@ -1,5 +1,65 @@
 
 #define _USE_MATH_DEFINES
+//posterior
+
+#define PSF_OUTSERT_LEFT_P2 0.000013191447062 
+#define PSF_OUTSERT_LEFT_P1 0.034614917479396 
+#define PSF_OUTSERT_LEFT_P0 0.146960657809779
+
+#define PSF_OUTSERT_RIGHT_P2 0.000013191447062 
+#define PSF_OUTSERT_RIGHT_P1 0.034614917479396
+#define PSF_OUTSERT_RIGHT_P0 0.146960657809779
+
+//priori
+/*
+#define PSF_OUTSERT_LEFT_P2 0.000876757083108 
+#define PSF_OUTSERT_LEFT_P1 0.002637905048182 
+#define PSF_OUTSERT_LEFT_P0 0.679473047016796
+
+#define PSF_OUTSERT_RIGHT_P2 0.000876757083108 
+#define PSF_OUTSERT_RIGHT_P1 0.002637905048182 
+#define PSF_OUTSERT_RIGHT_P0 0.679473047016796
+*/
+
+
+
+
+
+#define R_SCANNER 423       //scanner radius in mm
+#define MAX_ALLOWED_ANGLE_RAD 1.3963 //max allowed incident angel in rad (80/180)*pi
+
+#define PSF_SCANNER_P2 0.0000193645*2
+#define PSF_SCANNER_P1 0.0010024476*2
+#define PSF_SCANNER_P0 0.982671632*2
+
+
+#define SIGMA_Z 0.5
+#define INVERSE_SIGMA_Z_SQUARE 2.0f //  1/(2*sigma^2)
+#define AMPLITUDE_Z 0.798f             // 1/sqrt(2pi)/sigma
+
+//scanner fitting function: using siemens, r as input
+#define SCANNER_SINGLE_SIGMA_FITTING_FUNC_LEFT(dist_center_to_LOR) dist_center_to_LOR*dist_center_to_LOR*PSF_SCANNER_P2-dist_center_to_LOR*PSF_SCANNER_P1+PSF_SCANNER_P0
+#define SCANNER_SINGLE_SIGMA_FITTING_FUNC_RIGHT(dist_center_to_LOR) dist_center_to_LOR*dist_center_to_LOR*PSF_SCANNER_P2+dist_center_to_LOR*PSF_SCANNER_P1+PSF_SCANNER_P0
+#define CALCULATE_SOLID_ANGLE_RATIO(dist,t)	(1 + 2 * fabsf(t - 0.5f))*(1 + 2 * fabsf(t - 0.5f))*dist*dist;
+
+
+//outsert signles fitting function: using simulation, angle as input (in degree!!!!)
+//#define OUTSERT_SINGLE_SIGMA_FITTING_FUNC_LEFT(x) max(0.5f,(float)(x*x*PSF_OUTSERT_LEFT_P2+x*PSF_OUTSERT_LEFT_P1+PSF_OUTSERT_LEFT_P0))
+//#define OUTSERT_SINGLE_SIGMA_FITTING_FUNC_RIGHT(x) max(0.5f,(float)(x*x*PSF_OUTSERT_RIGHT_P2-x*PSF_OUTSERT_RIGHT_P1+PSF_OUTSERT_RIGHT_P0))
+
+#define OUTSERT_SINGLE_SIGMA_FITTING_FUNC_LEFT(x) (CRYSTAL_THICKNESS_OUTSERT*sinf32(x)+CRYSTAL_WIDTH_OUTSERT*cosf32(x))*0.5f
+#define OUTSERT_SINGLE_SIGMA_FITTING_FUNC_RIGHT(x) (CRYSTAL_THICKNESS_OUTSERT*sinf32(x)+CRYSTAL_WIDTH_OUTSERT*cosf32(x))*0.5f
+
+//#define SHIFT_DOI_SCANNER(x) CRYSTAL_THICKNESS_SCANNER/2-CRYSTAL_WIDTH_SCANNER/2/tanf32(x)
+//#define SHIFT_DOI_OUTSERT(x) CRYSTAL_THICKNESS_OUTSERT/2-CRYSTAL_WIDTH_OUTSERT/2/tanf32(x)
+
+#define SHIFT_DOI_SCANNER(x) 0.0f
+#define SHIFT_DOI_OUTSERT(x) 0.0f
+
+//#define GET_COINC_SIGMA_FROM_SINGLE_SIGMA(sigma_src,sigma_dest) sigma_src*sigma_dest/sqrt(sigma_src*sigma_src+sigma_dest*sigma_dest)
+#define GET_COINC_SIGMA_FROM_SINGLE_SIGMA(sigma_src,sigma_dest) (sigma_src+sigma_dest)*0.5f
+
+
 #include <math.h>
 
 #include <cuda_runtime.h>
@@ -174,7 +234,7 @@ __global__ _fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_events
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -202,7 +262,7 @@ __global__ _fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_events
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_FWHM = _events_x_dominant_uvm->coeff;
+		ptr_sigma_left = _events_x_dominant_uvm->sigma_left;
 		
 		num_lines = _events_x_dominant_uvm->num_lines;
 		/*
@@ -240,7 +300,7 @@ __global__ _fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_events
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 			
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -329,7 +389,7 @@ __global__ _fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_events
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -358,7 +418,7 @@ __global__ _fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_events
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_FWHM = _events_y_dominant_uvm->coeff;
+		ptr_sigma_left = _events_y_dominant_uvm->sigma_left;
 	
 		num_lines = _events_y_dominant_uvm->num_lines;
 		/*
@@ -396,7 +456,7 @@ __global__ _fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_events
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 		
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -487,7 +547,7 @@ __global__ _b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
@@ -518,7 +578,7 @@ __global__ _b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_FWHM = _events_x_dominant_uvm->coeff;
+		ptr_sigma_left = _events_x_dominant_uvm->sigma_left;
 		
 		num_lines = _events_x_dominant_uvm->num_lines;
 		/*
@@ -556,7 +616,7 @@ __global__ _b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 			
 
 			//TOF_dist = ptr_TOF_dist[event_index];
@@ -655,7 +715,7 @@ __global__ _b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z; 
-	__shared__ float *ptr_FWHM; 
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right; 
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -684,7 +744,8 @@ __global__ _b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_FWHM= _events_y_dominant_uvm->coeff;
+		ptr_sigma_left = _events_y_dominant_uvm->sigma_left;
+;
 	
 		num_lines = _events_y_dominant_uvm->num_lines;
 		/*
@@ -721,7 +782,7 @@ __global__ _b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 		
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -791,12 +852,14 @@ __global__ _TOF_fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_ev
 	int event_index, current_slice, sub_slice;
 	float src_x, src_y, src_z, dest_x, dest_y, dest_z;
 	int coeff, c;
-	float current_FWHM,current_Alpha,current_FWHM_sigma_inv; //for PSF
-	int current_range;
+	float current_LOR_radial_distance,current_angle,current_sigma_left,current_sigma_right,
+		current_Amplitude_left,current_Amplitude_right,current_inverse_sigma_square_left,
+		current_inverse_sigma_square_right,inv_sin_for_delta_rho;//for PSF
+	int current_range_left,current_range_right; 
 	float dir_x, dir_y, dir_z;
 	float TOF_dist;
 	float dist_to_TOF_center;
-	float unit_dir_vector_y, unit_dir_vector_z;
+	float unit_dir_vector_y, unit_dir_vector_z, unit_2D_dir_x_square;
 	float projection_vector_y, projection_vector_z;
 	float dot_product;
 	float point_line_distance_square;
@@ -819,7 +882,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_ev
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -849,7 +912,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_ev
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_FWHM = _events_x_dominant_uvm->coeff;
+		ptr_sigma_left = _events_x_dominant_uvm->sigma_left;
 
 		ptr_TOF_dist = _events_x_dominant_uvm->TOF_dist;
 		num_lines = _events_x_dominant_uvm->num_lines;
@@ -879,14 +942,9 @@ __global__ _TOF_fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_ev
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
-
+			//coeff = ptr_LOR_angle[event_index];
 			TOF_dist = ptr_TOF_dist[event_index];
 
-			current_FWHM = ptr_FWHM[event_index];
-			current_FWHM_sigma_inv = 4 * log(2.0) / (current_FWHM*current_FWHM);
-		    current_Alpha =0.93943727 / current_FWHM;
-		    current_range=(int)current_FWHM;
 			//only do the computation if current event line intersects current slice
 			if (src_x<intersection_x - voxel_size_x && dest_x>intersection_x + voxel_size_x){
 				dir_x = dest_x - src_x;
@@ -895,10 +953,20 @@ __global__ _TOF_fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_ev
 				//dist_squared = __fmaf_rn (dir_z,dir_z, __fmaf_rn(dir_y,dir_y,__fmul_rn(dir_x,dir_x) ) );
 				dist_squared = dir_x*dir_x + dir_y*dir_y + dir_z*dir_z;
 				dist = __fsqrt_rn(dist_squared);
-
+				current_LOR_radial_distance = (1-2*signbit(src_y+dest_y))*__fsqrt_rn((src_x+dest_x)/2*(src_x+dest_x)/2+(src_y+dest_y)/2*(src_y+dest_y)/2);
+				inv_sin_for_delta_rho= __fsqrt_rn(src_x*src_x+src_y*src_y)/__fsqrt_rn( (src_x-dest_x)/2*(src_x-dest_x)/2 + (src_y-dest_y)/2*(src_y-dest_y)/2);			
+				current_sigma_left=SCANNER_SINGLE_SIGMA_FITTING_FUNC_LEFT(current_LOR_radial_distance);
+				current_sigma_right=SCANNER_SINGLE_SIGMA_FITTING_FUNC_RIGHT(current_LOR_radial_distance);
+				current_inverse_sigma_square_left = 1 / (2*current_sigma_left*current_sigma_left);
+				current_inverse_sigma_square_right = 1 / (2*current_sigma_right*current_sigma_right);
+		    	current_Amplitude_left =0.79788456f*1/(current_sigma_left+current_sigma_left);; //    1/sqrt(2pi) * 1/sigma
+				current_Amplitude_right =0.79788456f*1/(current_sigma_left+current_sigma_left); //    1/sqrt(2pi) * 1/sigma
+				TOF_dist = ptr_TOF_dist[event_index];
+				current_range_left = (int)(current_sigma_left*2.35);
+				current_range_right = (int)(current_sigma_right*2.35);
 				unit_dir_vector_y = dir_y / dist;
 				unit_dir_vector_z = dir_z / dist;
-
+				unit_2D_dir_x_square = dir_x*dir_x/(dir_x*dir_x+dir_y*dir_y);
 				//t keeps the ratio of the two segment of LOR segmented by the intersection plane
 				t = (intersection_x - src_x) / dir_x;
 				intersection_y = t*dir_y + src_y;
@@ -918,24 +986,40 @@ __global__ _TOF_fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_ev
 
 				forward_sum = 0.0f;
 
-				for (inslice_z = intersection_index_z - current_range; inslice_z <= intersection_index_z + current_range; inslice_z++){
-					for (inslice_y = intersection_index_y - current_range; inslice_y <= intersection_index_y + current_range; inslice_y++){
+				for (inslice_z = intersection_index_z - range2; inslice_z <= intersection_index_z + range2; inslice_z++){
+					
+					//left half TOR, but LOR is on voxel right so use right
+					for (inslice_y = intersection_index_y - range1; inslice_y < intersection_index_y; inslice_y++){
 						if (inslice_y >= 0 && inslice_y < num_y && inslice_z >= subslice_z0 && inslice_z < subslice_z1){
 							//projection_vector_y = (inslice_y - center_y - 0.5)*voxel_size_y - intersection_y;
 							projection_vector_y = inslice_y*voxel_size_y - H_CENTER - intersection_y;
 							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
 							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
-							dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
-							point_line_distance_square = projection_vector_y*projection_vector_y + projection_vector_z*projection_vector_z - dot_product*dot_product;
-
-							//increment = current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] * 0.569;
-							//increment = current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t * GLOBAL_SCALE;
-							increment = current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] * __expf(-point_line_distance_square*current_FWHM_sigma_inv) * current_Alpha * t * GLOBAL_SCALE;;
-
-							forward_sum += increment;
-							//forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] * 0.569 ;
-							//atomicAdd(&fp_value[event_index],weight);
+							//dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
+							point_line_distance_square = inv_sin_for_delta_rho*inv_sin_for_delta_rho
+														*(projection_vector_y*projection_vector_y*unit_2D_dir_x_square);
+							forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] 
+							* __expf(-point_line_distance_square*current_inverse_sigma_square_right) * current_Amplitude_right
+							*__expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+							* t * GLOBAL_SCALE;
 						}
+					}
+					//right half TOR, but LOR is on voxel left so use sigma_left
+					for (inslice_y = intersection_index_y; inslice_y <= intersection_index_y+range1; inslice_y++){
+						if (inslice_y >= 0 && inslice_y < num_y && inslice_z >= subslice_z0 && inslice_z < subslice_z1){
+							//projection_vector_y = (inslice_y - center_y - 0.5)*voxel_size_y - intersection_y;
+							projection_vector_y = inslice_y*voxel_size_y - H_CENTER - intersection_y;
+							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
+							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
+							//dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
+							point_line_distance_square = inv_sin_for_delta_rho*inv_sin_for_delta_rho*(projection_vector_y*projection_vector_y*unit_2D_dir_x_square);
+
+							//forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t * GLOBAL_SCALE;
+							//PSF
+							forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] 
+							* __expf(-point_line_distance_square*current_inverse_sigma_square_left) * current_Amplitude_left
+							*__expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+							* t * GLOBAL_SCALE;						}
 					}
 				}
 
@@ -946,6 +1030,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_ev
 			}//intersects current slice
 
 		}
+		__syncthreads();
 	}
 }
 
@@ -953,8 +1038,8 @@ void
 __global__ _TOF_fproj_lst_cuda_x_kernel_atten(float* image, float* fp_x, float* atten_per_event, LST_LORs *_events_x_dominant_uvm, PARAMETERS_IN_DEVICE_t* parameters_device){
 	int event_index, current_slice, sub_slice;
 	float src_x, src_y, src_z, dest_x, dest_y, dest_z;
-	float current_FWHM,current_Alpha,current_FWHM_sigma_inv;//for PSF
-	int current_range; 
+	float current_LOR_radial_distance,current_angle,current_sigma_left,current_sigma_right,current_Amplitude_left,current_Amplitude_right,current_inverse_sigma_square_left,current_inverse_sigma_square_right;//for PSF
+	int current_range_left,current_range_right; 
 	int coeff, c;
 	float dir_x, dir_y, dir_z;
 	float TOF_dist;
@@ -966,8 +1051,10 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_atten(float* image, float* fp_x, float* 
 	//float weight;
 	float dist, dist_squared;
 	float t;
+	float inv_sin_for_delta_rho;
 	float solid_angle_ratio;
 	float forward_sum, integral_mu;
+	float unit_2D_dir_x_square;
 	float intersection_x, intersection_y, intersection_z;
 	int  intersection_index_y, intersection_index_z;
 	int  inslice_y, inslice_z;
@@ -982,7 +1069,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_atten(float* image, float* fp_x, float* 
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -1013,8 +1100,8 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_atten(float* image, float* fp_x, float* 
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_FWHM = _events_x_dominant_uvm->coeff;
-
+		ptr_sigma_left = _events_x_dominant_uvm->sigma_left;
+		ptr_sigma_right = _events_x_dominant_uvm->sigma_right;
 		ptr_TOF_dist = _events_x_dominant_uvm->TOF_dist;
 		num_lines = _events_x_dominant_uvm->num_lines;
 		image_ptr = image;
@@ -1044,12 +1131,8 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_atten(float* image, float* fp_x, float* 
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			current_FWHM = ptr_FWHM[event_index];
-			current_FWHM_sigma_inv = 4 * log(2.0) / (current_FWHM*current_FWHM);
-		    current_Alpha =0.93943727 / current_FWHM; //2sqrt(log(2)/pi)/FWHM
-			TOF_dist = ptr_TOF_dist[event_index];
-
-			current_range = (int)current_FWHM;
+			current_sigma_left=ptr_sigma_left[event_index];
+			current_sigma_right=ptr_sigma_right[event_index];
 
 			//only do the computation if current event line intersects current slice
 			if (src_x<intersection_x - voxel_size_x && dest_x>intersection_x + voxel_size_x){
@@ -1059,55 +1142,65 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_atten(float* image, float* fp_x, float* 
 				//dist_squared = __fmaf_rn (dir_z,dir_z, __fmaf_rn(dir_y,dir_y,__fmul_rn(dir_x,dir_x) ) );
 				dist_squared = dir_x*dir_x + dir_y*dir_y + dir_z*dir_z;
 				dist = __fsqrt_rn(dist_squared);
-
+				current_inverse_sigma_square_left = 1 / (2*current_sigma_left*current_sigma_left);
+				current_inverse_sigma_square_right = 1 / (2*current_sigma_right*current_sigma_right);
+		    	current_Amplitude_left =0.79788456f*1/(current_sigma_left+current_sigma_left); //    1/sqrt(2pi) * 1/sigma
+				current_Amplitude_right =0.79788456f*1/(current_sigma_left+current_sigma_left); //    1/sqrt(2pi) * 1/sigma
+				TOF_dist = ptr_TOF_dist[event_index];
+				current_range_left = (int)(current_sigma_left*2.35);
+				current_range_right = (int)(current_sigma_right*2.35);
 				unit_dir_vector_y = dir_y / dist;
 				unit_dir_vector_z = dir_z / dist;
+				unit_2D_dir_x_square = dir_x*dir_x/(dir_x*dir_x+dir_y*dir_y);
 
 				//t keeps the ratio of the two segment of LOR segmented by the intersection plane
 				t = (intersection_x - src_x) / dir_x;
 				intersection_y = t*dir_y + src_y;
 				intersection_z = t*dir_z + src_z;
-
 				intersection_index_y = (int)ceilf(intersection_y / voxel_size_y) + center_y;
 				intersection_index_z = (int)ceilf(intersection_z / voxel_size_z) + center_z;
-
 				//compute the solid angle ratio w.r.t. the location of the intersection
-				solid_angle_ratio = 1 + 2 * fabsf(t - 0.5f);
-				//solid_angle_ratio = solid_angle_ratio*solid_angle_ratio;
-				solid_angle_ratio = 1 * dist*dist;
+				solid_angle_ratio = (float)CALCULATE_SOLID_ANGLE_RATIO(dist,t);
 
 				//compute the distance to the TOF center
 				dist_to_TOF_center = (0.5f - t)*dist - TOF_dist;
 				t = TOF_ALPHA * __expf(-dist_to_TOF_center*dist_to_TOF_center*TOF_INV);
-
 				integral_mu = atten_factor[event_index];
-
 				forward_sum = 0.0f;
-
-				for (inslice_z = intersection_index_z - current_range; inslice_z <= intersection_index_z + current_range; inslice_z++){
-					for (inslice_y = intersection_index_y - current_range; inslice_y <= intersection_index_y + current_range; inslice_y++){
+				for (inslice_z = intersection_index_z - range2; inslice_z <= intersection_index_z + range2; inslice_z++){
+					//voxel is at LOR right
+					for (inslice_y = intersection_index_y; inslice_y <= intersection_index_y+range1; inslice_y++){
+						if (inslice_y >= 0 && inslice_y < num_y && inslice_z >= subslice_z0 && inslice_z < subslice_z1){
+							//projection_vector_y = (inslice_y - center_y - 0.5)*voxel_size_y - intersection_y;
+							projection_vector_y = inslice_y*voxel_size_y - H_CENTER - intersection_y;
+							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
+							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
+							point_line_distance_square = projection_vector_y*projection_vector_y*unit_2D_dir_x_square;
+							forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] 
+							* __expf(-point_line_distance_square*current_inverse_sigma_square_right) * current_Amplitude_right
+							*__expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+							* t * GLOBAL_SCALE;		
+						}				
+					}
+					//voxel is at LOR left
+					for (inslice_y = intersection_index_y - range1; inslice_y < intersection_index_y; inslice_y++){
 						if (inslice_y >= 0 && inslice_y < num_y && inslice_z >= subslice_z0 && inslice_z < subslice_z1){
 							//projection_vector_y = (inslice_y - center_y - 0.5)*voxel_size_y - intersection_y;
 							projection_vector_y = inslice_y*voxel_size_y - H_CENTER - intersection_y;
 							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
 							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
 							dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
-							point_line_distance_square = projection_vector_y*projection_vector_y + projection_vector_z*projection_vector_z - dot_product*dot_product;
-
-							//forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t * GLOBAL_SCALE;
-							//PSF
-							forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] * __expf(-point_line_distance_square*current_FWHM_sigma_inv) * current_Alpha * t * GLOBAL_SCALE;
-							//atomicAdd(&fp_value[event_index],weight);
+							point_line_distance_square = (projection_vector_y*projection_vector_y*unit_2D_dir_x_square);
+							forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] 
+							* __expf(-point_line_distance_square*current_inverse_sigma_square_left) * current_Amplitude_left
+							*__expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+							* t * GLOBAL_SCALE;
 						}
 					}
 				}
-
 				atomicAdd(&fp_value[event_index], (forward_sum * __expf(-integral_mu))/solid_angle_ratio);
 				//atomicAdd(&coeff_value[event_index], coeff_s);
-
-
 			}//intersects current slice
-
 		}
 	}
 }
@@ -1146,7 +1239,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_scatter(float* image, float* fp_x, LST_L
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
 	__shared__ float *ptr_sc_coeff;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -1176,7 +1269,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_scatter(float* image, float* fp_x, LST_L
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_FWHM = _events_x_dominant_uvm->coeff;
+		ptr_sigma_left = _events_x_dominant_uvm->sigma_left;
 		ptr_sc_coeff = _events_x_dominant_uvm->sc_coeff;
 
 		ptr_TOF_dist = _events_x_dominant_uvm->TOF_dist;
@@ -1207,7 +1300,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_scatter(float* image, float* fp_x, LST_L
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 			sc_coeff = ptr_sc_coeff[event_index];
 
 			TOF_dist = ptr_TOF_dist[event_index];
@@ -1306,7 +1399,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_scatter_atten(float* image, float* fp_x,
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
 	__shared__ float *ptr_sc_coeff;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -1337,7 +1430,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_scatter_atten(float* image, float* fp_x,
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_FWHM = _events_x_dominant_uvm->coeff;
+		ptr_sigma_left = _events_x_dominant_uvm->sigma_left;
 		ptr_sc_coeff = _events_x_dominant_uvm->sc_coeff;
 
 		ptr_TOF_dist = _events_x_dominant_uvm->TOF_dist;
@@ -1369,7 +1462,7 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_scatter_atten(float* image, float* fp_x,
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 			sc_coeff = ptr_sc_coeff[event_index];
 
 			TOF_dist = ptr_TOF_dist[event_index];
@@ -1435,18 +1528,19 @@ __global__ _TOF_fproj_lst_cuda_x_kernel_scatter_atten(float* image, float* fp_x,
 }
 
 
-
 void
 __global__ _TOF_fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_events_y_dominant_uvm, PARAMETERS_IN_DEVICE_t* parameters_device){
 	int event_index, current_slice, sub_slice;
 	float src_x, src_y, src_z, dest_x, dest_y, dest_z;
-	float current_FWHM,current_Alpha,current_FWHM_sigma_inv; //for PSF
-	int current_range;
 	int coeff, c;
+	float current_LOR_radial_distance,current_angle,current_sigma_left,current_sigma_right,
+		current_Amplitude_left,current_Amplitude_right,current_inverse_sigma_square_left,
+		current_inverse_sigma_square_right, inv_sin_for_delta_rho;//for PSF
+	int current_range_left,current_range_right; 
 	float dir_x, dir_y, dir_z;
 	float TOF_dist;
 	float dist_to_TOF_center;
-	float unit_dir_vector_x, unit_dir_vector_z;
+	float unit_dir_vector_x, unit_dir_vector_z, unit_2D_dir_y_square;
 	float projection_vector_x, projection_vector_z;
 	float dot_product;
 	float point_line_distance_square;
@@ -1469,7 +1563,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_ev
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left,*ptr_sigma_right;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -1499,7 +1593,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_ev
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_FWHM = _events_y_dominant_uvm->coeff;
+		ptr_sigma_left = _events_y_dominant_uvm->sigma_left;
 		
 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
 		num_lines = _events_y_dominant_uvm->num_lines;
@@ -1530,10 +1624,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_ev
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			current_FWHM = ptr_FWHM[event_index];
-			current_FWHM_sigma_inv = 4 * log(2.0) / (current_FWHM*current_FWHM);
-		    current_Alpha =0.93943727 / current_FWHM;
-			current_range=(int)current_FWHM;		
+		
 			TOF_dist = ptr_TOF_dist[event_index];
 
 			
@@ -1546,10 +1637,20 @@ __global__ _TOF_fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_ev
 					//dist_squared = __fmaf_rn (dir_z,dir_z, __fmaf_rn(dir_y,dir_y,__fmul_rn(dir_x,dir_x) ) );
 					dist_squared = dir_x*dir_x + dir_y*dir_y + dir_z*dir_z;
 					dist = __fsqrt_rn(dist_squared);
-
+					current_LOR_radial_distance = (1-2*signbit(src_x+dest_x))*__fsqrt_rn((src_x+dest_x)/2*(src_x+dest_x)/2+(src_y+dest_y)/2*(src_y+dest_y)/2);
+					inv_sin_for_delta_rho= __fsqrt_rn(src_x*src_x+src_y*src_y)/__fsqrt_rn( (src_x-dest_x)/2*(src_x-dest_x)/2 + (src_y-dest_y)/2*(src_y-dest_y)/2);			
+					current_sigma_left=SCANNER_SINGLE_SIGMA_FITTING_FUNC_LEFT(current_LOR_radial_distance);
+					current_sigma_right=SCANNER_SINGLE_SIGMA_FITTING_FUNC_RIGHT(current_LOR_radial_distance);
+					current_inverse_sigma_square_left = 1 / (2*current_sigma_left*current_sigma_left);
+					current_inverse_sigma_square_right = 1 / (2*current_sigma_right*current_sigma_right);
+		    		current_Amplitude_left =0.79788456f*1/(current_sigma_left+current_sigma_left);; //    1/sqrt(2pi) * 1/sigma
+					current_Amplitude_right =0.79788456f*1/(current_sigma_left+current_sigma_left); //    1/sqrt(2pi) * 1/sigma
+					TOF_dist = ptr_TOF_dist[event_index];
+					current_range_left = (int)(current_sigma_left*2.35);
+					current_range_right = (int)(current_sigma_right*2.35);
 					unit_dir_vector_x = dir_x / dist;
 					unit_dir_vector_z = dir_z / dist;
-
+					unit_2D_dir_y_square = dir_y*dir_y/(dir_x*dir_x+dir_y*dir_y);
 					t = (intersection_y - src_y) / dir_y;
 					intersection_x = t*dir_x + src_x;
 					intersection_z = t*dir_z + src_z;
@@ -1559,8 +1660,8 @@ __global__ _TOF_fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_ev
 
 					//compute the solid angle ratio w.r.t. the location of the intersection
 					solid_angle_ratio = 1 + 2 * fabsf(t - 0.5f);
-					//solid_angle_ratio = solid_angle_ratio*solid_angle_ratio*dist*dist;
-					solid_angle_ratio = 1 * dist*dist;
+					solid_angle_ratio = solid_angle_ratio*solid_angle_ratio*dist*dist;
+					//solid_angle_ratio = 1 * dist*dist;
 
 
 					//compute the distance to the TOF center
@@ -1569,18 +1670,39 @@ __global__ _TOF_fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_ev
 
 					forward_sum = 0.0f;
 					
-					for (inslice_z = intersection_index_z - current_range; inslice_z <= intersection_index_z + current_range; inslice_z++){
-						for (inslice_x = intersection_index_x - current_range; inslice_x <= intersection_index_x + current_range; inslice_x++){
+					for (inslice_z = intersection_index_z - range2; inslice_z <= intersection_index_z + range2; inslice_z++){
+						for (inslice_x = intersection_index_x - range1; inslice_x < intersection_index_x ; inslice_x++){
 							if (inslice_x >= 0 && inslice_x < num_x && inslice_z >= subslice_z0 && inslice_z < subslice_z1){
 								//projection_vector_x = (inslice_x - center_x - 0.5)*voxel_size_x - intersection_x;
 								projection_vector_x = inslice_x*voxel_size_x - H_CENTER - intersection_x;
 								//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
 								projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
-								dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
-								point_line_distance_square = projection_vector_x*projection_vector_x + projection_vector_z*projection_vector_z - dot_product*dot_product;
-								//increment = current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA  * t * GLOBAL_SCALE;
-								increment = current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] * __expf(-point_line_distance_square*current_FWHM_sigma_inv) * current_Alpha * t * GLOBAL_SCALE;
-								forward_sum += increment;
+								//dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
+								point_line_distance_square = inv_sin_for_delta_rho*inv_sin_for_delta_rho
+															*(projection_vector_x*projection_vector_x *unit_2D_dir_y_square);
+								increment = current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] 
+											* __expf(-point_line_distance_square*current_inverse_sigma_square_right) * current_Amplitude_right 
+											* __expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+											* t * GLOBAL_SCALE;
+							    forward_sum += increment;
+								//forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] ;
+								//atomicAdd(&fp_value[event_index],weight);
+							}
+						}
+						for (inslice_x = intersection_index_x; inslice_x <= intersection_index_x + range1; inslice_x++){
+							if (inslice_x >= 0 && inslice_x < num_x && inslice_z >= subslice_z0 && inslice_z < subslice_z1){
+								//projection_vector_x = (inslice_x - center_x - 0.5)*voxel_size_x - intersection_x;
+								projection_vector_x = inslice_x*voxel_size_x - H_CENTER - intersection_x;
+								//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
+								projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
+								//dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
+								point_line_distance_square = inv_sin_for_delta_rho*inv_sin_for_delta_rho
+															*(projection_vector_x*projection_vector_x *unit_2D_dir_y_square);
+								increment = current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] 
+											* __expf(-point_line_distance_square*current_inverse_sigma_square_left) * current_Amplitude_left 
+											* __expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+											* t * GLOBAL_SCALE;
+							    forward_sum += increment;
 								//forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] ;
 								//atomicAdd(&fp_value[event_index],weight);
 
@@ -1593,15 +1715,189 @@ __global__ _TOF_fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_ev
 				}//intersects current slice
 			
 		}
+		__syncthreads();
 	}
 }
+
+
+// void
+// __global__ _TOF_fproj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_events_y_dominant_uvm, PARAMETERS_IN_DEVICE_t* parameters_device){
+// 	int event_index, current_slice, sub_slice;
+// 	float src_x, src_y, src_z, dest_x, dest_y, dest_z;
+// 	float current_LOR_radial_distance,current_angle,current_sigma_left,current_sigma_right,current_Amplitude_left,
+// 		current_Amplitude_right,current_inverse_sigma_square_left,
+// 		current_inverse_sigma_square_right,inv_sin_for_delta_rho;//for PSF
+// 	int current_range_left,current_range_right; 
+// 	int coeff, c;
+// 	float dir_x, dir_y, dir_z;
+// 	float TOF_dist;
+// 	float dist_to_TOF_center;
+// 	float unit_dir_vector_x, unit_dir_vector_z;
+// 	float projection_vector_x, projection_vector_z;
+// 	float dot_product;
+// 	float point_line_distance_square;
+// 	//float weight;
+// 	float dist, dist_squared;
+// 	float t;
+// 	float solid_angle_ratio;
+// 	float forward_sum, increment;
+// 	float intersection_x, intersection_y, intersection_z;
+// 	int intersection_index_x, intersection_index_z;
+// 	int inslice_x, inslice_z;
+// 	int subslice_z0, subslice_z1;
+// 	__shared__ float H_CENTER;
+// 	__shared__ float V_CENTER;
+// 	__shared__ float SIGMA_INV;
+// 	__shared__ float ALPHA;
+// 	__shared__ float current_slice_image[SIZE_SUB_SLICE_y];
+// 	__shared__ float voxel_size_x, voxel_size_y, voxel_size_z;
+// 	__shared__ int center_x, center_y, center_z;
+// 	__shared__ int range1, range2;
+// 	__shared__ int num_x, num_y, num_z;
+// 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
+// 	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
+// 	__shared__ int num_lines;
+// 	__shared__ float *image_ptr;
+// 	__shared__ float *fp_value;
+// 	__shared__ float TOF_INV, TOF_ALPHA;
+// 	if (threadIdx.x == 0){
+// 		voxel_size_x = parameters_device->X_SAMP;
+// 		voxel_size_y = parameters_device->Y_SAMP;
+// 		voxel_size_z = parameters_device->Z_SAMP;
+// 		center_x = parameters_device->X_INDEX_CENT;
+// 		center_y = parameters_device->Y_INDEX_CENT;
+// 		center_z = parameters_device->Z_INDEX_CENT;
+// 		num_x = parameters_device->NUM_X;
+// 		num_y = parameters_device->NUM_Y;
+// 		num_z = parameters_device->NUM_Z;
+// 		H_CENTER = parameters_device->H_CENTER_X;
+// 		V_CENTER = parameters_device->V_CENTER;
+// 		SIGMA_INV = parameters_device->FWHM_sigma_inv;
+// 		ALPHA = parameters_device->FWHM_alpha;
+// 		range1 = parameters_device->RANGE1;
+// 		range2 = parameters_device->RANGE2;
+// 		TOF_INV = parameters_device->TOF_inv;
+// 		TOF_ALPHA = parameters_device->TOF_alpha;
+
+// 		ptr_src_x = _events_y_dominant_uvm->src_x;
+// 		ptr_src_y = _events_y_dominant_uvm->src_y;
+// 		ptr_src_z = _events_y_dominant_uvm->src_z;
+// 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
+// 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
+// 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
+// 		ptr_sigma_left = _events_y_dominant_uvm->sigma_left;
+		
+// 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
+// 		num_lines = _events_y_dominant_uvm->num_lines;
+// 		image_ptr = image;
+// 		fp_value = fp_y;
+// 	}
+// 	__syncthreads();
+// 	current_slice = blockIdx.x;
+
+// 	intersection_y = (current_slice - center_y - 0.5)*voxel_size_y;
+// 	for (sub_slice = 0; sub_slice<NUM_SUB_SLICE_y; sub_slice++){
+// 		subslice_z0 = (num_z / NUM_SUB_SLICE_y)*sub_slice;
+// 		subslice_z1 = subslice_z0 + SUB_SLICE_HEIGHT_y;//(num_z/NUM_SUB_SLICE)*(sub_slice+1);
+// 		//load current image slice to shared memory
+// 		for (int i = threadIdx.x; i<SIZE_SUB_SLICE_y; i = i + blockDim.x){
+// 			current_slice_image[i] = image_ptr[num_x*num_y*(subslice_z0 + i / num_x) + num_x*current_slice + i%num_x];
+// 		}
+
+// 		__syncthreads();
+
+// 		c = 1;
+// 		//loop through all the lines and compute the backprojection to this current slice
+// 		for (event_index = threadIdx.x; event_index< num_lines; event_index = event_index + blockDim.x){
+// 			//get event line parameters
+// 			src_x = ptr_src_x[event_index];
+// 			src_y = ptr_src_y[event_index];
+// 			src_z = ptr_src_z[event_index];
+// 			dest_x = ptr_dest_x[event_index];
+// 			dest_y = ptr_dest_y[event_index];
+// 			dest_z = ptr_dest_z[event_index];		
+
+// 			//only do the computation if current event line intersects current slice
+// 			if (src_y<intersection_y - voxel_size_y && dest_y>intersection_y + voxel_size_y){
+// 				dir_x = dest_x - src_x;
+// 				dir_y = dest_y - src_y;
+// 				dir_z = dest_z - src_z;
+// 				//dist_squared = __fmaf_rn (dir_z,dir_z, __fmaf_rn(dir_y,dir_y,__fmul_rn(dir_x,dir_x) ) );
+// 				dist_squared = dir_x*dir_x + dir_y*dir_y + dir_z*dir_z;
+// 				dist = __fsqrt_rn(dist_squared);
+// 				current_LOR_radial_distance = (1-2*signbit(src_x+dest_x))*__fsqrt_rn((src_x+dest_x)/2*(src_x+dest_x)/2+(src_y+dest_y)/2*(src_y+dest_y)/2);
+// 				inv_sin_for_delta_rho= __fsqrt_rn(src_x*src_x+src_y*src_y)/__fsqrt_rn( (src_x-dest_x)/2*(src_x-dest_x)/2 + (src_y-dest_y)/2*(src_y-dest_y)/2);			
+// 				current_sigma_left=SCANNER_SINGLE_SIGMA_FITTING_FUNC_LEFT(current_LOR_radial_distance);
+// 				current_sigma_right=SCANNER_SINGLE_SIGMA_FITTING_FUNC_RIGHT(current_LOR_radial_distance);
+// 				current_inverse_sigma_square_left = 1 / (2*current_sigma_left*current_sigma_left);
+// 				current_inverse_sigma_square_right = 1 / (2*current_sigma_right*current_sigma_right);
+// 		    	current_Amplitude_left =0.79788456f*1/(current_sigma_left+current_sigma_left);; //    1/sqrt(2pi) * 1/sigma
+// 				current_Amplitude_right =0.79788456f*1/(current_sigma_left+current_sigma_left); //    1/sqrt(2pi) * 1/sigma
+// 				unit_dir_vector_x = dir_x / dist;
+// 				unit_dir_vector_z = dir_z / dist;
+
+// 				t = (intersection_y - src_y) / dir_y;
+// 				intersection_x = t*dir_x + src_x;
+// 				intersection_z = t*dir_z + src_z;
+
+// 				intersection_index_x = (int)ceilf(intersection_x / voxel_size_x) + center_x;
+// 				intersection_index_z = (int)ceilf(intersection_z / voxel_size_z) + center_z;
+
+// 					//compute the solid angle ratio w.r.t. the location of the intersection
+// 				solid_angle_ratio = 1 + 2 * fabsf(t - 0.5f);
+// 				//solid_angle_ratio = solid_angle_ratio*solid_angle_ratio*dist*dist;
+// 				solid_angle_ratio = 1 * dist*dist;
+
+// 				//compute the distance to the TOF center
+// 				dist_to_TOF_center = (0.5f - t)*dist - TOF_dist;
+// 				t = TOF_ALPHA * __expf(-dist_to_TOF_center*dist_to_TOF_center*TOF_INV);
+
+// 				forward_sum = 0.0f;
+					
+// 				for (inslice_z = intersection_index_z - range2; inslice_z <= intersection_index_z + range2; inslice_z++){
+// 					for (inslice_x = intersection_index_x; inslice_x <= intersection_index_x + range1; inslice_x++){
+// 						if (inslice_x >= 0 && inslice_x < num_x && inslice_z >= subslice_z0 && inslice_z < subslice_z1){
+// 							//projection_vector_x = (inslice_x - center_x - 0.5)*voxel_size_x - intersection_x;
+// 							projection_vector_x = inslice_x*voxel_size_x - H_CENTER - intersection_x;
+// 							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
+// 							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
+// 							dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
+// 							point_line_distance_square = inv_sin_for_delta_rho*inv_sin_for_delta_rho*(projection_vector_x*projection_vector_x + projection_vector_z*projection_vector_z - dot_product*dot_product);							//increment = current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA  * t * GLOBAL_SCALE;
+// 							forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_x] * __expf(-point_line_distance_square*current_inverse_sigma_square_left) * current_Amplitude_left* t * GLOBAL_SCALE;
+// 							//forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] ;
+// 							//atomicAdd(&fp_value[event_index],weight);
+// 							}
+// 					}
+// 					for (inslice_x = intersection_index_x - range1; inslice_x <= intersection_index_x ; inslice_x++){
+// 						if (inslice_x >= 0 && inslice_x < num_x && inslice_z >= subslice_z0 && inslice_z < subslice_z1){
+// 							//projection_vector_x = (inslice_x - center_x - 0.5)*voxel_size_x - intersection_x;
+// 							projection_vector_x = inslice_x*voxel_size_x - H_CENTER - intersection_x;
+// 							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
+// 							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
+// 							dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
+// 							point_line_distance_square = inv_sin_for_delta_rho*inv_sin_for_delta_rho*(projection_vector_x*projection_vector_x + projection_vector_z*projection_vector_z - dot_product*dot_product);							//increment = current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA  * t * GLOBAL_SCALE;
+// 							forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_x] * __expf(-point_line_distance_square*current_inverse_sigma_square_right) * current_Amplitude_right* t * GLOBAL_SCALE;
+// 							//forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] ;
+// 							//atomicAdd(&fp_value[event_index],weight);
+// 							}
+// 					}
+
+// 				}
+					
+// 				atomicAdd(&fp_value[event_index], forward_sum/solid_angle_ratio );
+// 					//atomicAdd(&fp_value[event_index], forward_sum);
+// 			}//intersects current slice
+		
+// 		}
+// 	}
+// }
 
 
 void
 __global__ _TOF_fproj_lst_cuda_y_kernel_atten(float* image, float* fp_y, float* atten_per_event, LST_LORs *_events_y_dominant_uvm, PARAMETERS_IN_DEVICE_t* parameters_device){
 	int event_index, current_slice, sub_slice;
 	float src_x, src_y, src_z, dest_x, dest_y, dest_z;
-	float current_FWHM,current_Alpha,current_FWHM_sigma_inv; //for PSF
+	float current_LOR_radial_distance,current_angle,current_sigma_left,current_sigma_right,current_Amplitude_left,current_Amplitude_right,current_inverse_sigma_square_left,current_inverse_sigma_square_right;//for PSF
 	int current_range;
 	int coeff, c;
 	float dir_x, dir_y, dir_z;
@@ -1610,7 +1906,9 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_atten(float* image, float* fp_y, float* 
 	float unit_dir_vector_x, unit_dir_vector_z;
 	float projection_vector_x, projection_vector_z;
 	float dot_product;
+	float increment;
 	float point_line_distance_square;
+	float unit_2D_dir_y_square;
 	//float weight;
 	float dist, dist_squared;
 	float t;
@@ -1630,7 +1928,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_atten(float* image, float* fp_y, float* 
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -1661,8 +1959,8 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_atten(float* image, float* fp_y, float* 
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_FWHM = _events_y_dominant_uvm->coeff;
-
+		ptr_sigma_left = _events_y_dominant_uvm->sigma_left;
+		ptr_sigma_right = _events_y_dominant_uvm->sigma_right;
 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
 		num_lines = _events_y_dominant_uvm->num_lines;
 		image_ptr = image;
@@ -1671,7 +1969,6 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_atten(float* image, float* fp_y, float* 
 	}
 	__syncthreads();
 	current_slice = blockIdx.x;
-
 	intersection_y = (current_slice - center_y - 0.5)*voxel_size_y;
 	for (sub_slice = 0; sub_slice<NUM_SUB_SLICE_y; sub_slice++){
 		subslice_z0 = (num_z / NUM_SUB_SLICE_y)*sub_slice;
@@ -1680,7 +1977,6 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_atten(float* image, float* fp_y, float* 
 		for (int i = threadIdx.x; i<SIZE_SUB_SLICE_y; i = i + blockDim.x){
 			current_slice_image[i] = image_ptr[num_x*num_y*(subslice_z0 + i / num_x) + num_x*current_slice + i%num_x];
 		}
-
 		__syncthreads();
 
 		c = 1;
@@ -1693,10 +1989,8 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_atten(float* image, float* fp_y, float* 
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			current_FWHM = ptr_FWHM[event_index];
-			current_FWHM_sigma_inv = 4 * log(2.0) / (current_FWHM*current_FWHM);
-		    current_Alpha =0.93943727 / current_FWHM;
-			current_range = (int)current_FWHM;
+			current_sigma_left=ptr_sigma_left[event_index];
+			current_sigma_right=ptr_sigma_right[event_index];
 			TOF_dist = ptr_TOF_dist[event_index];
 
 
@@ -1709,10 +2003,14 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_atten(float* image, float* fp_y, float* 
 				//dist_squared = __fmaf_rn (dir_z,dir_z, __fmaf_rn(dir_y,dir_y,__fmul_rn(dir_x,dir_x) ) );
 				dist_squared = dir_x*dir_x + dir_y*dir_y + dir_z*dir_z;
 				dist = __fsqrt_rn(dist_squared);
+				current_inverse_sigma_square_left = 1 / (2*current_sigma_left*current_sigma_left);
+				current_inverse_sigma_square_right = 1 / (2*current_sigma_right*current_sigma_right);
+		    	current_Amplitude_left =0.79788456f*1/(current_sigma_left+current_sigma_left);; //    1/sqrt(2pi) * 1/sigma
+				current_Amplitude_right =0.79788456f*1/(current_sigma_left+current_sigma_left); //    1/sqrt(2pi) * 1/sigma
 
 				unit_dir_vector_x = dir_x / dist;
 				unit_dir_vector_z = dir_z / dist;
-
+				unit_2D_dir_y_square = (dir_y*dir_y)/(dir_y*dir_y+dir_x*dir_x);
 				t = (intersection_y - src_y) / dir_y;
 				intersection_x = t*dir_x + src_x;
 				intersection_z = t*dir_z + src_z;
@@ -1721,10 +2019,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_atten(float* image, float* fp_y, float* 
 				intersection_index_z = (int)ceilf(intersection_z / voxel_size_z) + center_z;
 
 				//compute the solid angle ratio w.r.t. the location of the intersection
-				solid_angle_ratio = 1 + 2 * fabsf(t - 0.5f);
-				//solid_angle_ratio = solid_angle_ratio*solid_angle_ratio;
-				solid_angle_ratio = 1 * dist*dist;
-
+				solid_angle_ratio = (float)CALCULATE_SOLID_ANGLE_RATIO(dist,t);
 
 				//compute the distance to the TOF center
 				dist_to_TOF_center = (0.5f - t)*dist - TOF_dist;
@@ -1734,28 +2029,48 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_atten(float* image, float* fp_y, float* 
 
 				forward_sum = 0.0f;
 
-				for (inslice_z = intersection_index_z - current_range; inslice_z <= intersection_index_z + current_range; inslice_z++){
-					for (inslice_x = intersection_index_x - current_range; inslice_x <= intersection_index_x + current_range; inslice_x++){
-						if (inslice_x >= 0 && inslice_x < num_x && inslice_z >= subslice_z0 && inslice_z < subslice_z1){
-							//projection_vector_x = (inslice_x - center_x - 0.5)*voxel_size_x - intersection_x;
-							projection_vector_x = inslice_x*voxel_size_x - H_CENTER - intersection_x;
-							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
-							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
-							dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
-							point_line_distance_square = projection_vector_x*projection_vector_x + projection_vector_z*projection_vector_z - dot_product*dot_product;
+				for (inslice_z = intersection_index_z - range2; inslice_z <= intersection_index_z + range2; inslice_z++){
+						for (inslice_x = intersection_index_x - range1; inslice_x < intersection_index_x ; inslice_x++){
+							if (inslice_x >= 0 && inslice_x < num_x && inslice_z >= subslice_z0 && inslice_z < subslice_z1){
+								//projection_vector_x = (inslice_x - center_x - 0.5)*voxel_size_x - intersection_x;
+								projection_vector_x = inslice_x*voxel_size_x - H_CENTER - intersection_x;
+								//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
+								projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
 
-							forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] * __expf(-point_line_distance_square*current_FWHM_sigma_inv) * current_Alpha  * t * GLOBAL_SCALE;
+								point_line_distance_square =(projection_vector_x*projection_vector_x*unit_2D_dir_y_square);
+								increment = current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] 
+											* __expf(-point_line_distance_square*current_inverse_sigma_square_left) * current_Amplitude_left 
+											* __expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+											* t * GLOBAL_SCALE;
+							    forward_sum += increment;
+								//forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] ;
+								//atomicAdd(&fp_value[event_index],weight);
+							}
+						}
+						for (inslice_x = intersection_index_x; inslice_x <= intersection_index_x + range1; inslice_x++){
+							if (inslice_x >= 0 && inslice_x < num_x && inslice_z >= subslice_z0 && inslice_z < subslice_z1){
+								//projection_vector_x = (inslice_x - center_x - 0.5)*voxel_size_x - intersection_x;
+								projection_vector_x = inslice_x*voxel_size_x - H_CENTER - intersection_x;
+								//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
+								projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
+								point_line_distance_square = (projection_vector_x*projection_vector_x *unit_2D_dir_y_square);
+								increment = current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] 
+											* __expf(-point_line_distance_square*current_inverse_sigma_square_right) * current_Amplitude_right 
+											* __expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+											* t * GLOBAL_SCALE;
+							    forward_sum += increment;
+								//forward_sum += current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x] ;
+								//atomicAdd(&fp_value[event_index],weight);
 
-							//atomicAdd(&fp_value[event_index],weight);
-
+							}
 						}
 					}
-				}
 
 				atomicAdd(&fp_value[event_index], (forward_sum * __expf(-integral_mu) )/ solid_angle_ratio);
 			}//intersects current slice
-
 		}
+		__syncthreads();
+
 	}
 }
 
@@ -1792,7 +2107,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_scatter(float* image, float* fp_y, LST_L
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	__shared__ float *ptr_sc_coeff;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -1823,7 +2138,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_scatter(float* image, float* fp_y, LST_L
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_FWHM = _events_y_dominant_uvm->coeff;
+		ptr_sigma_left = _events_y_dominant_uvm->sigma_left;
 		ptr_sc_coeff = _events_y_dominant_uvm->sc_coeff;
 
 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
@@ -1855,7 +2170,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_scatter(float* image, float* fp_y, LST_L
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 			sc_coeff = ptr_sc_coeff[event_index];
 
 			TOF_dist = ptr_TOF_dist[event_index];
@@ -1916,6 +2231,8 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_scatter(float* image, float* fp_y, LST_L
 			}//intersects current slice
 			//atomicAdd(&fp_value[event_index], sc_coeff);
 		}
+		__syncthreads();
+
 	}
 }
 
@@ -1951,7 +2268,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_scatter_atten(float* image, float* fp_y,
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	__shared__ float *ptr_sc_coeff;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -1983,7 +2300,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_scatter_atten(float* image, float* fp_y,
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_FWHM = _events_y_dominant_uvm->coeff;
+		ptr_sigma_left = _events_y_dominant_uvm->sigma_left;
 		ptr_sc_coeff = _events_y_dominant_uvm->sc_coeff;
 
 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
@@ -2017,7 +2334,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_scatter_atten(float* image, float* fp_y,
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 			sc_coeff = ptr_sc_coeff[event_index];
 
 			TOF_dist = ptr_TOF_dist[event_index];
@@ -2081,7 +2398,7 @@ __global__ _TOF_fproj_lst_cuda_y_kernel_scatter_atten(float* image, float* fp_y,
 			}//intersects current slice
 
 		}
-
+		__syncthreads();
 	}
 }
 
@@ -2090,13 +2407,14 @@ void
 __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_events_x_dominant_uvm, PARAMETERS_IN_DEVICE_t* parameters_device){
 	int event_index, current_slice, sub_slice;
 	float src_x, src_y, src_z, dest_x, dest_y, dest_z;
-	float current_FWHM,current_Alpha,current_FWHM_sigma_inv; //for PSF
-	int current_range;
+	float current_LOR_radial_distance,current_angle,current_sigma_left,current_sigma_right,current_Amplitude_left,
+		current_Amplitude_right,current_inverse_sigma_square_left,current_inverse_sigma_square_right,inv_sin_for_delta_rho;//for PSF
+	int current_range_left,current_range_right; 
     int coeff, c;
 	float dir_x, dir_y, dir_z;
 	float TOF_dist;
 	float dist_to_TOF_center;
-	float unit_dir_vector_y, unit_dir_vector_z;
+	float unit_dir_vector_y, unit_dir_vector_z, unit_2D_dir_x_square;
 	float projection_vector_y, projection_vector_z;
 	float dot_product;
 	float point_line_distance_square;
@@ -2119,7 +2437,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LO
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -2150,7 +2468,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LO
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
 		ptr_TOF_dist = _events_x_dominant_uvm->TOF_dist;
-		ptr_FWHM = _events_x_dominant_uvm->coeff;
+		ptr_sigma_left = _events_x_dominant_uvm->sigma_left;
 	
         num_lines = _events_x_dominant_uvm->num_lines;
 		image_ptr = image;
@@ -2176,11 +2494,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LO
 			src_z = ptr_src_z[event_index];
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
-			dest_z = ptr_dest_z[event_index];
-			current_FWHM = ptr_FWHM[event_index];
-			current_FWHM_sigma_inv = 4 * log(2.0) / (current_FWHM*current_FWHM);
-		    current_Alpha =0.93943727 / current_FWHM;
-		    current_range=(int)current_FWHM;			
+			dest_z = ptr_dest_z[event_index];		
 			TOF_dist = ptr_TOF_dist[event_index];
 
 			//only do the computation if current event line intersects current slice
@@ -2191,15 +2505,25 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LO
 				//dist_squared = __fmaf_rn (dir_z,dir_z, __fmaf_rn(dir_y,dir_y,__fmul_rn(dir_x,dir_x) ) );
 				dist_squared = dir_x*dir_x + dir_y*dir_y + dir_z*dir_z;
 				dist = __fsqrt_rn(dist_squared);
-
+				current_LOR_radial_distance = (1-2*signbit(src_y+dest_y))*__fsqrt_rn((src_x+dest_x)/2*(src_x+dest_x)/2+(src_y+dest_y)/2*(src_y+dest_y)/2);
+				inv_sin_for_delta_rho= __fsqrt_rn(src_x*src_x+src_y*src_y)/__fsqrt_rn( (src_x-dest_x)/2*(src_x-dest_x)/2 + (src_y-dest_y)/2*(src_y-dest_y)/2);			
+				current_sigma_left=SCANNER_SINGLE_SIGMA_FITTING_FUNC_LEFT(current_LOR_radial_distance);
+				current_sigma_right=SCANNER_SINGLE_SIGMA_FITTING_FUNC_RIGHT(current_LOR_radial_distance);
+				current_inverse_sigma_square_left = 1 / (2*current_sigma_left*current_sigma_left);
+				current_inverse_sigma_square_right = 1 / (2*current_sigma_right*current_sigma_right);
+		    	current_Amplitude_left =0.79788456f*1/(current_sigma_left+current_sigma_left);; //    1/sqrt(2pi) * 1/sigma
+				current_Amplitude_right =0.79788456f*1/(current_sigma_left+current_sigma_left); //    1/sqrt(2pi) * 1/sigma
+				TOF_dist = ptr_TOF_dist[event_index];
+				current_range_left = (int)(current_sigma_left*2.35);
+				current_range_right = (int)(current_sigma_right*2.35);
 				unit_dir_vector_y = dir_y / dist;
 				unit_dir_vector_z = dir_z / dist;
-
+				unit_2D_dir_x_square = dir_x*dir_x / ( dir_y*dir_y+ dir_x*dir_x);
 				t = (intersection_x - src_x) / dir_x;
 				intersection_y = t*dir_y + src_y;
 				intersection_z = t*dir_z + src_z;
 
-				if (fp_value[event_index] == 0)
+				if (fp_value[event_index] <SMALLEST_ALLOWED)
 					backward_ratio = 0;
 				else
 					backward_ratio = __frcp_rn(fp_value[event_index]);
@@ -2210,26 +2534,42 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel(float* image, float* fp_x, LST_LO
 				intersection_index_z = (int)ceilf(intersection_z / voxel_size_z) + center_z;
 
 				//compute the solid angle ratio w.r.t. the location of the intersection
-				solid_angle_ratio = 1 + 2 * fabsf(t - 0.5f);
-				//solid_angle_ratio = solid_angle_ratio*solid_angle_ratio*dist*dist;
-				solid_angle_ratio = 1 * dist*dist;
+				solid_angle_ratio = CALCULATE_SOLID_ANGLE_RATIO(dist,t);
 
 
 				//compute the distance to the TOF center
 				dist_to_TOF_center = (0.5f - t)*dist - TOF_dist;
 				t = TOF_ALPHA *__expf(-dist_to_TOF_center*dist_to_TOF_center*TOF_INV);
 				
-				for (inslice_z = intersection_index_z - current_range; inslice_z <= intersection_index_z + current_range; inslice_z++){
-					for (inslice_y = intersection_index_y - current_range; inslice_y <= intersection_index_y + current_range; inslice_y++){
+				for (inslice_z = intersection_index_z - range2; inslice_z <= intersection_index_z + range2; inslice_z++){
+					for (inslice_y = intersection_index_y ; inslice_y <= intersection_index_y + range1; inslice_y++){
 						if (inslice_y >= 0 && inslice_y<num_y && inslice_z >= subslice_z0 && inslice_z<subslice_z1){
 							//projection_vector_y = (inslice_y - center_y - 0.5)*voxel_size_y - intersection_y;
 							projection_vector_y = inslice_y*voxel_size_y - H_CENTER - intersection_y;
 							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
 							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
-							dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
-							point_line_distance_square = projection_vector_y*projection_vector_y + projection_vector_z*projection_vector_z - dot_product*dot_product;
-							weight = t * backward_ratio * __expf(-point_line_distance_square*current_FWHM_sigma_inv) * current_Alpha * GLOBAL_SCALE;
+							//dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
+							point_line_distance_square = inv_sin_for_delta_rho*inv_sin_for_delta_rho
+														*(projection_vector_y*projection_vector_y * unit_2D_dir_x_square);
+							weight = t * backward_ratio * __expf(-point_line_distance_square*current_inverse_sigma_square_left) * current_Amplitude_left 
+									 * 	__expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+									* GLOBAL_SCALE;
 							//weight = backward_ratio * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t;
+							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] ,( weight/solid_angle_ratio ));
+						}
+					}
+					for (inslice_y = intersection_index_y - range1; inslice_y < intersection_index_y ; inslice_y++){
+						if (inslice_y >= 0 && inslice_y<num_y && inslice_z >= subslice_z0 && inslice_z<subslice_z1){
+							//projection_vector_y = (inslice_y - center_y - 0.5)*voxel_size_y - intersection_y;
+							projection_vector_y = inslice_y*voxel_size_y - H_CENTER - intersection_y;
+							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
+							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
+							//dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
+							point_line_distance_square = inv_sin_for_delta_rho*inv_sin_for_delta_rho
+														*(projection_vector_y*projection_vector_y * unit_2D_dir_x_square);
+							weight = t * backward_ratio * __expf(-point_line_distance_square*current_inverse_sigma_square_right) * current_Amplitude_right 
+									 * 	__expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+									* GLOBAL_SCALE;
 							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] ,( weight/solid_angle_ratio ));
 						}
 					}
@@ -2253,12 +2593,12 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LO
 	int event_index, current_slice, sub_slice;
 	float src_x, src_y, src_z, dest_x, dest_y, dest_z;
 	int coeff, c;
-	int current_range;
-	float current_FWHM,current_Alpha,current_FWHM_sigma_inv; //for PSF
+	float current_LOR_radial_distance,current_angle,current_sigma_left,current_sigma_right,current_Amplitude_left,current_Amplitude_right,current_inverse_sigma_square_left,current_inverse_sigma_square_right, inv_sin_for_delta_rho;//for PSF
+	int current_range_left,current_range_right; 
 	float dir_x, dir_y, dir_z;
 	float TOF_dist;
 	float dist_to_TOF_center;
-	float unit_dir_vector_x, unit_dir_vector_z;
+	float unit_dir_vector_x, unit_dir_vector_z,unit_2D_dir_y_square;
 	float projection_vector_x, projection_vector_z;
 	float dot_product;
 	float point_line_distance_square;
@@ -2281,7 +2621,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LO
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -2311,7 +2651,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LO
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_FWHM = _events_y_dominant_uvm->coeff;
+		ptr_sigma_left = _events_y_dominant_uvm->sigma_left;
 		
 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
 		num_lines = _events_y_dominant_uvm->num_lines;
@@ -2338,12 +2678,6 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LO
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			current_FWHM = ptr_FWHM[event_index];
-			current_FWHM_sigma_inv = 4 * log(2.0) / (current_FWHM*current_FWHM);
-		    current_Alpha =0.93943727 / current_FWHM;
-		    current_range=current_FWHM;
-			TOF_dist = ptr_TOF_dist[event_index];
-
 			//only do the computation if current event line intersects current slice
 			if (src_y<intersection_y - voxel_size_y && dest_y>intersection_y + voxel_size_y){
 				dir_x = dest_x - src_x;
@@ -2352,15 +2686,25 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LO
 				//dist_squared = __fmaf_rn (dir_z,dir_z, __fmaf_rn(dir_y,dir_y,__fmul_rn(dir_x,dir_x) ) );
 				dist_squared = dir_x*dir_x + dir_y*dir_y + dir_z*dir_z;
 				dist = __fsqrt_rn(dist_squared);
-
+				current_LOR_radial_distance = (1-2*signbit(src_x+dest_x))*__fsqrt_rn((src_x+dest_x)/2*(src_x+dest_x)/2+(src_y+dest_y)/2*(src_y+dest_y)/2);
+				inv_sin_for_delta_rho= __fsqrt_rn(src_x*src_x+src_y*src_y)/__fsqrt_rn( (src_x-dest_x)/2*(src_x-dest_x)/2 + (src_y-dest_y)/2*(src_y-dest_y)/2);			
+				current_sigma_left=SCANNER_SINGLE_SIGMA_FITTING_FUNC_LEFT(current_LOR_radial_distance);
+				current_sigma_right=SCANNER_SINGLE_SIGMA_FITTING_FUNC_RIGHT(current_LOR_radial_distance);
+				current_inverse_sigma_square_left = 1 / (2*current_sigma_left*current_sigma_left);
+				current_inverse_sigma_square_right = 1 / (2*current_sigma_right*current_sigma_right);
+		    	current_Amplitude_left =0.79788456f*1/(current_sigma_left+current_sigma_left);; //    1/sqrt(2pi) * 1/sigma
+				current_Amplitude_right =0.79788456f*1/(current_sigma_left+current_sigma_left); //    1/sqrt(2pi) * 1/sigma
+				TOF_dist = ptr_TOF_dist[event_index];
+				current_range_left = (int)(current_sigma_left*2.35);
+				current_range_right = (int)(current_sigma_right*2.35);
 				unit_dir_vector_x = dir_x / dist;
 				unit_dir_vector_z = dir_z / dist;
-
+				unit_2D_dir_y_square=(dir_y*dir_y)/(dir_y*dir_y+dir_x*dir_x);
 				t = (intersection_y - src_y) / dir_y;
 				intersection_x = t*dir_x + src_x;
 				intersection_z = t*dir_z + src_z;
 
-				if (fp_value[event_index] == 0)
+				if (fp_value[event_index] <=SMALLEST_ALLOWED)
 					backward_ratio = 0;
 				else
 					backward_ratio = __frcp_rn(fp_value[event_index]);
@@ -2369,25 +2713,43 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel(float* image, float* fp_y, LST_LO
 				intersection_index_z = (int)ceilf(intersection_z / voxel_size_z) + center_z;
 
 				//compute the solid angle ratio w.r.t. the location of the intersection
-				solid_angle_ratio = 1 + 2 * fabsf(t - 0.5f);
-				//solid_angle_ratio = solid_angle_ratio*solid_angle_ratio*dist*dist;
-				solid_angle_ratio = 1 * dist*dist;
+				
+				solid_angle_ratio = CALCULATE_SOLID_ANGLE_RATIO(dist,t);
 
 
 				//compute the distance to the TOF center
 				dist_to_TOF_center = (0.5f - t)*dist - TOF_dist;
 				t = TOF_ALPHA * __expf(-dist_to_TOF_center*dist_to_TOF_center*TOF_INV);
 				
-				for (inslice_z = intersection_index_z - current_range; inslice_z <= intersection_index_z + current_range; inslice_z++){
-					for (inslice_x = intersection_index_x - current_range; inslice_x <= intersection_index_x + current_range; inslice_x++){
+				for (inslice_z = intersection_index_z - range1; inslice_z <= intersection_index_z + range1; inslice_z++){
+					for (inslice_x = intersection_index_x ; inslice_x <= intersection_index_x+range2; inslice_x++){
 						if (inslice_x >= 0 && inslice_x<num_x && inslice_z >= subslice_z0 && inslice_z<subslice_z1){
 							//projection_vector_x = (inslice_x - center_x - 0.5)*voxel_size_x - intersection_x;
 							projection_vector_x = inslice_x*voxel_size_x - H_CENTER - intersection_x;
 							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
 							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
-							dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
-							point_line_distance_square = projection_vector_x*projection_vector_x + projection_vector_z*projection_vector_z - dot_product*dot_product;
-							weight = t * backward_ratio * __expf(-point_line_distance_square*current_FWHM_sigma_inv) * current_Alpha * GLOBAL_SCALE;
+							//dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
+							point_line_distance_square = inv_sin_for_delta_rho*inv_sin_for_delta_rho*
+														projection_vector_x*projection_vector_x*unit_2D_dir_y_square ;
+							weight = t * backward_ratio * __expf(-point_line_distance_square*current_inverse_sigma_square_right) * current_Amplitude_right 
+									 * 	__expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+									* GLOBAL_SCALE;
+							//weight = backward_ratio * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t;
+							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x], (weight/solid_angle_ratio));
+						}
+					}
+					for (inslice_x = intersection_index_x-range2; inslice_x < intersection_index_x; inslice_x++){
+						if (inslice_x >= 0 && inslice_x<num_x && inslice_z >= subslice_z0 && inslice_z<subslice_z1){
+							//projection_vector_x = (inslice_x - center_x - 0.5)*voxel_size_x - intersection_x;
+							projection_vector_x = inslice_x*voxel_size_x - H_CENTER - intersection_x;
+							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
+							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
+							//dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
+							point_line_distance_square = inv_sin_for_delta_rho*inv_sin_for_delta_rho*
+														projection_vector_x*projection_vector_x*unit_2D_dir_y_square ;
+							weight = t * backward_ratio * __expf(-point_line_distance_square*current_inverse_sigma_square_left) * current_Amplitude_left 
+									 * 	__expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+									* GLOBAL_SCALE;							
 							//weight = backward_ratio * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t;
 							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x], (weight/solid_angle_ratio));
 						}
@@ -2411,13 +2773,14 @@ void
 __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_atten(float* image, float* fp_x, float* atten_per_event, LST_LORs *_events_x_dominant_uvm, PARAMETERS_IN_DEVICE_t* parameters_device){
 	int event_index, current_slice, sub_slice;
 	float src_x, src_y, src_z, dest_x, dest_y, dest_z;
-	float current_FWHM,current_Alpha,current_FWHM_sigma_inv; //for PSF
+	float current_sigma_left,current_sigma_right,current_Amplitude_left,
+		current_Amplitude_right,current_inverse_sigma_square_left,current_inverse_sigma_square_right;//for PSF
 	int current_range;
 	int coeff, c;
 	float dir_x, dir_y, dir_z;
 	float TOF_dist;
 	float dist_to_TOF_center;
-	float unit_dir_vector_y, unit_dir_vector_z;
+	float unit_dir_vector_y, unit_dir_vector_z,unit_2D_dir_x_square;
 	float projection_vector_y, projection_vector_z;
 	float dot_product;
 	float point_line_distance_square;
@@ -2440,7 +2803,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_atten(float* image, float* fp_x, 
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -2472,7 +2835,8 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_atten(float* image, float* fp_x, 
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
 		ptr_TOF_dist = _events_x_dominant_uvm->TOF_dist;
-		ptr_FWHM = _events_x_dominant_uvm->coeff;
+		ptr_sigma_left = _events_x_dominant_uvm->sigma_left;
+		ptr_sigma_right = _events_x_dominant_uvm->sigma_right;
 
 		num_lines = _events_x_dominant_uvm->num_lines;
 		image_ptr = image;
@@ -2500,11 +2864,14 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_atten(float* image, float* fp_x, 
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			current_FWHM = ptr_FWHM[event_index];
-			current_FWHM_sigma_inv = 4 * log(2.0) / (current_FWHM*current_FWHM);
-		    current_Alpha =0.93943727 / current_FWHM;
+			current_sigma_left=ptr_sigma_left[event_index];
+			current_sigma_right=ptr_sigma_right[event_index];
+			current_inverse_sigma_square_left = 1 / (2*current_sigma_left*current_sigma_left);
+			current_inverse_sigma_square_right = 1 / (2*current_sigma_right*current_sigma_right);
+		    current_Amplitude_left =0.79788456f*1/(current_sigma_left+current_sigma_right);; //    1/sqrt(2pi) * 1/sigma
+			current_Amplitude_right =0.79788456f*1/(current_sigma_left+current_sigma_right); //    1/sqrt(2pi) * 1/sigma
+
 			TOF_dist = ptr_TOF_dist[event_index];
-			current_range=current_FWHM;
 			//only do the computation if current event line intersects current slice
 			if (src_x<intersection_x - voxel_size_x && dest_x>intersection_x + voxel_size_x){
 				dir_x = dest_x - src_x;
@@ -2516,44 +2883,55 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_atten(float* image, float* fp_x, 
 
 				unit_dir_vector_y = dir_y / dist;
 				unit_dir_vector_z = dir_z / dist;
+				unit_2D_dir_x_square = dir_x*dir_x / ( dir_y*dir_y+ dir_x*dir_x);
 
 				t = (intersection_x - src_x) / dir_x;
 				intersection_y = t*dir_y + src_y;
 				intersection_z = t*dir_z + src_z;
 
-				if (fp_value[event_index] == 0)
+				//compute the solid angle ratio w.r.t. the location of the intersection
+				solid_angle_ratio = CALCULATE_SOLID_ANGLE_RATIO(dist,t);
+				if (fp_value[event_index] < SMALLEST_ALLOWED)
 					backward_ratio = 0;
 				else
 					backward_ratio = __frcp_rn(fp_value[event_index]);
 
 				integral_mu = atten_factor[event_index];
-
-
-
 				intersection_index_y = (int)ceilf(intersection_y / voxel_size_y) + center_y;
 				intersection_index_z = (int)ceilf(intersection_z / voxel_size_z) + center_z;
-
-				//compute the solid angle ratio w.r.t. the location of the intersection
-				solid_angle_ratio = 1 + 2 * fabsf(t - 0.5f);
-				//solid_angle_ratio = solid_angle_ratio*solid_angle_ratio;
-				solid_angle_ratio = 1 * dist*dist;
-
 
 				//compute the distance to the TOF center
 				dist_to_TOF_center = (0.5f - t)*dist - TOF_dist;
 				t = TOF_ALPHA * __expf(-dist_to_TOF_center*dist_to_TOF_center*TOF_INV);
 
-				for (inslice_z = intersection_index_z - current_range; inslice_z <= intersection_index_z + current_range; inslice_z++){
-					for (inslice_y = intersection_index_y - current_range; inslice_y <= intersection_index_y + current_range; inslice_y++){
+				for (inslice_z = intersection_index_z - range2; inslice_z <= intersection_index_z + range2; inslice_z++){
+					for (inslice_y = intersection_index_y ; inslice_y <= intersection_index_y + range1; inslice_y++){
 						if (inslice_y >= 0 && inslice_y<num_y && inslice_z >= subslice_z0 && inslice_z<subslice_z1){
 							//projection_vector_y = (inslice_y - center_y - 0.5)*voxel_size_y - intersection_y;
 							projection_vector_y = inslice_y*voxel_size_y - H_CENTER - intersection_y;
 							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
 							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
-							dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
-							point_line_distance_square = projection_vector_y*projection_vector_y + projection_vector_z*projection_vector_z - dot_product*dot_product;
-							weight = t * backward_ratio * __expf(-point_line_distance_square*current_FWHM_sigma_inv - integral_mu) * current_Alpha * GLOBAL_SCALE;
-							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y],(weight / solid_angle_ratio));
+							//dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
+							point_line_distance_square = projection_vector_y*projection_vector_y * unit_2D_dir_x_square;
+							weight = t * backward_ratio * __expf(-point_line_distance_square*current_inverse_sigma_square_right-integral_mu) 
+							* current_Amplitude_right * __expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+							* GLOBAL_SCALE;
+							//weight = backward_ratio * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t;
+							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] ,( weight/solid_angle_ratio ));
+						}
+					}
+					for (inslice_y = intersection_index_y - range1; inslice_y < intersection_index_y ; inslice_y++){
+						if (inslice_y >= 0 && inslice_y<num_y && inslice_z >= subslice_z0 && inslice_z<subslice_z1){
+							//projection_vector_y = (inslice_y - center_y - 0.5)*voxel_size_y - intersection_y;
+							projection_vector_y = inslice_y*voxel_size_y - H_CENTER - intersection_y;
+							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
+							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
+							//dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
+							point_line_distance_square = projection_vector_y*projection_vector_y * unit_2D_dir_x_square;
+							weight = t * backward_ratio * __expf(-point_line_distance_square*current_inverse_sigma_square_left-integral_mu) 
+									 * current_Amplitude_left * __expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+									* GLOBAL_SCALE;
+							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] ,( weight/solid_angle_ratio ));
 						}
 					}
 				}
@@ -2575,12 +2953,15 @@ void
 __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_atten(float* image, float* fp_y, float* atten_per_event, LST_LORs *_events_y_dominant_uvm, PARAMETERS_IN_DEVICE_t* parameters_device){
 	int event_index, current_slice, sub_slice;
 	float src_x, src_y, src_z, dest_x, dest_y, dest_z;
+	float current_sigma_left,current_sigma_right,current_Amplitude_left,
+		current_Amplitude_right,current_inverse_sigma_square_left,current_inverse_sigma_square_right;//for PSF
+
 	int coeff, c;
 	float dir_x, dir_y, dir_z;
 	float TOF_dist;
 	float dist_to_TOF_center;
 	float unit_dir_vector_x, unit_dir_vector_z;
-	float projection_vector_x, projection_vector_z;
+	float projection_vector_x, projection_vector_z,unit_2D_dir_y_square;
 	float dot_product;
 	float point_line_distance_square;
 	float weight;
@@ -2602,7 +2983,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_atten(float* image, float* fp_y, 
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value, *atten_factor;
@@ -2632,7 +3013,8 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_atten(float* image, float* fp_y, 
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_FWHM = _events_y_dominant_uvm->coeff;
+		ptr_sigma_left = _events_y_dominant_uvm->sigma_left;
+		ptr_sigma_right = _events_y_dominant_uvm->sigma_right;
 
 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
 		num_lines = _events_y_dominant_uvm->num_lines;
@@ -2660,8 +3042,12 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_atten(float* image, float* fp_y, 
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
-
+			current_sigma_left=ptr_sigma_left[event_index];
+			current_sigma_right=ptr_sigma_right[event_index];
+			current_inverse_sigma_square_left = 1 / (2*current_sigma_left*current_sigma_left);
+			current_inverse_sigma_square_right = 1 / (2*current_sigma_right*current_sigma_right);
+		    current_Amplitude_left =0.79788456f*1/(current_sigma_left+current_sigma_right);; //    1/sqrt(2pi) * 1/sigma
+			current_Amplitude_right =0.79788456f*1/(current_sigma_left+current_sigma_right); //    1/sqrt(2pi) * 1/sigma
 			TOF_dist = ptr_TOF_dist[event_index];
 
 			//only do the computation if current event line intersects current slice
@@ -2675,12 +3061,13 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_atten(float* image, float* fp_y, 
 
 				unit_dir_vector_x = dir_x / dist;
 				unit_dir_vector_z = dir_z / dist;
+				unit_2D_dir_y_square=(dir_y*dir_y)/(dir_y*dir_y+dir_x*dir_x);
 
 				t = (intersection_y - src_y) / dir_y;
 				intersection_x = t*dir_x + src_x;
 				intersection_z = t*dir_z + src_z;
 
-				if (fp_value[event_index] == 0)
+				if (fp_value[event_index] <= SMALLEST_ALLOWED)
 					backward_ratio = 0;
 				else
 					backward_ratio = __frcp_rn(fp_value[event_index]);
@@ -2689,27 +3076,43 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_atten(float* image, float* fp_y, 
 				intersection_index_x = (int)ceilf(intersection_x / voxel_size_x) + center_x;
 				intersection_index_z = (int)ceilf(intersection_z / voxel_size_z) + center_z;
 
-				//compute the solid angle ratio w.r.t. the location of the intersection
-				solid_angle_ratio = 1 + 2 * fabsf(t - 0.5f);
-				//solid_angle_ratio = solid_angle_ratio*solid_angle_ratio;
-				solid_angle_ratio = 1 * dist*dist;
+				solid_angle_ratio = CALCULATE_SOLID_ANGLE_RATIO(dist,t);
+
 
 
 				//compute the distance to the TOF center
 				dist_to_TOF_center = (0.5f - t)*dist - TOF_dist;
 				t = TOF_ALPHA * __expf(-dist_to_TOF_center*dist_to_TOF_center*TOF_INV);
 
-				for (inslice_z = intersection_index_z - range2; inslice_z <= intersection_index_z + range2; inslice_z++){
-					for (inslice_x = intersection_index_x - range1; inslice_x <= intersection_index_x + range1; inslice_x++){
+				for (inslice_z = intersection_index_z - range1; inslice_z <= intersection_index_z + range1; inslice_z++){
+					for (inslice_x = intersection_index_x - range2 ; inslice_x < intersection_index_x; inslice_x++){
 						if (inslice_x >= 0 && inslice_x<num_x && inslice_z >= subslice_z0 && inslice_z<subslice_z1){
 							//projection_vector_x = (inslice_x - center_x - 0.5)*voxel_size_x - intersection_x;
 							projection_vector_x = inslice_x*voxel_size_x - H_CENTER - intersection_x;
 							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
 							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
-							dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
-							point_line_distance_square = projection_vector_x*projection_vector_x + projection_vector_z*projection_vector_z - dot_product*dot_product;
-							weight = t * backward_ratio * __expf(-point_line_distance_square*SIGMA_INV - integral_mu) * ALPHA * GLOBAL_SCALE;
-							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x], (weight/ solid_angle_ratio));
+							//dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
+							point_line_distance_square = projection_vector_x*projection_vector_x*unit_2D_dir_y_square ;
+							weight = t * backward_ratio * __expf(-point_line_distance_square*current_inverse_sigma_square_left-integral_mu) * current_Amplitude_left 
+									 * 	__expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+									* GLOBAL_SCALE;
+							//weight = backward_ratio * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t;
+							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x], (weight/solid_angle_ratio));
+						}
+					}
+					for (inslice_x = intersection_index_x; inslice_x < intersection_index_x+range2; inslice_x++){
+						if (inslice_x >= 0 && inslice_x<num_x && inslice_z >= subslice_z0 && inslice_z<subslice_z1){
+							//projection_vector_x = (inslice_x - center_x - 0.5)*voxel_size_x - intersection_x;
+							projection_vector_x = inslice_x*voxel_size_x - H_CENTER - intersection_x;
+							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
+							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
+							//dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
+							point_line_distance_square = projection_vector_x*projection_vector_x*unit_2D_dir_y_square ;
+							weight = t * backward_ratio * __expf(-point_line_distance_square*current_inverse_sigma_square_right-integral_mu) * current_Amplitude_right 
+									 * 	__expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+									* GLOBAL_SCALE;							
+							//weight = backward_ratio * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t;
+							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x], (weight/solid_angle_ratio));
 						}
 					}
 				}
@@ -2761,7 +3164,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_scatter(float* image, float* fp_x
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -2793,7 +3196,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_scatter(float* image, float* fp_x
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
 		ptr_TOF_dist = _events_x_dominant_uvm->TOF_dist;
-		ptr_FWHM = _events_x_dominant_uvm->coeff;
+		ptr_sigma_left = _events_x_dominant_uvm->sigma_left;
 		ptr_scatter_coeff = _events_x_dominant_uvm->sc_coeff;
 
 		num_lines = _events_x_dominant_uvm->num_lines;
@@ -2821,7 +3224,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_scatter(float* image, float* fp_x
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 			sc_coeff = ptr_scatter_coeff[event_index];
 
 			TOF_dist = ptr_TOF_dist[event_index];
@@ -2925,7 +3328,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_scatter(float* image, float* fp_y
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -2956,7 +3359,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_scatter(float* image, float* fp_y
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_FWHM = _events_y_dominant_uvm->coeff;
+		ptr_sigma_left = _events_y_dominant_uvm->sigma_left;
 		ptr_scatter_coeff = _events_y_dominant_uvm->sc_coeff;
 
 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
@@ -2984,7 +3387,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_scatter(float* image, float* fp_y
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 			sc_coeff = ptr_scatter_coeff[event_index];
 			TOF_dist = ptr_TOF_dist[event_index];
 
@@ -3085,7 +3488,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_scatter_atten(float* image, float
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -3118,7 +3521,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_scatter_atten(float* image, float
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
 		ptr_TOF_dist = _events_x_dominant_uvm->TOF_dist;
-		ptr_FWHM = _events_x_dominant_uvm->coeff;
+		ptr_sigma_left = _events_x_dominant_uvm->sigma_left;
 		ptr_sc_coeff = _events_x_dominant_uvm->sc_coeff;
 
 		num_lines = _events_x_dominant_uvm->num_lines;
@@ -3147,7 +3550,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_x_kernel_scatter_atten(float* image, float
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 			sc_coeff = ptr_sc_coeff[event_index];
 
 			TOF_dist = ptr_TOF_dist[event_index];
@@ -3252,7 +3655,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_scatter_atten(float* image, float
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z, *ptr_TOF_dist;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
 	__shared__ float *fp_value;
@@ -3284,7 +3687,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_scatter_atten(float* image, float
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_FWHM = _events_y_dominant_uvm->coeff;
+		ptr_sigma_left = _events_y_dominant_uvm->sigma_left;
 		ptr_sc_coeff = _events_y_dominant_uvm->sc_coeff;
 
 		ptr_TOF_dist = _events_y_dominant_uvm->TOF_dist;
@@ -3313,7 +3716,7 @@ __global__ _TOF_b_ratio_proj_lst_cuda_y_kernel_scatter_atten(float* image, float
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 			sc_coeff = ptr_sc_coeff[event_index];
 
 			TOF_dist = ptr_TOF_dist[event_index];
@@ -3732,7 +4135,7 @@ __global__ _fproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -3760,7 +4163,7 @@ __global__ _fproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_FWHM = _events_x_dominant_uvm->coeff;
+		ptr_sigma_left = _events_x_dominant_uvm->sigma_left;
 	
 		num_lines = _events_x_dominant_uvm->num_lines;
 		/*
@@ -3799,7 +4202,7 @@ __global__ _fproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 		
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -3857,6 +4260,8 @@ __global__ _fproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 				atomicAdd(&fp_value[event_index], forward_sum );
 			}//intersects current slice
 		}
+		__syncthreads();
+
 	}
 }
 
@@ -3895,7 +4300,7 @@ __global__ _fproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -3924,7 +4329,7 @@ __global__ _fproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_FWHM = _events_y_dominant_uvm->coeff;
+		ptr_sigma_left = _events_y_dominant_uvm->sigma_left;
 		
 		num_lines = _events_y_dominant_uvm->num_lines;
 		/*
@@ -3963,7 +4368,7 @@ __global__ _fproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 			
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -4019,6 +4424,7 @@ __global__ _fproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 				atomicAdd(&fp_value[event_index], forward_sum);
 			}//intersects current slice
 		}
+		__syncthreads();
 	}
 }
 
@@ -4057,7 +4463,7 @@ __global__ _fproj_atten_lst_cuda_x_kernel_scatter(float* image, float* fp_x, LST
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -4085,7 +4491,7 @@ __global__ _fproj_atten_lst_cuda_x_kernel_scatter(float* image, float* fp_x, LST
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_FWHM = _events_x_dominant_uvm->coeff;
+		ptr_sigma_left = _events_x_dominant_uvm->sigma_left;
 
 		num_lines = _events_x_dominant_uvm->num_lines;
 		/*
@@ -4124,7 +4530,7 @@ __global__ _fproj_atten_lst_cuda_x_kernel_scatter(float* image, float* fp_x, LST
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -4182,6 +4588,7 @@ __global__ _fproj_atten_lst_cuda_x_kernel_scatter(float* image, float* fp_x, LST
 				atomicAdd(&fp_value[event_index], forward_sum);
 			}//intersects current slice
 		}
+		__syncthreads();
 	}
 }
 
@@ -4220,7 +4627,7 @@ __global__ _fproj_atten_lst_cuda_y_kernel_scatter(float* image, float* fp_y, LST
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -4249,7 +4656,7 @@ __global__ _fproj_atten_lst_cuda_y_kernel_scatter(float* image, float* fp_y, LST
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_FWHM = _events_y_dominant_uvm->coeff;
+		ptr_sigma_left = _events_y_dominant_uvm->sigma_left;
 
 		num_lines = _events_y_dominant_uvm->num_lines;
 		/*
@@ -4288,7 +4695,7 @@ __global__ _fproj_atten_lst_cuda_y_kernel_scatter(float* image, float* fp_y, LST
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -4344,6 +4751,7 @@ __global__ _fproj_atten_lst_cuda_y_kernel_scatter(float* image, float* fp_y, LST
 				atomicAdd(&fp_value[event_index], forward_sum);
 			}//intersects current slice
 		}
+		__syncthreads();
 	}
 }
 
@@ -4355,9 +4763,10 @@ __global__ _bproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 	float area, dist_from_center, geom;
 	float coeff;
 	float dir_x, dir_y, dir_z;
-	float current_FWHM,current_Alpha,current_FWHM_sigma_inv; //for PSF
+	float current_sigma_left,current_sigma_right,current_Amplitude_left,
+		current_Amplitude_right,current_inverse_sigma_square_left,current_inverse_sigma_square_right;//for PSF
 	float unit_dir_vector_y, unit_dir_vector_z;
-	float projection_vector_y, projection_vector_z;
+	float projection_vector_y, projection_vector_z,unit_2D_dir_x_square;
 	float dot_product;
 	float point_line_distance_square;
 	float weight;
@@ -4380,7 +4789,7 @@ __global__ _bproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -4409,7 +4818,8 @@ __global__ _bproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_FWHM = _events_x_dominant_uvm->coeff;
+		ptr_sigma_left = _events_x_dominant_uvm->sigma_left;
+		ptr_sigma_right = _events_x_dominant_uvm->sigma_right;
 		
 		num_lines = _events_x_dominant_uvm->num_lines;
 		/*
@@ -4449,43 +4859,37 @@ __global__ _bproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
-			
-			current_FWHM = ptr_FWHM[event_index];
-			current_FWHM_sigma_inv = 4 * log(2.0) / (current_FWHM*current_FWHM);
-		    current_Alpha =0.93943727 / current_FWHM;
-			
+			//coeff = ptr_LOR_angle[event_index];
+			current_sigma_left=ptr_sigma_left[event_index];
+			current_sigma_right=ptr_sigma_right[event_index];
+			current_inverse_sigma_square_left = 1 / (2*current_sigma_left*current_sigma_left);
+			current_inverse_sigma_square_right = 1 / (2*current_sigma_right*current_sigma_right);
+		    current_Amplitude_left =0.79788456f*1/(current_sigma_left+current_sigma_right);
+			current_Amplitude_right =0.79788456f*1/(current_sigma_left+current_sigma_right); 
 			//TOF_dist = ptr_TOF_dist[event_index];
-
 			//only do the computation if current event line intersects current slice
-			if (src_x<intersection_x - voxel_size_x && dest_x>intersection_x + voxel_size_x){
-
-				
+			if (src_x<intersection_x - voxel_size_x && dest_x>intersection_x + voxel_size_x){			
 				dir_x = dest_x - src_x;
 				dir_y = dest_y - src_y;
 				dir_z = dest_z - src_z;
 				//dist_squared = __fmaf_rn (dir_z,dir_z, __fmaf_rn(dir_y,dir_y,__fmul_rn(dir_x,dir_x) ) );
 				dist_squared = dir_x*dir_x + dir_y*dir_y + dir_z*dir_z;
 				dist = __fsqrt_rn(dist_squared);
-
 				area = 0.5 * fabsf(src_x * dest_y - dest_x * src_y);
 				dist_from_center = 2 * area / dist;
 				geom = (0.00000468*dist_from_center*dist_from_center - 0.0000112*dist_from_center + 0.9321);
 				unit_dir_vector_y = dir_y / dist;
 				unit_dir_vector_z = dir_z / dist;
-
+				unit_2D_dir_x_square = dir_x*dir_x / ( dir_y*dir_y+ dir_x*dir_x);
 				t = (intersection_x - src_x) / dir_x;
 				intersection_y = t*dir_y + src_y;
 				intersection_z = t*dir_z + src_z;
-
 				backward_ratio = fp_value[event_index];
-
 				intersection_index_y = (int)ceilf(intersection_y / voxel_size_y) + center_y;
 				intersection_index_z = (int)ceilf(intersection_z / voxel_size_z) + center_z;
-
 				//compute the solid angle ratio w.r.t. the location of the intersection
-				solid_angle_ratio = 1 + 2 * fabsf(t - 0.5f);
-				solid_angle_ratio = solid_angle_ratio*solid_angle_ratio*dist*dist;
+				solid_angle_ratio = CALCULATE_SOLID_ANGLE_RATIO(dist,t);
+
 				//solid_angle_ratio = 1 + 12 * (t - 0.5f) * (t - 0.5f);
 				//solid_angle_ratio = 1 + fabsf(24 * (t - 0.5f) * (t - 0.5f) * (t - 0.5f));
 				//solid_angle_ratio = 1*dist*dist;
@@ -4495,17 +4899,33 @@ __global__ _bproj_atten_lst_cuda_x_kernel(float* image, float* fp_x, LST_LORs *_
 				//t = TOF_ALPHA * __expf( - dist_to_TOF_center*dist_to_TOF_center*TOF_INV);
 
 				for (inslice_z = intersection_index_z - range2; inslice_z <= intersection_index_z + range2; inslice_z++){
-					for (inslice_y = intersection_index_y - range1; inslice_y <= intersection_index_y + range1; inslice_y++){
+					for (inslice_y = intersection_index_y ; inslice_y <= intersection_index_y + range1; inslice_y++){
 						if (inslice_y >= 0 && inslice_y<num_y && inslice_z >= subslice_z0 && inslice_z<subslice_z1){
 							//projection_vector_y = (inslice_y - center_y - 0.5)*voxel_size_y - intersection_y;
 							projection_vector_y = inslice_y*voxel_size_y - H_CENTER - intersection_y;
 							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
 							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
-							dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
-							point_line_distance_square = projection_vector_y*projection_vector_y + projection_vector_z*projection_vector_z - dot_product*dot_product;
-							//weight = t * backward_ratio * __expf( - point_line_distance_square*SIGMA_INV );
-							weight = __expf(-point_line_distance_square*current_FWHM_sigma_inv - backward_ratio) * current_Alpha * GLOBAL_SCALE ;
-							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y], weight / (solid_angle_ratio) );
+							//dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
+							point_line_distance_square = projection_vector_y*projection_vector_y * unit_2D_dir_x_square;
+							weight = __expf(-point_line_distance_square*current_inverse_sigma_square_left-backward_ratio) 
+							* current_Amplitude_left * 	__expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+							* GLOBAL_SCALE;
+							//weight = backward_ratio * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t;
+							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] ,( weight/solid_angle_ratio ));
+						}
+					}
+					for (inslice_y = intersection_index_y - range1; inslice_y < intersection_index_y ; inslice_y++){
+						if (inslice_y >= 0 && inslice_y<num_y && inslice_z >= subslice_z0 && inslice_z<subslice_z1){
+							//projection_vector_y = (inslice_y - center_y - 0.5)*voxel_size_y - intersection_y;
+							projection_vector_y = inslice_y*voxel_size_y - H_CENTER - intersection_y;
+							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
+							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
+							//dot_product = projection_vector_y*unit_dir_vector_y + projection_vector_z*unit_dir_vector_z;
+							point_line_distance_square = projection_vector_y*projection_vector_y * unit_2D_dir_x_square;
+							weight =  __expf(-point_line_distance_square*current_inverse_sigma_square_right-backward_ratio) 
+									 * current_Amplitude_right * __expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+									* GLOBAL_SCALE;
+							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_y + inslice_y] ,( weight/solid_angle_ratio ));
 						}
 					}
 				}
@@ -4530,9 +4950,12 @@ __global__ _bproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 	float area, dist_from_center, geom;
 	float coeff;
 	float dir_x, dir_y, dir_z;
+	float current_sigma_left,current_sigma_right,current_Amplitude_left,
+		current_Amplitude_right,current_inverse_sigma_square_left,current_inverse_sigma_square_right;//for PSF
+
 	//float TOF_dist;
 	//float dist_to_TOF_center;
-	float unit_dir_vector_x, unit_dir_vector_z;
+	float unit_dir_vector_x, unit_dir_vector_z,unit_2D_dir_y_square;
 	float projection_vector_x, projection_vector_z;
 	float dot_product;
 	float point_line_distance_square;
@@ -4556,7 +4979,7 @@ __global__ _bproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -4585,8 +5008,9 @@ __global__ _bproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_FWHM = _events_y_dominant_uvm->coeff;
-		
+		ptr_sigma_left = _events_y_dominant_uvm->sigma_left;
+		ptr_sigma_right = _events_y_dominant_uvm->sigma_right;
+
 		num_lines = _events_y_dominant_uvm->num_lines;
 		/*
 		ptr_src_x = device_event_y.src_x;
@@ -4623,7 +5047,14 @@ __global__ _bproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			current_sigma_left=ptr_sigma_left[event_index];
+			current_sigma_right=ptr_sigma_right[event_index];
+			current_inverse_sigma_square_left = 1 / (2*current_sigma_left*current_sigma_left);
+			current_inverse_sigma_square_right = 1 / (2*current_sigma_right*current_sigma_right);
+		    current_Amplitude_left =0.79788456f*1/(current_sigma_left+current_sigma_right);; //    1/sqrt(2pi) * 1/sigma
+			current_Amplitude_right =0.79788456f*1/(current_sigma_left+current_sigma_right); //    1/sqrt(2pi) * 1/sigma
+
+			//coeff = ptr_LOR_angle[event_index];
 		
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -4653,8 +5084,7 @@ __global__ _bproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 				intersection_index_z = (int)ceilf(intersection_z / voxel_size_z) + center_z;
 
 				//compute the solid angle ratio w.r.t. the location of the intersection
-				solid_angle_ratio = 1 + 2 * fabsf(t - 0.5f);
-				solid_angle_ratio = solid_angle_ratio*solid_angle_ratio*dist*dist;
+				solid_angle_ratio = CALCULATE_SOLID_ANGLE_RATIO(dist,t);
 
 				//solid_angle_ratio = 1 + 12 * (t - 0.5f) * (t - 0.5f);
 				//solid_angle_ratio = 1 + fabsf(24 * (t - 0.5f) * (t - 0.5f) * (t - 0.5f));
@@ -4664,18 +5094,37 @@ __global__ _bproj_atten_lst_cuda_y_kernel(float* image, float* fp_y, LST_LORs *_
 				//dist_to_TOF_center = (0.5f-t)*dist - TOF_dist;
 				//t = TOF_ALPHA * __expf( - dist_to_TOF_center*dist_to_TOF_center*TOF_INV);
 
-				for (inslice_z = intersection_index_z - range2; inslice_z <= intersection_index_z + range2; inslice_z++){
-					for (inslice_x = intersection_index_x - range1; inslice_x <= intersection_index_x + range1; inslice_x++){
+				for (inslice_z = intersection_index_z - range1; inslice_z <= intersection_index_z + range1; inslice_z++){
+					//voxel at LOR left
+					for (inslice_x = intersection_index_x - range2 ; inslice_x < intersection_index_x; inslice_x++){
 						if (inslice_x >= 0 && inslice_x<num_x && inslice_z >= subslice_z0 && inslice_z<subslice_z1){
 							//projection_vector_x = (inslice_x - center_x - 0.5)*voxel_size_x - intersection_x;
 							projection_vector_x = inslice_x*voxel_size_x - H_CENTER - intersection_x;
 							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
 							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
-							dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
-							point_line_distance_square = projection_vector_x*projection_vector_x + projection_vector_z*projection_vector_z - dot_product*dot_product;
-							//weight = t * backward_ratio * __expf( - point_line_distance_square*SIGMA_INV );
-							weight = __expf(-point_line_distance_square*SIGMA_INV - backward_ratio) * ALPHA  * GLOBAL_SCALE ;
-							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x], weight / (solid_angle_ratio));
+							//dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
+							point_line_distance_square = projection_vector_x*projection_vector_x*unit_2D_dir_y_square ;
+							weight = __expf(-point_line_distance_square*current_inverse_sigma_square_left-backward_ratio) * current_Amplitude_left 
+									* 	__expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+									* GLOBAL_SCALE;
+							//weight = backward_ratio * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t;
+							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x], (weight/solid_angle_ratio));
+						}
+					}
+					//voxel at LOR right
+					for (inslice_x = intersection_index_x; inslice_x < intersection_index_x+range2; inslice_x++){
+						if (inslice_x >= 0 && inslice_x<num_x && inslice_z >= subslice_z0 && inslice_z<subslice_z1){
+							//projection_vector_x = (inslice_x - center_x - 0.5)*voxel_size_x - intersection_x;
+							projection_vector_x = inslice_x*voxel_size_x - H_CENTER - intersection_x;
+							//projection_vector_z = (inslice_z - center_z - 0.5)*voxel_size_z - intersection_z;
+							projection_vector_z = inslice_z*voxel_size_z - V_CENTER - intersection_z;
+							//dot_product = projection_vector_x*unit_dir_vector_x + projection_vector_z*unit_dir_vector_z;
+							point_line_distance_square = projection_vector_x*projection_vector_x*unit_2D_dir_y_square ;
+							weight = __expf(-point_line_distance_square*current_inverse_sigma_square_right-backward_ratio) * current_Amplitude_right 
+									 * 	__expf(-projection_vector_z*projection_vector_z*INVERSE_SIGMA_Z_SQUARE) * AMPLITUDE_Z
+									* GLOBAL_SCALE;							
+							//weight = backward_ratio * __expf(-point_line_distance_square*SIGMA_INV) * ALPHA * t;
+							atomicAdd(&current_slice_image[(inslice_z - subslice_z0)*num_x + inslice_x], (weight/solid_angle_ratio));
 						}
 					}
 				}
@@ -4725,7 +5174,7 @@ __global__ _bproj_atten_lst_cuda_x_kernel_norm(float* image, float* fp_x, LST_LO
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_FWHM; 
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right; 
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -4755,7 +5204,7 @@ __global__ _bproj_atten_lst_cuda_x_kernel_norm(float* image, float* fp_x, LST_LO
 		ptr_dest_x = _events_x_dominant_uvm->dest_x;
 		ptr_dest_y = _events_x_dominant_uvm->dest_y;
 		ptr_dest_z = _events_x_dominant_uvm->dest_z;
-		ptr_FWHM = _events_x_dominant_uvm->coeff;
+		ptr_sigma_left = _events_x_dominant_uvm->sigma_left;
 
 		num_lines = _events_x_dominant_uvm->num_lines;
 		/*
@@ -4796,7 +5245,7 @@ __global__ _bproj_atten_lst_cuda_x_kernel_norm(float* image, float* fp_x, LST_LO
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -4898,7 +5347,7 @@ __global__ _bproj_atten_lst_cuda_y_kernel_norm(float* image, float* fp_y, LST_LO
 	__shared__ int range1, range2;
 	__shared__ int num_x, num_y, num_z;
 	__shared__ float *ptr_src_x, *ptr_src_y, *ptr_src_z, *ptr_dest_x, *ptr_dest_y, *ptr_dest_z;
-	__shared__ float *ptr_FWHM;
+	__shared__ float *ptr_sigma_left, *ptr_sigma_right;
 	//__shared__ float *ptr_TOF_dist;
 	__shared__ int num_lines;
 	__shared__ float *image_ptr;
@@ -4928,7 +5377,7 @@ __global__ _bproj_atten_lst_cuda_y_kernel_norm(float* image, float* fp_y, LST_LO
 		ptr_dest_x = _events_y_dominant_uvm->dest_x;
 		ptr_dest_y = _events_y_dominant_uvm->dest_y;
 		ptr_dest_z = _events_y_dominant_uvm->dest_z;
-		ptr_FWHM = _events_y_dominant_uvm->coeff;
+		ptr_sigma_left = _events_y_dominant_uvm->sigma_left;
 
 		num_lines = _events_y_dominant_uvm->num_lines;
 		/*
@@ -4967,7 +5416,7 @@ __global__ _bproj_atten_lst_cuda_y_kernel_norm(float* image, float* fp_y, LST_LO
 			dest_x = ptr_dest_x[event_index];
 			dest_y = ptr_dest_y[event_index];
 			dest_z = ptr_dest_z[event_index];
-			coeff = ptr_FWHM[event_index];
+			//coeff = ptr_LOR_angle[event_index];
 
 			//TOF_dist = ptr_TOF_dist[event_index];
 
@@ -5203,7 +5652,7 @@ cuda_em_recon::_Initialize_host_parameters(parameters_t p){
 	*/
 
 	parameters_host.RANGE1 = (int)(sqrt(2)*LOR_FWHM / parameters_host.X_SAMP+parameters_host.X_SAMP);
-	parameters_host.RANGE2 = (int)(sqrt(2)*LOR_FWHM / parameters_host.Z_SAMP+parameters_host.X_SAMP);
+	parameters_host.RANGE2 = (int)(sqrt(2)*LOR_FWHM / parameters_host.Z_SAMP+parameters_host.Z_SAMP);
 
 	parameters_host.RANGE_atten_1 = (int)(LOR_FWHM / parameters_host.X_SAMP);;
 	parameters_host.RANGE_atten_2 = (int)(LOR_FWHM / parameters_host.Z_SAMP);
@@ -5215,17 +5664,17 @@ void
 cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PET_movement& movement, PET_data& data, int start_index, int end_index, PET_coincidence_type pet_coinc_type, LST_LORs*& device_events_x_global_mem, LST_LORs*& device_events_y_global_mem, int& event_count_x_dominant, int& event_count_y_dominant, int device_ID){
 
 	float dir[3];
-	float dist, TOF_dist_temp;
+	float dist, TOF_dist_temp, dist_center_to_LOR;
 	int count;
 	float *src_x_x, *src_y_x, *src_z_x, *dest_x_x, *dest_y_x, *dest_z_x;
 	float *src_x_y, *src_y_y, *src_z_y, *dest_x_y, *dest_y_y, *dest_z_y;
 	float *src_x_z, *src_y_z, *src_z_z, *dest_x_z, *dest_y_z, *dest_z_z;
-	float *coeff_x, *coeff_y, *coeff_z;
+	float *coinc_sigma_left_x, *coinc_sigma_left_y, *coinc_sigma_right_x,*coinc_sigma_right_y;
 	float snorm_x, dnorm_x, centm_x, snorm_z, dnorm_z, centm_z, angle_s_x, angle_d_x, cos_s_x, cos_d_x;
-	float FWHM_s, FWHM_d; //FWHM of Detector response function of destination and sourse crystal
-	float alpha_x, alpha_y;
+	float single_sigma_src_left, single_sigma_src_right,single_sigma_dest_left, single_sigma_dest_right; //FWHM of Detector response function of destination and sourse crystal
+	float alpha_x, alpha_y, incident_angle_xy_src,incident_angle_xy_dest;
 	float snorm_y, dnorm_y, centm_y, angle_s_y, angle_d_y, angle_s_z, angle_d_z, cos_s_y, cos_d_y, cos_s_z, cos_d_z, coeff_s_z, coeff_d_z;
-
+	float dist_shift=0.0f;
 	int position;
 	box temp_s, temp_d;
 
@@ -5240,7 +5689,8 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 	dest_x_x = (float*)malloc(total_event_count*sizeof(float));
 	dest_y_x = (float*)malloc(total_event_count*sizeof(float));
 	dest_z_x = (float*)malloc(total_event_count*sizeof(float));
-	coeff_x = (float*)malloc(total_event_count*sizeof(float));
+	coinc_sigma_left_x = (float*)malloc(total_event_count*sizeof(float));
+	coinc_sigma_right_x = (float*)malloc(total_event_count*sizeof(float));
 
 	float *TOF_dist_x = (float*)malloc(total_event_count*sizeof(float));
 
@@ -5250,7 +5700,8 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 	dest_x_y = (float*)malloc(total_event_count*sizeof(float));
 	dest_y_y = (float*)malloc(total_event_count*sizeof(float));
 	dest_z_y = (float*)malloc(total_event_count*sizeof(float));
-	coeff_y = (float*)malloc(total_event_count*sizeof(float));
+	coinc_sigma_left_y = (float*)malloc(total_event_count*sizeof(float));
+	coinc_sigma_right_y = (float*)malloc(total_event_count*sizeof(float));
 
 	float *TOF_dist_y = (float*)malloc(total_event_count*sizeof(float));
 
@@ -5335,51 +5786,6 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 			temp_d.normal_1[2] = (detector.detector_crystal_list.at(current_lst_event.dest_id).geometry.normal_1[2]);
 		}
 		
-
-
-
-		
-
-
-
-	
-
-
-
-		//For IS type events, we consider applying insert movement before copying crystal coordinates to GPU
-		/*if (pet_coinc_type == IS){
-
-			if (current_lst_event.src_id >= 60800){
-				//apply movement to temp_s
-
-				TVec3<float> center(temp_s.center[0], temp_s.center[1], temp_s.center[2]);
-				position = movement.get_position_index_by_time(current_lst_event.t0);
-				//printf("Time %f corresponds to position %d\n", current_lst_event.t0, position);
-				TVec3<float> new_center = movement.get_transform_matrix(position).rotation*center;
-				new_center += movement.get_transform_matrix(position).translate;
-
-				temp_s.center[0] = new_center[0];
-				temp_s.center[1] = new_center[1];
-				temp_s.center[2] = new_center[2];
-
-			}
-			else{
-				//apply movement to temp_d
-
-				TVec3<float> center(temp_d.center[0], temp_d.center[1], temp_d.center[2]);
-				position = movement.get_position_index_by_time(current_lst_event.t0);
-				//printf("Time %f corresponds to position %d\n", current_lst_event.t0, position);
-				TVec3<float> new_center = movement.get_transform_matrix(position).rotation*center;
-				new_center += movement.get_transform_matrix(position).translate;
-
-				temp_d.center[0] = new_center[0];
-				temp_d.center[1] = new_center[1];
-				temp_d.center[2] = new_center[2];
-
-			}
-
-		}*/
-
 		TOF_dist_temp = current_lst_event.TOF_dist;
 		count = current_lst_event.normfact;
 
@@ -5395,280 +5801,262 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 		* Rewrtie this part into a dedicated function LOR_filter() to implement more complicated filtering strategy
 		*/
 		dist = sqrt(dir[0] * dir[0] + dir[1] * dir[1] + dir[2] * dir[2]);
+		dist_center_to_LOR = sqrt((d.center[0] + s.center[0])*(d.center[0] + s.center[0])/4 +(d.center[1] + s.center[1])*(d.center[1] + s.center[1])/4);
+		float sin_rho= sqrt(   (d.center[0] - s.center[0])* (d.center[0] - s.center[0])+  (d.center[1] - s.center[1])* (d.center[1] - s.center[1]) )/2.0f/R_SCANNER;
 		if (dist < 50)
 			continue;
 		/**********************************************************************************************************/
-		//distance from center to LOR
-		float dist_to_LOR = sqrt((d.center[0] + s.center[0])/2 * (d.center[0] + s.center[0])/2 + (d.center[1] + s.center[1])/2 * (d.center[1] + s.center[1])/2)/1.65;
-
 		if (fabs(dir[0]) >= fabs(dir[1])){
-
-
-			//horizontal , x predominant = 0
+			//horizontal , x predominant = 0				
+			dist_center_to_LOR *= (1-2*signbit(d.center[1] + s.center[1]));
 			//always make sure src has smaller x coordinate than dest
-
 			snorm_x = 0, dnorm_x = 0, centm_x = 0, angle_s_x = 0, angle_d_x = 0, cos_s_x = 0, cos_d_x = 0;
-			
-
-
-
-			if (s.center[0] <= d.center[0]){
-				src_x_x[event_count_x_dominant] = s.center[0];
-				src_y_x[event_count_x_dominant] = s.center[1];
-				src_z_x[event_count_x_dominant] = s.center[2];
-				dest_x_x[event_count_x_dominant] = d.center[0];
-				dest_y_x[event_count_x_dominant] = d.center[1];
-				dest_z_x[event_count_x_dominant] = d.center[2];
-				TOF_dist_x[event_count_x_dominant] = TOF_dist_temp;
-				
+			if (s.center[0] <= d.center[0]){			
 				snorm_x = sqrt(s.normal_1[0] * s.normal_1[0] + s.normal_1[1] * s.normal_1[1] + s.normal_1[2] * s.normal_1[2]);
 				dnorm_x = sqrt(d.normal_1[0] * d.normal_1[0] + d.normal_1[1] * d.normal_1[1] + d.normal_1[2] * d.normal_1[2]);
 				centm_x = sqrt((d.center[0] - s.center[0]) * (d.center[0] - s.center[0]) + (d.center[1] - s.center[1]) * (d.center[1] - s.center[1]) + (d.center[2] - s.center[2]) * (d.center[2] - s.center[2]));
 				cos_s_x = ((s.normal_1[0] * (d.center[0] - s.center[0])) + (s.normal_1[1] * (d.center[1] - s.center[1])) + (s.normal_1[2] * (d.center[2] - s.center[2]))) / (snorm_x * centm_x);
 				cos_d_x = ((d.normal_1[0] * (s.center[0] - d.center[0])) + (d.normal_1[1] * (s.center[1] - d.center[1])) + (d.normal_1[2] * (s.center[2] - d.center[2]))) / (dnorm_x * centm_x);
-				angle_s_x = acos((cos_s_x)) * 180 / M_PI;
-				angle_d_x = acos((cos_d_x)) * 180 / M_PI;
-
-
-
-
-				if ((angle_s_x >= 0 && angle_s_x <= 75) && (angle_d_x >= 0 && angle_d_x <= 75)){
-					alpha_x=atan2f32((d.center[1]+s.center[1])/2,(d.center[0]+s.center[0])/2);
-					if(event_count_x_dominant<50)
-						cout <<"d.center[1]:"<<d.center[1]<<"s.center[1]"<<s.center[1]<<"d.center[0]"<<d.center[0]<<"s.center[0]"<<s.center[0] <<"alpha_x:" <<alpha_x<<"\n";
+				cos_s_x = min(1.0f,cos_s_x);
+				cos_s_x = max(-1.0f,cos_s_x);
+				cos_d_x = min(1.0f,cos_d_x);
+				cos_d_x = max(-1.0f,cos_d_x);
+				angle_s_x = acos((cos_s_x));// * 180 / M_PI;
+				angle_d_x = acos((cos_d_x));// * 180 / M_PI;
+				incident_angle_xy_src = asin(abs( (d.center[0] - s.center[0])*s.normal_1[1]- (d.center[1] - s.center[1])* s.normal_1[0] )
+										/sqrt((d.center[0] - s.center[0]) * (d.center[0] - s.center[0]) + (d.center[1] - s.center[1]) * (d.center[1] - s.center[1]))
+										/sqrt(s.normal_1[0] * s.normal_1[0] + s.normal_1[1] * s.normal_1[1])); 
+				incident_angle_xy_dest = asin(abs( (d.center[0] - s.center[0])*d.normal_1[1]- (d.center[1] - s.center[1])* d.normal_1[0] )
+										/sqrt((d.center[0] - s.center[0]) * (d.center[0] - s.center[0]) + (d.center[1] - s.center[1]) * (d.center[1] - s.center[1]))
+										/sqrt(d.normal_1[0] * d.normal_1[0] + d.normal_1[1] * d.normal_1[1])); 
+				if ((angle_s_x >= 0 && angle_s_x <= MAX_ALLOWED_ANGLE_RAD) && (angle_d_x >= 0 && angle_d_x <= MAX_ALLOWED_ANGLE_RAD)){
+					if (current_lst_event.src_id < NUM_SCANNER_CRYSTALS){ //src is scanner crystal
+						dist_shift=max(0.0f,(float)SHIFT_DOI_SCANNER(angle_s_x));
+						single_sigma_src_left = SCANNER_SINGLE_SIGMA_FITTING_FUNC_LEFT(dist_center_to_LOR)*sin_rho;
+						single_sigma_src_right = SCANNER_SINGLE_SIGMA_FITTING_FUNC_RIGHT(dist_center_to_LOR)*sin_rho;
+					}
+					else{ 
+						dist_shift=max(0.0f,(float)SHIFT_DOI_OUTSERT(angle_s_x));
+						single_sigma_src_left = OUTSERT_SINGLE_SIGMA_FITTING_FUNC_LEFT(angle_s_x);
+						single_sigma_src_right = OUTSERT_SINGLE_SIGMA_FITTING_FUNC_RIGHT(angle_s_x);
+					}
+					src_x_x[event_count_x_dominant] = s.center[0] + dist_shift*s.normal_1[0];
+					src_y_x[event_count_x_dominant] = s.center[1] + dist_shift*s.normal_1[1];
+					src_z_x[event_count_x_dominant] = s.center[2];
+					if (current_lst_event.dest_id < NUM_SCANNER_CRYSTALS){
+						dist_shift=max(0.0f,(float)SHIFT_DOI_SCANNER(angle_d_x));
+						single_sigma_dest_left = SCANNER_SINGLE_SIGMA_FITTING_FUNC_LEFT(dist_center_to_LOR)*sin_rho;
+						single_sigma_dest_right = SCANNER_SINGLE_SIGMA_FITTING_FUNC_RIGHT(dist_center_to_LOR)*sin_rho;
+					}
+					else{ 
+						dist_shift=max(0.0f,(float)SHIFT_DOI_OUTSERT(angle_d_x));
+						single_sigma_dest_left = OUTSERT_SINGLE_SIGMA_FITTING_FUNC_LEFT(angle_d_x);
+						single_sigma_dest_right = OUTSERT_SINGLE_SIGMA_FITTING_FUNC_RIGHT(angle_d_x);
+					}
+					dest_x_x[event_count_x_dominant] = d.center[0] + dist_shift*d.normal_1[0];
+					dest_y_x[event_count_x_dominant] = d.center[1] + dist_shift*d.normal_1[1];
+					dest_z_x[event_count_x_dominant] = d.center[2];
+					TOF_dist_x[event_count_x_dominant] = TOF_dist_temp;
 				}
 				else{
 					continue;
 					alpha_x = 0;
 				}
-
-
-
-
-
-
 			}
 			else{
-				src_x_x[event_count_x_dominant] = d.center[0];
-				src_y_x[event_count_x_dominant] = d.center[1];
-				src_z_x[event_count_x_dominant] = d.center[2];
-				dest_x_x[event_count_x_dominant] = s.center[0];
-				dest_y_x[event_count_x_dominant] = s.center[1];
-				dest_z_x[event_count_x_dominant] = s.center[2];
-				
-				//NOTE!!!! When exchange the order of src and dest, be sure to flip the sign of TOF
-
-				TOF_dist_x[event_count_x_dominant] = -TOF_dist_temp;
-
 				snorm_x = sqrt(d.normal_1[0] * d.normal_1[0] + d.normal_1[1] * d.normal_1[1] + d.normal_1[2] * d.normal_1[2]);
 				dnorm_x = sqrt(s.normal_1[0] * s.normal_1[0] + s.normal_1[1] * s.normal_1[1] + s.normal_1[2] * s.normal_1[2]);
 				centm_x = sqrt((d.center[0] - s.center[0]) * (d.center[0] - s.center[0]) + (d.center[1] - s.center[1]) * (d.center[1] - s.center[1]) + (d.center[2] - s.center[2]) * (d.center[2] - s.center[2]));
 				cos_s_x = ((d.normal_1[0] * (s.center[0] - d.center[0])) + (d.normal_1[1] * (s.center[1] - d.center[1])) + (d.normal_1[2] * (s.center[2] - d.center[2]))) / (snorm_x * centm_x);
 				cos_d_x = ((s.normal_1[0] * (d.center[0] - s.center[0])) + (s.normal_1[1] * (d.center[1] - s.center[1])) + (s.normal_1[2] * (d.center[2] - s.center[2]))) / (dnorm_x * centm_x);
-				angle_s_x = acos((cos_s_x)) * 180 / M_PI;
-				angle_d_x = acos((cos_d_x)) * 180 / M_PI;
-
-				//angle_s_x = 0;
-				//angle_d_x = 0;
-
-				if ((angle_s_x >= 0 && angle_s_x <= 75) && (angle_d_x >= 0 && angle_d_x <= 75)){
-		          //if ((angle_s_x <= 1) || (angle_d_x <= 1)){
-
-					/*
-					if(current_lst_event.dest_id<NUM_SCANNER_CRYSTALS){
-						//FWHM_d=PSF_SCANNER_P0 + PSF_SCANNER_P1*angle_d_x+PSF_SCANNER_P2*angle_d_x*angle_d_x;
-						FWHM_d=CRYSTAL_THICKNESS_SCANNER/2*sin(angle_d_x/180*M_PI);
-					}
-					else{
-						//FWHM_d=PSF_OUTSERT_P0 + PSF_OUTSERT_P1*angle_d_x+PSF_OUTSERT_P2*angle_d_x*angle_d_x;
-						FWHM_d=CRYSTAL_THICKNESS_INSERT/2*sin(angle_d_x/180*M_PI);
-					}
-
-					if(current_lst_event.src_id<NUM_SCANNER_CRYSTALS){
-						//FWHM_s=PSF_SCANNER_P0 + PSF_SCANNER_P1*angle_s_x+PSF_SCANNER_P2*angle_s_x*angle_s_x;
-						FWHM_s=CRYSTAL_THICKNESS_SCANNER/2*sin(angle_s_x/180*M_PI);
-					}
-					else{
-						//FWHM_s=PSF_OUTSERT_P0 + PSF_OUTSERT_P1*angle_s_x+PSF_OUTSERT_P2*angle_s_x*angle_s_x;
-						FWHM_s=CRYSTAL_THICKNESS_INSERT/2*sin(angle_s_x/180*M_PI);
-					}
-					*/
-					//alpha_x = (float)sqrt(FWHM_d*FWHM_d+FWHM_s*FWHM_s)/2;
-					//alpha_x = max(alpha_x,CRYSTAL_WIDTH_SCANNER/2);
-					alpha_x=atan2f32((d.center[1]+s.center[1])/2,(d.center[0]+s.center[0])/2);
-
-					if(event_count_x_dominant<50)
-						cout <<"d.center[1]:"<<d.center[1]<<"s.center[1]"<<s.center[1]<<"d.center[0]"<<d.center[0]<<"s.center[0]"<<s.center[0] <<"alpha_x:" <<alpha_x<<"\n";
-
-
+				cos_s_x = min(1.0f,cos_s_x);
+				cos_s_x = max(-1.0f,cos_s_x);
+				cos_d_x = min(1.0f,cos_d_x);
+				cos_d_x = max(-1.0f,cos_d_x);
+				angle_s_x = acos((cos_s_x));// * 180 / M_PI;
+				angle_d_x = acos((cos_d_x));// * 180 / M_PI;
+				incident_angle_xy_src = asin(abs( (d.center[0] - s.center[0])*s.normal_1[1]- (d.center[1] - s.center[1])* s.normal_1[0] )
+										/sqrt((d.center[0] - s.center[0]) * (d.center[0] - s.center[0]) + (d.center[1] - s.center[1]) * (d.center[1] - s.center[1]))
+										/sqrt(s.normal_1[0] * s.normal_1[0] + s.normal_1[1] * s.normal_1[1])); 
+				incident_angle_xy_dest = asin(abs( (d.center[0] - s.center[0])*d.normal_1[1]- (d.center[1] - s.center[1])* d.normal_1[0] )
+										/sqrt((d.center[0] - s.center[0]) * (d.center[0] - s.center[0]) + (d.center[1] - s.center[1]) * (d.center[1] - s.center[1]))
+										/sqrt(d.normal_1[0] * d.normal_1[0] + d.normal_1[1] * d.normal_1[1])); 
+				if ((angle_s_x >= 0 && angle_s_x <= MAX_ALLOWED_ANGLE_RAD) && (angle_d_x >= 0 && angle_d_x <= MAX_ALLOWED_ANGLE_RAD)){
+						//NOTE!!!! When exchange the order of src and dest, be sure to flip the sign of TOF
+						
+						if (current_lst_event.dest_id < NUM_SCANNER_CRYSTALS){
+							dist_shift=max(0.0f,(float)SHIFT_DOI_SCANNER(incident_angle_xy_dest));
+							single_sigma_src_left = SCANNER_SINGLE_SIGMA_FITTING_FUNC_LEFT(dist_center_to_LOR)*sin_rho;
+							single_sigma_src_right = SCANNER_SINGLE_SIGMA_FITTING_FUNC_RIGHT(dist_center_to_LOR)*sin_rho;
+						}
+						else{
+							dist_shift=max(0.0f,(float)SHIFT_DOI_OUTSERT(incident_angle_xy_dest));
+							single_sigma_src_left = OUTSERT_SINGLE_SIGMA_FITTING_FUNC_LEFT(angle_d_x);
+							single_sigma_src_right = OUTSERT_SINGLE_SIGMA_FITTING_FUNC_RIGHT(angle_d_x);
+						}
+						src_x_x[event_count_x_dominant] = d.center[0] + dist_shift*d.normal_1[0];
+						src_y_x[event_count_x_dominant] = d.center[1] + dist_shift*d.normal_1[1];
+						src_z_x[event_count_x_dominant] = d.center[2];
+						if (current_lst_event.src_id < NUM_SCANNER_CRYSTALS){
+							dist_shift=max(0.0f,(float)SHIFT_DOI_SCANNER(incident_angle_xy_src));
+							single_sigma_dest_left = SCANNER_SINGLE_SIGMA_FITTING_FUNC_LEFT(dist_center_to_LOR)*sin_rho;
+							single_sigma_dest_right = SCANNER_SINGLE_SIGMA_FITTING_FUNC_RIGHT(dist_center_to_LOR)*sin_rho;
+						}
+						else{
+							dist_shift=max(0.0f,(float)SHIFT_DOI_OUTSERT(incident_angle_xy_src));
+							single_sigma_dest_left = OUTSERT_SINGLE_SIGMA_FITTING_FUNC_LEFT(angle_s_x);
+							single_sigma_dest_right = OUTSERT_SINGLE_SIGMA_FITTING_FUNC_RIGHT(angle_s_x);
+						}
+						dest_x_x[event_count_x_dominant] = s.center[0]+ dist_shift*s.normal_1[0];
+						dest_y_x[event_count_x_dominant] = s.center[1]+ dist_shift*s.normal_1[1];
+						dest_z_x[event_count_x_dominant] = s.center[2];
+						TOF_dist_x[event_count_x_dominant] = -TOF_dist_temp;
 				}
 				else{
 					continue;
-					alpha_x = 0;
-					
-					//cout << angle_s_x << " " << angle_d_x << " " << cos_s_x << " " << cos_d_x << " " << centm_x << "\n";
-					//cout << "#";
-
+					alpha_x = 0;				
 				}
 			}
-
-			coeff_x[event_count_x_dominant] = alpha_x ;
-
+			coinc_sigma_left_x[event_count_x_dominant] = GET_COINC_SIGMA_FROM_SINGLE_SIGMA(single_sigma_src_left,single_sigma_dest_left);
+			coinc_sigma_right_x[event_count_x_dominant] = GET_COINC_SIGMA_FROM_SINGLE_SIGMA(single_sigma_src_right,single_sigma_dest_right);
+			
+			if(event_count_x_dominant<50){
+					cout <<"d.center[1]:"<<d.center[1]<<", s.center[1]"<<s.center[1]<<", d.center[0]"<<d.center[0]<<", s.center[0]"<<s.center[0] <<endl; 
+					cout<<"angle_s_x:"<<angle_s_x<<",angle_d_x:"<<angle_d_x<<",dist_center_to_LOR:"<<dist_center_to_LOR<<endl;
+					cout <<"sigma_src_left:" <<single_sigma_src_left<<",sigma_src_right:"<<single_sigma_src_right<<",sigma_dest_left:" << single_sigma_dest_left <<",sigma_dest_right:"<<single_sigma_dest_right<<endl;
+					cout <<"coinc_sigma_left_x:" <<coinc_sigma_left_x[event_count_x_dominant]<<",coinc_sigma_right_x:"<<coinc_sigma_right_x[event_count_x_dominant]<<endl;
+					cout<<"---------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+			}
+			
 			event_count_x_dominant++;
-
-
-
-
 		}
 		else if (fabs(dir[1]) > fabs(dir[0])){
 			//vertical, predominant = 1
 			//always make sure src has smaller y coordinate than dest
-
-
+			dist_center_to_LOR *= (1-2*signbit(d.center[0] + s.center[0]));
 			snorm_y = 0, dnorm_y = 0, centm_y = 0, angle_s_y = 0, angle_d_y = 0, cos_s_y = 0, cos_d_y = 0;
 			
-
-			if (s.center[1] <= d.center[1]){
-				src_x_y[event_count_y_dominant] = s.center[0];
-				src_y_y[event_count_y_dominant] = s.center[1];
-				src_z_y[event_count_y_dominant] = s.center[2];
-				dest_x_y[event_count_y_dominant] = d.center[0];
-				dest_y_y[event_count_y_dominant] = d.center[1];
-				dest_z_y[event_count_y_dominant] = d.center[2];
-				TOF_dist_y[event_count_y_dominant] = TOF_dist_temp;
-				
-				snorm_y = sqrt(s.normal_1[0] * s.normal_1[0] + s.normal_1[1] * s.normal_1[1] + s.normal_1[2] * s.normal_1[2]);
-				dnorm_y = sqrt(d.normal_1[0] * d.normal_1[0] + d.normal_1[1] * d.normal_1[1] + d.normal_1[2] * d.normal_1[2]);
-				centm_y = sqrt((d.center[0] - s.center[0]) * (d.center[0] - s.center[0]) + (d.center[1] - s.center[1]) * (d.center[1] - s.center[1]) + (d.center[2] - s.center[2]) * (d.center[2] - s.center[2]));
-				cos_s_y = ((s.normal_1[0] * (d.center[0] - s.center[0])) + (s.normal_1[1] * (d.center[1] - s.center[1])) + (s.normal_1[2] * (d.center[2] - s.center[2]))) / (snorm_y * centm_y);
-				cos_d_y = ((d.normal_1[0] * (s.center[0] - d.center[0])) + (d.normal_1[1] * (s.center[1] - d.center[1])) + (d.normal_1[2] * (s.center[2] - d.center[2]))) / (dnorm_y * centm_y);
-				angle_s_y = acos((cos_s_y)) * 180 / M_PI;
-				angle_d_y = acos((cos_d_y)) * 180 / M_PI;
-
-				//angle_s_y = 0;
-				//angle_d_y = 0;
-
-				if ((angle_s_y >= 0 && angle_s_y <= 75) && (angle_d_y >= 0 && angle_d_y <= 75)){
-					//if ((angle_s_y <= 1 ) || (angle_d_y <= 1 )){
-					/*
-					if(current_lst_event.dest_id<NUM_SCANNER_CRYSTALS){
-						//FWHM_d=PSF_SCANNER_P0 + PSF_SCANNER_P1*angle_d_y+PSF_SCANNER_P2*angle_d_y*angle_d_y;
-						FWHM_d=CRYSTAL_THICKNESS_SCANNER/2*sin(angle_d_y/180*M_PI);
+			if (s.center[1] <= d.center[1]){			
+				if ((angle_s_y >= 0 && angle_s_y <= MAX_ALLOWED_ANGLE_RAD) && (angle_d_y >= 0 && angle_d_y <= MAX_ALLOWED_ANGLE_RAD)){
+					snorm_y = sqrt(s.normal_1[0] * s.normal_1[0] + s.normal_1[1] * s.normal_1[1] + s.normal_1[2] * s.normal_1[2]);
+					dnorm_y = sqrt(d.normal_1[0] * d.normal_1[0] + d.normal_1[1] * d.normal_1[1] + d.normal_1[2] * d.normal_1[2]);
+					centm_y = sqrt((d.center[0] - s.center[0]) * (d.center[0] - s.center[0]) + (d.center[1] - s.center[1]) * (d.center[1] - s.center[1]) + (d.center[2] - s.center[2]) * (d.center[2] - s.center[2]));
+					cos_s_y = ((s.normal_1[0] * (d.center[0] - s.center[0])) + (s.normal_1[1] * (d.center[1] - s.center[1])) + (s.normal_1[2] * (d.center[2] - s.center[2]))) / (snorm_y * centm_y);
+					cos_d_y = ((d.normal_1[0] * (s.center[0] - d.center[0])) + (d.normal_1[1] * (s.center[1] - d.center[1])) + (d.normal_1[2] * (s.center[2] - d.center[2]))) / (dnorm_y * centm_y);
+					cos_s_y = min(1.0f,cos_s_y);
+					cos_s_y = max(-1.0f,cos_s_y);
+					cos_d_y = min(1.0f,cos_d_y);
+					cos_d_y = max(-1.0f,cos_d_y);
+					angle_s_y = acos((cos_s_y));// * 180 / M_PI;
+					angle_d_y = acos((cos_d_y));// * 180 / M_PI;
+					incident_angle_xy_src = asin(abs( (d.center[0] - s.center[0])*s.normal_1[1]- (d.center[1] - s.center[1])* s.normal_1[0] )
+										/sqrt((d.center[0] - s.center[0]) * (d.center[0] - s.center[0]) + (d.center[1] - s.center[1]) * (d.center[1] - s.center[1]))
+										/sqrt(s.normal_1[0] * s.normal_1[0] + s.normal_1[1] * s.normal_1[1])); 
+					incident_angle_xy_dest = asin(abs( (d.center[0] - s.center[0])*d.normal_1[1]- (d.center[1] - s.center[1])* d.normal_1[0] )
+										/sqrt((d.center[0] - s.center[0]) * (d.center[0] - s.center[0]) + (d.center[1] - s.center[1]) * (d.center[1] - s.center[1]))
+										/sqrt(d.normal_1[0] * d.normal_1[0] + d.normal_1[1] * d.normal_1[1])); 
+					if (current_lst_event.src_id < NUM_SCANNER_CRYSTALS){ //src is scanner crystal
+						dist_shift=max(0.0f,(float)SHIFT_DOI_SCANNER(incident_angle_xy_src));
+						single_sigma_src_left = SCANNER_SINGLE_SIGMA_FITTING_FUNC_LEFT(dist_center_to_LOR)*sin_rho;
+						single_sigma_src_right = SCANNER_SINGLE_SIGMA_FITTING_FUNC_RIGHT(dist_center_to_LOR)*sin_rho;
 					}
-					else{
-						//FWHM_d=PSF_OUTSERT_P0 + PSF_OUTSERT_P1*angle_d_y+PSF_OUTSERT_P2*angle_d_y*angle_d_y;
-						FWHM_d=CRYSTAL_THICKNESS_INSERT/2*sin(angle_d_y/180*M_PI);
+					else{ 
+						dist_shift=max(0.0f,(float)SHIFT_DOI_OUTSERT(incident_angle_xy_src));
+						single_sigma_src_left = OUTSERT_SINGLE_SIGMA_FITTING_FUNC_LEFT(angle_s_y);
+						single_sigma_src_right = OUTSERT_SINGLE_SIGMA_FITTING_FUNC_RIGHT(angle_s_y);
 					}
-
-					if(current_lst_event.src_id<NUM_SCANNER_CRYSTALS){
-						//FWHM_s=PSF_SCANNER_P0 + PSF_SCANNER_P1*angle_s_y+PSF_SCANNER_P2*angle_s_x*angle_s_y;
-						FWHM_s=CRYSTAL_THICKNESS_SCANNER/2*sin(angle_s_y/180*M_PI);
+					src_x_y[event_count_y_dominant] = s.center[0]+ dist_shift*s.normal_1[0];
+					src_y_y[event_count_y_dominant] = s.center[1]+ dist_shift*s.normal_1[1];
+					src_z_y[event_count_y_dominant] = s.center[2];
+					
+					if (current_lst_event.dest_id < NUM_SCANNER_CRYSTALS){
+						dist_shift=max(0.0f,(float)SHIFT_DOI_SCANNER(incident_angle_xy_dest));
+						single_sigma_dest_left = SCANNER_SINGLE_SIGMA_FITTING_FUNC_LEFT(dist_center_to_LOR)*sin_rho;
+						single_sigma_dest_right = SCANNER_SINGLE_SIGMA_FITTING_FUNC_RIGHT(dist_center_to_LOR)*sin_rho;
 					}
-					else{
-						//FWHM_s=PSF_OUTSERT_P0 + PSF_OUTSERT_P1*angle_s_y+PSF_OUTSERT_P2*angle_s_y*angle_s_y;
-						FWHM_s=CRYSTAL_THICKNESS_INSERT/2*sin(angle_s_y/180*M_PI);
+					else{ 
+						dist_shift=max(0.0f,(float)SHIFT_DOI_OUTSERT(incident_angle_xy_dest));
+						single_sigma_dest_left = OUTSERT_SINGLE_SIGMA_FITTING_FUNC_LEFT(angle_d_y);
+						single_sigma_dest_right = OUTSERT_SINGLE_SIGMA_FITTING_FUNC_RIGHT(angle_d_y);
 					}
-					*/
-					//alpha_y = (float)sqrt(FWHM_d*FWHM_d+FWHM_s*FWHM_s)/2;
-					//alpha_y = max(alpha_y,CRYSTAL_WIDTH_SCANNER/2);
-					alpha_y=atan2f32((d.center[1]+s.center[1])/2,(d.center[0]+s.center[0])/2);
-
-					if(event_count_y_dominant<50)
-						cout <<"d.center[1]:"<<d.center[1]<<"s.center[1]"<<s.center[1]<<"d.center[0]"<<d.center[0]<<"s.center[0]"<<s.center[0] <<"alpha_y:" <<alpha_y<<"\n";
-
+					dest_x_y[event_count_y_dominant] = d.center[0]+dist_shift*d.normal_1[0];
+					dest_y_y[event_count_y_dominant] = d.center[1]+dist_shift*d.normal_1[1];
+					dest_z_y[event_count_y_dominant] = d.center[2];
+					TOF_dist_y[event_count_y_dominant] = TOF_dist_temp;
 				}
 				else{
 					continue;
 					alpha_y = 0;
-				
-					//cout << angle_s_y << " " << angle_d_y << " " << cos_s_y << " " << cos_d_y << " " << centm_y << "\n";
-					//cout << "#";
 				}
-
-
-
-
 			}
-
 			else {
-				src_x_y[event_count_y_dominant] = d.center[0];
-				src_y_y[event_count_y_dominant] = d.center[1];
-				src_z_y[event_count_y_dominant] = d.center[2];
-				dest_x_y[event_count_y_dominant] = s.center[0];
-				dest_y_y[event_count_y_dominant] = s.center[1];
-				dest_z_y[event_count_y_dominant] = s.center[2];
-				//NOTE!!!! When exchange the order of src and dest, be sure to flip the sign of TOF
-				TOF_dist_y[event_count_y_dominant] = -TOF_dist_temp;
-				
-				snorm_y = sqrt(d.normal_1[0] * d.normal_1[0] + d.normal_1[1] * d.normal_1[1] + d.normal_1[2] * d.normal_1[2]);
 				dnorm_y = sqrt(s.normal_1[0] * s.normal_1[0] + s.normal_1[1] * s.normal_1[1] + s.normal_1[2] * s.normal_1[2]);
+				snorm_y = sqrt(d.normal_1[0] * d.normal_1[0] + d.normal_1[1] * d.normal_1[1] + d.normal_1[2] * d.normal_1[2]);
 				centm_y = sqrt((d.center[0] - s.center[0]) * (d.center[0] - s.center[0]) + (d.center[1] - s.center[1]) * (d.center[1] - s.center[1]) + (d.center[2] - s.center[2]) * (d.center[2] - s.center[2]));
-				cos_s_y = ((d.normal_1[0] * (s.center[0] - d.center[0])) + (d.normal_1[1] * (s.center[1] - d.center[1])) + (d.normal_1[2] * (s.center[2] - d.center[2]))) / (snorm_y * centm_y);
-				cos_d_y = ((s.normal_1[0] * (d.center[0] - s.center[0])) + (s.normal_1[1] * (d.center[1] - s.center[1])) + (s.normal_1[2] * (d.center[2] - s.center[2]))) / (dnorm_y * centm_y);
-				angle_s_y = acos((cos_s_y)) * 180 / M_PI;
-				angle_d_y = acos((cos_d_y)) * 180 / M_PI;
-
-				//angle_s_y = 0;
-				//angle_d_y = 0;
-
-				if ((angle_s_y >= 0 && angle_s_y <= 75) && (angle_d_y >= 0 && angle_d_y <= 75)){
+				cos_d_y = ((s.normal_1[0] * (d.center[0] - s.center[0])) + (s.normal_1[1] * (d.center[1] - s.center[1])) + (s.normal_1[2] * (d.center[2] - s.center[2]))) / (snorm_y * centm_y);
+				cos_s_y = ((d.normal_1[0] * (s.center[0] - d.center[0])) + (d.normal_1[1] * (s.center[1] - d.center[1])) + (d.normal_1[2] * (s.center[2] - d.center[2]))) / (dnorm_y * centm_y);
+				cos_s_y = min(1.0f,cos_s_y);
+				cos_s_y = max(-1.0f,cos_s_y);
+				cos_d_y = min(1.0f,cos_d_y);
+				cos_d_y = max(-1.0f,cos_d_y);
+				angle_s_y = acos((cos_s_y)); //* 180 / M_PI;
+				angle_d_y = acos((cos_d_y));// * 180 / M_PI;
+				incident_angle_xy_src = asin(abs( (d.center[0] - s.center[0])*s.normal_1[1]- (d.center[1] - s.center[1])* s.normal_1[0] )
+									/sqrt((d.center[0] - s.center[0]) * (d.center[0] - s.center[0]) + (d.center[1] - s.center[1]) * (d.center[1] - s.center[1]))
+									/sqrt(s.normal_1[0] * s.normal_1[0] + s.normal_1[1] * s.normal_1[1]));
 				
-					//if((angle_s_y <= 1 ) || (angle_d_y <= 1 )){
-					/*
-					if(current_lst_event.dest_id<NUM_SCANNER_CRYSTALS){
-						//FWHM_d=PSF_SCANNER_P0 + PSF_SCANNER_P1*angle_d_y+PSF_SCANNER_P2*angle_d_y*angle_d_y;
-						FWHM_d=CRYSTAL_THICKNESS_SCANNER/2*sin(angle_d_y/180*M_PI);
+				incident_angle_xy_dest = asin(abs( (d.center[0] - s.center[0])*d.normal_1[1]- (d.center[1] - s.center[1])* d.normal_1[0] )
+										/sqrt((d.center[0] - s.center[0]) * (d.center[0] - s.center[0]) + (d.center[1] - s.center[1]) * (d.center[1] - s.center[1]))
+										/sqrt(d.normal_1[0] * d.normal_1[0] + d.normal_1[1] * d.normal_1[1])); 
+				if ((angle_s_y >= 0 && angle_s_y <= MAX_ALLOWED_ANGLE_RAD) && (angle_d_y >= 0 && angle_d_y <= MAX_ALLOWED_ANGLE_RAD)){
+
+					if (current_lst_event.dest_id < NUM_SCANNER_CRYSTALS){
+						dist_shift=max(0.0f,(float)SHIFT_DOI_SCANNER(incident_angle_xy_dest));
+						single_sigma_src_left = SCANNER_SINGLE_SIGMA_FITTING_FUNC_LEFT(dist_center_to_LOR)*sin_rho;
+						single_sigma_src_right = SCANNER_SINGLE_SIGMA_FITTING_FUNC_RIGHT(dist_center_to_LOR)*sin_rho;
 					}
 					else{
-						//FWHM_d=PSF_OUTSERT_P0 + PSF_OUTSERT_P1*angle_d_y+PSF_OUTSERT_P2*angle_d_y*angle_d_y;
-						FWHM_d=CRYSTAL_THICKNESS_INSERT/2*sin(angle_d_y/180*M_PI);
+						dist_shift=max(0.0f,(float)SHIFT_DOI_OUTSERT(incident_angle_xy_dest));
+						single_sigma_src_left = OUTSERT_SINGLE_SIGMA_FITTING_FUNC_LEFT(angle_d_y);
+						single_sigma_src_right = OUTSERT_SINGLE_SIGMA_FITTING_FUNC_RIGHT(angle_d_y);
 					}
-
-					if(current_lst_event.src_id<NUM_SCANNER_CRYSTALS){
-						//FWHM_s=PSF_SCANNER_P0 + PSF_SCANNER_P1*angle_s_y+PSF_SCANNER_P2*angle_s_x*angle_s_y;
-						FWHM_s=CRYSTAL_THICKNESS_SCANNER/2*sin(angle_s_y/180*M_PI);
+					src_x_y[event_count_y_dominant] = d.center[0]+dist_shift*d.normal_1[0];
+					src_y_y[event_count_y_dominant] = d.center[1]+dist_shift*d.normal_1[1];
+					src_z_y[event_count_y_dominant] = d.center[2];
+					if (current_lst_event.src_id < NUM_SCANNER_CRYSTALS){
+							dist_shift=max(0.0f,(float)SHIFT_DOI_SCANNER(incident_angle_xy_src));
+							single_sigma_dest_left = SCANNER_SINGLE_SIGMA_FITTING_FUNC_LEFT(dist_center_to_LOR)*sin_rho;
+							single_sigma_dest_right = SCANNER_SINGLE_SIGMA_FITTING_FUNC_RIGHT(dist_center_to_LOR)*sin_rho;
 					}
 					else{
-						//FWHM_s=PSF_OUTSERT_P0 + PSF_OUTSERT_P1*angle_s_y+PSF_OUTSERT_P2*angle_s_y*angle_s_y;
-						FWHM_s=CRYSTAL_THICKNESS_INSERT/2*sin(angle_s_y/180*M_PI);
+						dist_shift=max(0.0f,(float)SHIFT_DOI_OUTSERT(incident_angle_xy_src));
+						single_sigma_dest_left = OUTSERT_SINGLE_SIGMA_FITTING_FUNC_LEFT(angle_s_y);
+						single_sigma_dest_right = OUTSERT_SINGLE_SIGMA_FITTING_FUNC_RIGHT(angle_s_y);
 					}
-
-					*/
-					//alpha_y = (float)sqrt(FWHM_d*FWHM_d+FWHM_s*FWHM_s)/2;
-					//alpha_y = max(alpha_y,CRYSTAL_WIDTH_SCANNER/2);
-					alpha_y=atan2f32((d.center[1]+s.center[1])/2,(d.center[0]+s.center[0])/2);
-
-					if(event_count_y_dominant<50)
-						cout <<"d.center[1]:"<<d.center[1]<<"s.center[1]"<<s.center[1]<<"d.center[0]"<<d.center[0]<<"s.center[0]"<<s.center[0] <<"alpha_y:" <<alpha_y<<"\n";
-
-					//cout << angle_s_y << " " << angle_d_y << " " << cos_s_y << " " << cos_d_y << " " << centm_y << "\n";
+					dest_x_y[event_count_y_dominant] = s.center[0]+ dist_shift*s.normal_1[0];
+					dest_y_y[event_count_y_dominant] = s.center[1]+ dist_shift*s.normal_1[1];
+					dest_z_y[event_count_y_dominant] = s.center[2];
+					//NOTE!!!! When exchange the order of src and dest, be sure to flip the sign of TOF
+					TOF_dist_y[event_count_y_dominant] = -TOF_dist_temp;
 				}
 				else{
-					alpha_y = 0;
 					continue;
-
-					//cout << angle_s_y << " " << angle_d_y << " " << cos_s_y << " " << cos_d_y << " " << centm_y << "\n";
-					//cout << "#";
 				}
-
-
 			}
-			coeff_y[event_count_y_dominant] = alpha_y ;
-
-
-			event_count_y_dominant++;
-
-		}
-
-
-	}
-
+			coinc_sigma_left_y[event_count_y_dominant] = GET_COINC_SIGMA_FROM_SINGLE_SIGMA(single_sigma_src_left,single_sigma_dest_left);
+			coinc_sigma_right_y[event_count_y_dominant] = GET_COINC_SIGMA_FROM_SINGLE_SIGMA(single_sigma_src_right,single_sigma_dest_right);
 			
-	
-
-
-	
-
+			if(event_count_y_dominant<50){
+					cout <<"d.center[1]:"<<d.center[1]<<", s.center[1]"<<s.center[1]<<", d.center[0]"<<d.center[0]<<", s.center[0]"<<s.center[0] <<endl; 
+					cout<<"angle_s_y:"<<angle_s_y<<",angle_d_y:"<<angle_d_y<<",dist_center_to_LOR:"<<dist_center_to_LOR<<endl;
+					cout <<"sigma_src_left:" <<single_sigma_src_left<<",sigma_src_right:"<<single_sigma_src_right<<",sigma_dest_left:" << single_sigma_dest_left <<",sigma_dest_right:"<<single_sigma_dest_right<<endl;
+					cout <<"coinc_sigma_left_x:" <<coinc_sigma_left_y[event_count_y_dominant]<<",coinc_sigma_right_x:"<<coinc_sigma_right_y[event_count_y_dominant]<<endl;
+					cout<<"---------------------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+			}
+			
+			event_count_y_dominant++;
+		}
+	}
 	LST_LORs events_x_host;
 	LST_LORs events_y_host;
 
@@ -5688,7 +6076,8 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.dest_x, events_x_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.dest_y, events_x_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.dest_z, events_x_host.num_lines*sizeof(float)));
-	checkCudaErrors(cudaMalloc((void**)&events_x_host.coeff, events_x_host.num_lines*sizeof(float)));
+	checkCudaErrors(cudaMalloc((void**)&events_x_host.sigma_left, events_x_host.num_lines*sizeof(float)));
+	checkCudaErrors(cudaMalloc((void**)&events_x_host.sigma_right, events_x_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.TOF_dist, events_x_host.num_lines*sizeof(float)));
 	
 
@@ -5698,7 +6087,8 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 	checkCudaErrors(cudaMemcpy(events_x_host.dest_x, dest_x_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_x_host.dest_y, dest_y_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_x_host.dest_z, dest_z_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
-	checkCudaErrors(cudaMemcpy(events_x_host.coeff, coeff_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
+	checkCudaErrors(cudaMemcpy(events_x_host.sigma_left, coinc_sigma_left_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
+	checkCudaErrors(cudaMemcpy(events_x_host.sigma_right, coinc_sigma_right_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_x_host.TOF_dist, TOF_dist_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	
 	
@@ -5710,7 +6100,8 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.dest_x, events_y_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.dest_y, events_y_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.dest_z, events_y_host.num_lines*sizeof(float)));
-	checkCudaErrors(cudaMalloc((void**)&events_y_host.coeff, events_y_host.num_lines*sizeof(float)));
+	checkCudaErrors(cudaMalloc((void**)&events_y_host.sigma_left, events_y_host.num_lines*sizeof(float)));
+	checkCudaErrors(cudaMalloc((void**)&events_y_host.sigma_right, events_y_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.TOF_dist, events_y_host.num_lines*sizeof(float)));
 
 	//checkCudaErrors(cudaDeviceSynchronize());
@@ -5721,7 +6112,8 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 	checkCudaErrors(cudaMemcpy(events_y_host.dest_x, dest_x_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_y_host.dest_y, dest_y_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_y_host.dest_z, dest_z_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
-	checkCudaErrors(cudaMemcpy(events_y_host.coeff, coeff_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
+	checkCudaErrors(cudaMemcpy(events_y_host.sigma_left, coinc_sigma_left_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
+	checkCudaErrors(cudaMemcpy(events_y_host.sigma_right, coinc_sigma_left_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_y_host.TOF_dist, TOF_dist_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
 
 	
@@ -5739,7 +6131,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 	size_t freebyte, total;
 	cudaMemGetInfo(&freebyte, &total);
 	
-	/*cout << "On Device " << device_active << ":" << std::endl;
+	cout << "On Device " << device_active << ":" << std::endl;
 	cout << "Data list length = " << total_event_count << std::endl;
 	cout << "Total number of x-predominant event copyed " << events_x_host.num_lines << std::endl;
 	cout << "Total number of y-predominant event copyed " << events_y_host.num_lines << std::endl;
@@ -5747,7 +6139,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 	cout << "Insert-Scanner: " << _is[device_ID] << std::endl;
 	cout << "Scanner-Scanner: " << _ss[device_ID] << std::endl;
 	cout << "Total: " << total_event_count << endl << std::endl;
-	cout << "Cuda memory Free " << freebyte / 1024 / 1024 << "MB out " << "of Total " << total / 1024 / 1024 << "MB" << endl;*/
+	cout << "Cuda memory Free " << freebyte / 1024 / 1024 << "MB out " << "of Total " << total / 1024 / 1024 << "MB" << endl;
 
 	//free host memory
 	free(src_x_x);	
@@ -5757,8 +6149,8 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 	free(dest_y_x);
 	free(dest_z_x);	
 	free(TOF_dist_x);	
-	free(coeff_x);	
-	
+	free(coinc_sigma_left_x);	
+	free(coinc_sigma_right_x);
 
 	free(src_x_y); 
 	free(src_y_y); 
@@ -5767,9 +6159,8 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy(PET_geometry& detector, PE
 	free(dest_y_y); 
 	free(dest_z_y); 
 	free(TOF_dist_y); 
-	free(coeff_y); 
-	
-
+	free(coinc_sigma_left_y); 
+	free(coinc_sigma_right_y);
 }
 
 
@@ -5783,7 +6174,7 @@ cuda_em_recon::_Mem_allocation_for_min_LST_events_memcopy(PET_geometry& detector
 	float *src_x_x, *src_y_x, *src_z_x, *dest_x_x, *dest_y_x, *dest_z_x;
 	float *src_x_y, *src_y_y, *src_z_y, *dest_x_y, *dest_y_y, *dest_z_y;
 	float *src_x_z, *src_y_z, *src_z_z, *dest_x_z, *dest_y_z, *dest_z_z;
-	float *coeff_x, *coeff_y, *coeff_z;
+	float *coinc_sigma_left_x, *coinc_sigma_left_y, *coeff_z;
 	float snorm_x, dnorm_x, centm_x, snorm_z, dnorm_z, centm_z, angle_s_x, angle_d_x, cos_s_x, cos_d_x;
 	float coeffx, coeffy;
 	float snorm_y, dnorm_y, centm_y, angle_s_y, angle_d_y, angle_s_z, angle_d_z, cos_s_y, cos_d_y, cos_s_z, cos_d_z, coeff_s_z, coeff_d_z;
@@ -5802,7 +6193,7 @@ cuda_em_recon::_Mem_allocation_for_min_LST_events_memcopy(PET_geometry& detector
 	dest_x_x = (float*)malloc(total_event_count*sizeof(float));
 	dest_y_x = (float*)malloc(total_event_count*sizeof(float));
 	dest_z_x = (float*)malloc(total_event_count*sizeof(float));
-	coeff_x = (float*)malloc(total_event_count*sizeof(float));
+	coinc_sigma_left_x = (float*)malloc(total_event_count*sizeof(float));
 
 	float *TOF_dist_x = (float*)malloc(total_event_count*sizeof(float));
 
@@ -5812,7 +6203,7 @@ cuda_em_recon::_Mem_allocation_for_min_LST_events_memcopy(PET_geometry& detector
 	dest_x_y = (float*)malloc(total_event_count*sizeof(float));
 	dest_y_y = (float*)malloc(total_event_count*sizeof(float));
 	dest_z_y = (float*)malloc(total_event_count*sizeof(float));
-	coeff_y = (float*)malloc(total_event_count*sizeof(float));
+	coinc_sigma_left_y = (float*)malloc(total_event_count*sizeof(float));
 
 	float *TOF_dist_y = (float*)malloc(total_event_count*sizeof(float));
 
@@ -5982,7 +6373,7 @@ cuda_em_recon::_Mem_allocation_for_min_LST_events_memcopy(PET_geometry& detector
 
 
 
-				if ((angle_s_x >= 0 && angle_s_x <= 75) && (angle_d_x >= 0 && angle_d_x <= 75)){
+				if ((angle_s_x >= 0 && angle_s_x <= MAX_ALLOWED_ANGLE_RAD) && (angle_d_x >= 0 && angle_d_x <= MAX_ALLOWED_ANGLE_RAD)){
 					//if ((angle_s_x <= 1 ) || (angle_d_x <= 1)){
 
 					coeffx = 1;
@@ -6028,7 +6419,7 @@ cuda_em_recon::_Mem_allocation_for_min_LST_events_memcopy(PET_geometry& detector
 				//angle_s_x = 0;
 				//angle_d_x = 0;
 
-				if ((angle_s_x >= 0 && angle_s_x <= 75) && (angle_d_x >= 0 && angle_d_x <= 75)){
+				if ((angle_s_x >= 0 && angle_s_x <= MAX_ALLOWED_ANGLE_RAD) && (angle_d_x >= 0 && angle_d_x <= MAX_ALLOWED_ANGLE_RAD)){
 		          //if ((angle_s_x <= 1) || (angle_d_x <= 1)){
 					coeffx = 1;
 					
@@ -6045,7 +6436,7 @@ cuda_em_recon::_Mem_allocation_for_min_LST_events_memcopy(PET_geometry& detector
 				}
 			}
 
-			coeff_x[event_count_x_dominant] = coeffx ;
+			coinc_sigma_left_x[event_count_x_dominant] = coeffx ;
 
 			event_count_x_dominant++;
 
@@ -6081,7 +6472,7 @@ cuda_em_recon::_Mem_allocation_for_min_LST_events_memcopy(PET_geometry& detector
 				//angle_s_y = 0;
 				//angle_d_y = 0;
 
-				if ((angle_s_y >= 0 && angle_s_y <= 75) && (angle_d_y >= 0 && angle_d_y <= 75)){
+				if ((angle_s_y >= 0 && angle_s_y <= MAX_ALLOWED_ANGLE_RAD) && (angle_d_y >= 0 && angle_d_y <= MAX_ALLOWED_ANGLE_RAD)){
 					//if ((angle_s_y <= 1 ) || (angle_d_y <= 1 )){
 
 					coeffy = 1;
@@ -6121,7 +6512,7 @@ cuda_em_recon::_Mem_allocation_for_min_LST_events_memcopy(PET_geometry& detector
 				//angle_s_y = 0;
 				//angle_d_y = 0;
 
-				if ((angle_s_y >= 0 && angle_s_y <= 75) && (angle_d_y >= 0 && angle_d_y <= 75)){
+				if ((angle_s_y >= 0 && angle_s_y <= MAX_ALLOWED_ANGLE_RAD) && (angle_d_y >= 0 && angle_d_y <= MAX_ALLOWED_ANGLE_RAD)){
 				
 					//if((angle_s_y <= 1 ) || (angle_d_y <= 1 )){
 
@@ -6139,7 +6530,7 @@ cuda_em_recon::_Mem_allocation_for_min_LST_events_memcopy(PET_geometry& detector
 
 
 			}
-			coeff_y[event_count_y_dominant] = coeffy ;
+			coinc_sigma_left_y[event_count_y_dominant] = coeffy ;
 
 
 			event_count_y_dominant++;
@@ -6174,7 +6565,7 @@ cuda_em_recon::_Mem_allocation_for_min_LST_events_memcopy(PET_geometry& detector
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.dest_x, events_x_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.dest_y, events_x_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.dest_z, events_x_host.num_lines*sizeof(float)));
-	checkCudaErrors(cudaMalloc((void**)&events_x_host.coeff, events_x_host.num_lines*sizeof(float)));
+	checkCudaErrors(cudaMalloc((void**)&events_x_host.sigma_left, events_x_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.TOF_dist, events_x_host.num_lines*sizeof(float)));
 	
 
@@ -6184,7 +6575,7 @@ cuda_em_recon::_Mem_allocation_for_min_LST_events_memcopy(PET_geometry& detector
 	checkCudaErrors(cudaMemcpy(events_x_host.dest_x, dest_x_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_x_host.dest_y, dest_y_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_x_host.dest_z, dest_z_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
-	checkCudaErrors(cudaMemcpy(events_x_host.coeff, coeff_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
+	checkCudaErrors(cudaMemcpy(events_x_host.sigma_left, coinc_sigma_left_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_x_host.TOF_dist, TOF_dist_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	
 	
@@ -6196,7 +6587,7 @@ cuda_em_recon::_Mem_allocation_for_min_LST_events_memcopy(PET_geometry& detector
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.dest_x, events_y_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.dest_y, events_y_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.dest_z, events_y_host.num_lines*sizeof(float)));
-	checkCudaErrors(cudaMalloc((void**)&events_y_host.coeff, events_y_host.num_lines*sizeof(float)));
+	checkCudaErrors(cudaMalloc((void**)&events_y_host.sigma_left, events_y_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.TOF_dist, events_y_host.num_lines*sizeof(float)));
 
 	//checkCudaErrors(cudaDeviceSynchronize());
@@ -6207,7 +6598,7 @@ cuda_em_recon::_Mem_allocation_for_min_LST_events_memcopy(PET_geometry& detector
 	checkCudaErrors(cudaMemcpy(events_y_host.dest_x, dest_x_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_y_host.dest_y, dest_y_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_y_host.dest_z, dest_z_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
-	checkCudaErrors(cudaMemcpy(events_y_host.coeff, coeff_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
+	checkCudaErrors(cudaMemcpy(events_y_host.sigma_left, coinc_sigma_left_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_y_host.TOF_dist, TOF_dist_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
 
 	
@@ -6243,7 +6634,7 @@ cuda_em_recon::_Mem_allocation_for_min_LST_events_memcopy(PET_geometry& detector
 	free(dest_y_x);
 	free(dest_z_x);	
 	free(TOF_dist_x);	
-	free(coeff_x);	
+	free(coinc_sigma_left_x);	
 	
 
 	free(src_x_y); 
@@ -6253,7 +6644,7 @@ cuda_em_recon::_Mem_allocation_for_min_LST_events_memcopy(PET_geometry& detector
 	free(dest_y_y); 
 	free(dest_z_y); 
 	free(TOF_dist_y); 
-	free(coeff_y); 
+	free(coinc_sigma_left_y); 
 	
 
 }
@@ -6270,8 +6661,8 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 	float *src_x_x, *src_y_x, *src_z_x, *dest_x_x, *dest_y_x, *dest_z_x;
 	float *src_x_y, *src_y_y, *src_z_y, *dest_x_y, *dest_y_y, *dest_z_y;
 	float *src_x_z, *src_y_z, *src_z_z, *dest_x_z, *dest_y_z, *dest_z_z;
-	int *coeff_x, *coeff_y, *coeff_z;
-	float *sc_coeff_x, *sc_coeff_y;
+	int *coinc_sigma_left_x, *coinc_sigma_left_y, *coeff_z;
+	float *sc_coinc_sigma_left_x, *sc_coinc_sigma_left_y;
 	float snorm_x, dnorm_x, centm_x, snorm_z, dnorm_z, centm_z, angle_s_x, angle_d_x, cos_s_x, cos_d_x;
 	int coeffx, coeffy;
 	float snorm_y, dnorm_y, centm_y, angle_s_y, angle_d_y, angle_s_z, angle_d_z, cos_s_y, cos_d_y, cos_s_z, cos_d_z, coeff_s_z, coeff_d_z;
@@ -6290,8 +6681,8 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 	dest_x_x = (float*)malloc(total_event_count*sizeof(float));
 	dest_y_x = (float*)malloc(total_event_count*sizeof(float));
 	dest_z_x = (float*)malloc(total_event_count*sizeof(float));
-	coeff_x = (int*)malloc(total_event_count*sizeof(int));
-	sc_coeff_x = (float*)malloc(total_event_count*sizeof(float));
+	coinc_sigma_left_x = (int*)malloc(total_event_count*sizeof(int));
+	sc_coinc_sigma_left_x = (float*)malloc(total_event_count*sizeof(float));
 
 	float *TOF_dist_x = (float*)malloc(total_event_count*sizeof(float));
 
@@ -6301,8 +6692,8 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 	dest_x_y = (float*)malloc(total_event_count*sizeof(float));
 	dest_y_y = (float*)malloc(total_event_count*sizeof(float));
 	dest_z_y = (float*)malloc(total_event_count*sizeof(float));
-	coeff_y = (int*)malloc(total_event_count*sizeof(int));
-	sc_coeff_y = (float*)malloc(total_event_count*sizeof(float));
+	coinc_sigma_left_y = (int*)malloc(total_event_count*sizeof(int));
+	sc_coinc_sigma_left_y = (float*)malloc(total_event_count*sizeof(float));
 
 	float *TOF_dist_y = (float*)malloc(total_event_count*sizeof(float));
 
@@ -6388,18 +6779,6 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 			temp_d.normal_1[1] = (detector.detector_crystal_list.at(current_lst_event.dest_id).geometry.normal_1[1]);
 			temp_d.normal_1[2] = (detector.detector_crystal_list.at(current_lst_event.dest_id).geometry.normal_1[2]);
 		}*/
-
-
-
-
-
-
-
-
-
-
-
-
 		//For IS type events, we consider applying insert movement before copying crystal coordinates to GPU
 		/*if (pet_coinc_type == IS){
 
@@ -6477,7 +6856,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 				dest_y_x[event_count_x_dominant] = d.center[1];
 				dest_z_x[event_count_x_dominant] = d.center[2];
 				TOF_dist_x[event_count_x_dominant] = TOF_dist_temp;
-				sc_coeff_x[event_count_x_dominant] = sc_coeff;
+				sc_coinc_sigma_left_x[event_count_x_dominant] = sc_coeff;
 
 				snorm_x = sqrt(s.normal_1[0] * s.normal_1[0] + s.normal_1[1] * s.normal_1[1] + s.normal_1[2] * s.normal_1[2]);
 				dnorm_x = sqrt(d.normal_1[0] * d.normal_1[0] + d.normal_1[1] * d.normal_1[1] + d.normal_1[2] * d.normal_1[2]);
@@ -6490,7 +6869,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 
 
 
-				if ((angle_s_x >= 0 && angle_s_x <= 75) && (angle_d_x >= 0 && angle_d_x <= 75)){
+				if ((angle_s_x >= 0 && angle_s_x <= MAX_ALLOWED_ANGLE_RAD) && (angle_d_x >= 0 && angle_d_x <= MAX_ALLOWED_ANGLE_RAD)){
 
 					coeffx = 1;
 
@@ -6519,7 +6898,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 				dest_x_x[event_count_x_dominant] = s.center[0];
 				dest_y_x[event_count_x_dominant] = s.center[1];
 				dest_z_x[event_count_x_dominant] = s.center[2];
-				sc_coeff_x[event_count_x_dominant] = sc_coeff;
+				sc_coinc_sigma_left_x[event_count_x_dominant] = sc_coeff;
 
 				//NOTE!!!! When exchange the order of src and dest, be sure to flip the sign of TOF
 
@@ -6536,7 +6915,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 				//angle_s_x = 0;
 				//angle_d_x = 0;
 
-				if ((angle_s_x >= 0 && angle_s_x <= 75) && (angle_d_x >= 0 && angle_d_x <= 75)){
+				if ((angle_s_x >= 0 && angle_s_x <= MAX_ALLOWED_ANGLE_RAD) && (angle_d_x >= 0 && angle_d_x <= MAX_ALLOWED_ANGLE_RAD)){
 
 					coeffx = 1;
 
@@ -6553,7 +6932,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 				}
 			}
 
-			coeff_x[event_count_x_dominant] = coeffx ;
+			coinc_sigma_left_x[event_count_x_dominant] = coeffx ;
 
 			event_count_x_dominant++;
 
@@ -6577,7 +6956,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 				dest_y_y[event_count_y_dominant] = d.center[1];
 				dest_z_y[event_count_y_dominant] = d.center[2];
 				TOF_dist_y[event_count_y_dominant] = TOF_dist_temp;
-				sc_coeff_y[event_count_y_dominant] = sc_coeff;
+				sc_coinc_sigma_left_y[event_count_y_dominant] = sc_coeff;
 
 				snorm_y = sqrt(s.normal_1[0] * s.normal_1[0] + s.normal_1[1] * s.normal_1[1] + s.normal_1[2] * s.normal_1[2]);
 				dnorm_y = sqrt(d.normal_1[0] * d.normal_1[0] + d.normal_1[1] * d.normal_1[1] + d.normal_1[2] * d.normal_1[2]);
@@ -6590,7 +6969,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 				//angle_s_y = 0;
 				//angle_d_y = 0;
 
-				if ((angle_s_y >= 0 && angle_s_y <= 75) && (angle_d_y >= 0 && angle_d_y <= 75)){
+				if ((angle_s_y >= 0 && angle_s_y <= MAX_ALLOWED_ANGLE_RAD) && (angle_d_y >= 0 && angle_d_y <= MAX_ALLOWED_ANGLE_RAD)){
 
 					coeffy = 1;
 
@@ -6615,7 +6994,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 				dest_x_y[event_count_y_dominant] = s.center[0];
 				dest_y_y[event_count_y_dominant] = s.center[1];
 				dest_z_y[event_count_y_dominant] = s.center[2];
-				sc_coeff_y[event_count_y_dominant] = sc_coeff;
+				sc_coinc_sigma_left_y[event_count_y_dominant] = sc_coeff;
 				//NOTE!!!! When exchange the order of src and dest, be sure to flip the sign of TOF
 				TOF_dist_y[event_count_y_dominant] = -TOF_dist_temp;
 
@@ -6630,7 +7009,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 				//angle_s_y = 0;
 				//angle_d_y = 0;
 
-				if ((angle_s_y >= 0 && angle_s_y <= 75) && (angle_d_y >= 0 && angle_d_y <= 75)){
+				if ((angle_s_y >= 0 && angle_s_y <= MAX_ALLOWED_ANGLE_RAD) && (angle_d_y >= 0 && angle_d_y <= MAX_ALLOWED_ANGLE_RAD)){
 
 
 					coeffy = 1;
@@ -6646,7 +7025,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 
 
 			}
-			coeff_y[event_count_y_dominant] = coeffy ;
+			coinc_sigma_left_y[event_count_y_dominant] = coeffy ;
 
 
 			event_count_y_dominant++;
@@ -6682,7 +7061,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.dest_x, events_x_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.dest_y, events_x_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.dest_z, events_x_host.num_lines*sizeof(float)));
-	checkCudaErrors(cudaMalloc((void**)&events_x_host.coeff, events_x_host.num_lines*sizeof(int)));
+	checkCudaErrors(cudaMalloc((void**)&events_x_host.sigma_left, events_x_host.num_lines*sizeof(int)));
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.TOF_dist, events_x_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.sc_coeff, events_x_host.num_lines*sizeof(float)));
 
@@ -6693,9 +7072,9 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 	checkCudaErrors(cudaMemcpy(events_x_host.dest_x, dest_x_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_x_host.dest_y, dest_y_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_x_host.dest_z, dest_z_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
-	checkCudaErrors(cudaMemcpy(events_x_host.coeff, coeff_x, events_x_host.num_lines*sizeof(int), cudaMemcpyDefault));
+	checkCudaErrors(cudaMemcpy(events_x_host.sigma_left, coinc_sigma_left_x, events_x_host.num_lines*sizeof(int), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_x_host.TOF_dist, TOF_dist_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
-	checkCudaErrors(cudaMemcpy(events_x_host.sc_coeff, sc_coeff_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
+	checkCudaErrors(cudaMemcpy(events_x_host.sc_coeff, sc_coinc_sigma_left_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
 
 
 	events_y_host.num_lines = event_count_y_dominant;
@@ -6706,7 +7085,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.dest_x, events_y_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.dest_y, events_y_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.dest_z, events_y_host.num_lines*sizeof(float)));
-	checkCudaErrors(cudaMalloc((void**)&events_y_host.coeff, events_y_host.num_lines*sizeof(int)));
+	checkCudaErrors(cudaMalloc((void**)&events_y_host.sigma_left, events_y_host.num_lines*sizeof(int)));
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.TOF_dist, events_y_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.sc_coeff, events_y_host.num_lines*sizeof(float)));
 
@@ -6718,9 +7097,9 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 	checkCudaErrors(cudaMemcpy(events_y_host.dest_x, dest_x_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_y_host.dest_y, dest_y_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_y_host.dest_z, dest_z_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
-	checkCudaErrors(cudaMemcpy(events_y_host.coeff, coeff_y, events_y_host.num_lines*sizeof(int), cudaMemcpyDefault));
+	checkCudaErrors(cudaMemcpy(events_y_host.sigma_left, coinc_sigma_left_y, events_y_host.num_lines*sizeof(int), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_y_host.TOF_dist, TOF_dist_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
-	checkCudaErrors(cudaMemcpy(events_y_host.sc_coeff, sc_coeff_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
+	checkCudaErrors(cudaMemcpy(events_y_host.sc_coeff, sc_coinc_sigma_left_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
 
 
 	checkCudaErrors(cudaMalloc((void**)&device_events_x_global_mem, sizeof(LST_LORs_scatter)));
@@ -6755,8 +7134,8 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 	free(dest_y_x);
 	free(dest_z_x);
 	free(TOF_dist_x);
-	free(coeff_x);
-	free(sc_coeff_x);
+	free(coinc_sigma_left_x);
+	free(sc_coinc_sigma_left_x);
 
 
 	free(src_x_y);
@@ -6766,8 +7145,8 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_scatter(PET_geometry& dete
 	free(dest_y_y);
 	free(dest_z_y);
 	free(TOF_dist_y);
-	free(coeff_y);
-	free(sc_coeff_y);
+	free(coinc_sigma_left_y);
+	free(sc_coinc_sigma_left_y);
 
 
 }
@@ -6782,7 +7161,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_norm(PET_geometry& detecto
 	float *src_x_x, *src_y_x, *src_z_x, *dest_x_x, *dest_y_x, *dest_z_x;
 	float *src_x_y, *src_y_y, *src_z_y, *dest_x_y, *dest_y_y, *dest_z_y;
 	float *src_x_z, *src_y_z, *src_z_z, *dest_x_z, *dest_y_z, *dest_z_z;
-	int *coeff_x, *coeff_y, *coeff_z;
+	int *coinc_sigma_left_x, *coinc_sigma_left_y, *coeff_z;
 	float snorm_x, dnorm_x, centm_x, snorm_z, dnorm_z, centm_z, angle_s_x, angle_d_x, cos_s_x, cos_d_x;
 	int coeffx, coeffy;
 	float snorm_y, dnorm_y, centm_y, angle_s_y, angle_d_y, angle_s_z, angle_d_z, cos_s_y, cos_d_y, cos_s_z, cos_d_z, coeff_s_z, coeff_d_z;
@@ -6801,7 +7180,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_norm(PET_geometry& detecto
 	dest_x_x = (float*)malloc(total_event_count*sizeof(float));
 	dest_y_x = (float*)malloc(total_event_count*sizeof(float));
 	dest_z_x = (float*)malloc(total_event_count*sizeof(float));
-	coeff_x = (int*)malloc(total_event_count*sizeof(int));
+	coinc_sigma_left_x = (int*)malloc(total_event_count*sizeof(int));
 
 	float *TOF_dist_x = (float*)malloc(total_event_count*sizeof(float));
 
@@ -6811,7 +7190,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_norm(PET_geometry& detecto
 	dest_x_y = (float*)malloc(total_event_count*sizeof(float));
 	dest_y_y = (float*)malloc(total_event_count*sizeof(float));
 	dest_z_y = (float*)malloc(total_event_count*sizeof(float));
-	coeff_y = (int*)malloc(total_event_count*sizeof(int));
+	coinc_sigma_left_y = (int*)malloc(total_event_count*sizeof(int));
 
 	float *TOF_dist_y = (float*)malloc(total_event_count*sizeof(float));
 
@@ -6990,7 +7369,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_norm(PET_geometry& detecto
 
 
 
-				if ((angle_s_x >= 0 && angle_s_x <= 75) && (angle_d_x >= 0 && angle_d_x <= 75)){
+				if ((angle_s_x >= 0 && angle_s_x <= MAX_ALLOWED_ANGLE_RAD) && (angle_d_x >= 0 && angle_d_x <= MAX_ALLOWED_ANGLE_RAD)){
 
 					coeffx = count;
 
@@ -7035,7 +7414,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_norm(PET_geometry& detecto
 				//angle_s_x = 0;
 				//angle_d_x = 0;
 
-				if ((angle_s_x >= 0 && angle_s_x <= 75) && (angle_d_x >= 0 && angle_d_x <= 75)){
+				if ((angle_s_x >= 0 && angle_s_x <= MAX_ALLOWED_ANGLE_RAD) && (angle_d_x >= 0 && angle_d_x <= MAX_ALLOWED_ANGLE_RAD)){
 
 					coeffx = count;
 
@@ -7052,8 +7431,8 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_norm(PET_geometry& detecto
 				}
 			}
 
-			coeff_x[event_count_x_dominant] = coeffx;
-			//cout << "\n" << coeff_x[event_count_x_dominant];
+			coinc_sigma_left_x[event_count_x_dominant] = coeffx;
+			//cout << "\n" << coinc_sigma_left_x[event_count_x_dominant];
 			event_count_x_dominant++;
 			
 
@@ -7088,7 +7467,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_norm(PET_geometry& detecto
 				//angle_s_y = 0;
 				//angle_d_y = 0;
 
-				if ((angle_s_y >= 0 && angle_s_y <= 75) && (angle_d_y >= 0 && angle_d_y <= 75)){
+				if ((angle_s_y >= 0 && angle_s_y <= MAX_ALLOWED_ANGLE_RAD) && (angle_d_y >= 0 && angle_d_y <= MAX_ALLOWED_ANGLE_RAD)){
 
 					coeffy = count;
 
@@ -7127,7 +7506,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_norm(PET_geometry& detecto
 				//angle_s_y = 0;
 				//angle_d_y = 0;
 
-				if ((angle_s_y >= 0 && angle_s_y <= 75) && (angle_d_y >= 0 && angle_d_y <= 75)){
+				if ((angle_s_y >= 0 && angle_s_y <= MAX_ALLOWED_ANGLE_RAD) && (angle_d_y >= 0 && angle_d_y <= MAX_ALLOWED_ANGLE_RAD)){
 
 
 					coeffy = count;
@@ -7143,8 +7522,8 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_norm(PET_geometry& detecto
 
 
 			}
-			coeff_y[event_count_y_dominant] = coeffy;
-			//cout << "\n" << coeff_y[event_count_y_dominant];
+			coinc_sigma_left_y[event_count_y_dominant] = coeffy;
+			//cout << "\n" << coinc_sigma_left_y[event_count_y_dominant];
 
 			event_count_y_dominant++;
 
@@ -7178,7 +7557,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_norm(PET_geometry& detecto
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.dest_x, events_x_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.dest_y, events_x_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.dest_z, events_x_host.num_lines*sizeof(float)));
-	checkCudaErrors(cudaMalloc((void**)&events_x_host.coeff, events_x_host.num_lines*sizeof(int)));
+	checkCudaErrors(cudaMalloc((void**)&events_x_host.sigma_left, events_x_host.num_lines*sizeof(int)));
 	checkCudaErrors(cudaMalloc((void**)&events_x_host.TOF_dist, events_x_host.num_lines*sizeof(float)));
 
 
@@ -7188,7 +7567,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_norm(PET_geometry& detecto
 	checkCudaErrors(cudaMemcpy(events_x_host.dest_x, dest_x_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_x_host.dest_y, dest_y_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_x_host.dest_z, dest_z_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
-	checkCudaErrors(cudaMemcpy(events_x_host.coeff, coeff_x, events_x_host.num_lines*sizeof(int), cudaMemcpyDefault));
+	checkCudaErrors(cudaMemcpy(events_x_host.sigma_left, coinc_sigma_left_x, events_x_host.num_lines*sizeof(int), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_x_host.TOF_dist, TOF_dist_x, events_x_host.num_lines*sizeof(float), cudaMemcpyDefault));
 
 
@@ -7200,7 +7579,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_norm(PET_geometry& detecto
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.dest_x, events_y_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.dest_y, events_y_host.num_lines*sizeof(float)));
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.dest_z, events_y_host.num_lines*sizeof(float)));
-	checkCudaErrors(cudaMalloc((void**)&events_y_host.coeff, events_y_host.num_lines*sizeof(int)));
+	checkCudaErrors(cudaMalloc((void**)&events_y_host.sigma_left, events_y_host.num_lines*sizeof(int)));
 	checkCudaErrors(cudaMalloc((void**)&events_y_host.TOF_dist, events_y_host.num_lines*sizeof(float)));
 
 	//checkCudaErrors(cudaDeviceSynchronize());
@@ -7211,7 +7590,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_norm(PET_geometry& detecto
 	checkCudaErrors(cudaMemcpy(events_y_host.dest_x, dest_x_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_y_host.dest_y, dest_y_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_y_host.dest_z, dest_z_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
-	checkCudaErrors(cudaMemcpy(events_y_host.coeff, coeff_y, events_y_host.num_lines*sizeof(int), cudaMemcpyDefault));
+	checkCudaErrors(cudaMemcpy(events_y_host.sigma_left, coinc_sigma_left_y, events_y_host.num_lines*sizeof(int), cudaMemcpyDefault));
 	checkCudaErrors(cudaMemcpy(events_y_host.TOF_dist, TOF_dist_y, events_y_host.num_lines*sizeof(float), cudaMemcpyDefault));
 
 
@@ -7247,7 +7626,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_norm(PET_geometry& detecto
 	free(dest_y_x);
 	free(dest_z_x);
 	free(TOF_dist_x);
-	free(coeff_x);
+	free(coinc_sigma_left_x);
 
 
 	free(src_x_y);
@@ -7257,7 +7636,7 @@ cuda_em_recon::_Mem_allocation_for_LST_events_memcopy_norm(PET_geometry& detecto
 	free(dest_y_y);
 	free(dest_z_y);
 	free(TOF_dist_y);
-	free(coeff_y);
+	free(coinc_sigma_left_y);
 
 
 }
@@ -7309,7 +7688,9 @@ cuda_em_recon::_Mem_release_for_LST_events_memcopy(LST_LORs* device_events_x, LS
 	checkCudaErrors(cudaFree(events_x_host.dest_x));
 	checkCudaErrors(cudaFree(events_x_host.dest_y));
 	checkCudaErrors(cudaFree(events_x_host.dest_z));
-	checkCudaErrors(cudaFree(events_x_host.coeff));
+	checkCudaErrors(cudaFree(events_x_host.sigma_left));
+	checkCudaErrors(cudaFree(events_x_host.sigma_right));
+
 	checkCudaErrors(cudaFree(events_x_host.TOF_dist));
 	
 	checkCudaErrors(cudaFree(device_events_x));
@@ -7321,7 +7702,8 @@ cuda_em_recon::_Mem_release_for_LST_events_memcopy(LST_LORs* device_events_x, LS
 	checkCudaErrors(cudaFree(events_y_host.dest_x));
 	checkCudaErrors(cudaFree(events_y_host.dest_y));
 	checkCudaErrors(cudaFree(events_y_host.dest_z));
-	checkCudaErrors(cudaFree(events_y_host.coeff));
+	checkCudaErrors(cudaFree(events_y_host.sigma_left));
+	checkCudaErrors(cudaFree(events_y_host.sigma_right));
 	checkCudaErrors(cudaFree(events_y_host.TOF_dist));
 	
 	checkCudaErrors(cudaFree(device_events_y));
@@ -7346,7 +7728,7 @@ cuda_em_recon::_Mem_release_for_LST_events_memcopy_scatter(LST_LORs_scatter* dev
 	checkCudaErrors(cudaFree(events_x_host.dest_x));
 	checkCudaErrors(cudaFree(events_x_host.dest_y));
 	checkCudaErrors(cudaFree(events_x_host.dest_z));
-	checkCudaErrors(cudaFree(events_x_host.coeff));
+	checkCudaErrors(cudaFree(events_x_host.sigma_left));
 	checkCudaErrors(cudaFree(events_x_host.TOF_dist));
 	checkCudaErrors(cudaFree(events_x_host.sc_coeff));
 
@@ -7359,7 +7741,7 @@ cuda_em_recon::_Mem_release_for_LST_events_memcopy_scatter(LST_LORs_scatter* dev
 	checkCudaErrors(cudaFree(events_y_host.dest_x));
 	checkCudaErrors(cudaFree(events_y_host.dest_y));
 	checkCudaErrors(cudaFree(events_y_host.dest_z));
-	checkCudaErrors(cudaFree(events_y_host.coeff));
+	checkCudaErrors(cudaFree(events_y_host.sigma_left));
 	checkCudaErrors(cudaFree(events_y_host.TOF_dist));
 	checkCudaErrors(cudaFree(events_y_host.sc_coeff));
 
@@ -7688,10 +8070,8 @@ cuda_em_recon::ComputeUpdateFactor(PET_geometry& detector, PET_movement& movemen
 
 		parameters_host.FWHM_alpha = parameters_host.FWHM_alpha_ss;
 		parameters_host.FWHM_sigma_inv = parameters_host.FWHM_sigma_inv_ss;
-		//parameters_host.RANGE1 = (int)(parameters_host.FWHM_ss / parameters_host.X_SAMP);
-		//parameters_host.RANGE2 = (int)(parameters_host.FWHM_ss / parameters_host.Z_SAMP);
-		parameters_host.RANGE1 = (int)(CRYSTAL_THICKNESS_SCANNER/2/parameters_host.X_SAMP);
-		parameters_host.RANGE2 = (int)(CRYSTAL_THICKNESS_SCANNER/2/parameters_host.Z_SAMP);
+		parameters_host.RANGE1 = (int)(parameters_host.FWHM_ss / parameters_host.X_SAMP);
+		parameters_host.RANGE2 = (int)(parameters_host.FWHM_ss / parameters_host.Z_SAMP);
 		printf("H_CENTER_X = %f H_CENTER_Y = %f V_CENTER = %f\n", parameters_host.H_CENTER_X, parameters_host.H_CENTER_Y, parameters_host.V_CENTER);
 		printf("RANGE1 = %d RANGE2 = %d FWHM_SS = %f\n", parameters_host.RANGE1, parameters_host.RANGE2, parameters_host.FWHM_ss);
 		cudaHostRegister(&parameters_host, sizeof(PARAMETERS_IN_DEVICE_t), 0);
@@ -7729,28 +8109,16 @@ cuda_em_recon::ComputeUpdateFactor(PET_geometry& detector, PET_movement& movemen
 			setForwardProjectionValueToZero_kernel << <dimGrid, dimBlock, 0, streamB[device_id] >> >(_fp_value_x_device[device_id], _event_count_x[device_id]);
 			setForwardProjectionValueToZero_kernel << <dimGrid, dimBlock, 0, streamC[device_id] >> >(_fp_value_y_device[device_id], _event_count_y[device_id]);
 			
-			//if (atten_flag_fp){
-				setForwardProjectionValueToZero_kernel << <dimGrid, dimBlock, 0, streamB[device_id] >> >(_fp_value2_x_device[device_id], _event_count_x[device_id]);
-				setForwardProjectionValueToZero_kernel << <dimGrid, dimBlock, 0, streamC[device_id] >> >(_fp_value2_y_device[device_id], _event_count_y[device_id]);
-			//}
+			setForwardProjectionValueToZero_kernel << <dimGrid, dimBlock, 0, streamB[device_id] >> >(_fp_value2_x_device[device_id], _event_count_x[device_id]);
+			setForwardProjectionValueToZero_kernel << <dimGrid, dimBlock, 0, streamC[device_id] >> >(_fp_value2_y_device[device_id], _event_count_y[device_id]);
 
-			//if (export_likelihood_flag){
-				//setForwardProjectionValueToZero_kernel << <dimGrid, dimBlock, 0, streamB[device_id] >> >(_fp_value2_x_device[device_id], _event_count_x[device_id]);
-				//setForwardProjectionValueToZero_kernel << <dimGrid, dimBlock, 0, streamC[device_id] >> >(_fp_value2_y_device[device_id], _event_count_y[device_id]);
-			//}
-			
 			if (_TOF_mode == TOF){
 				//TOF version
 				printf("starting TOF kernels.\n");
-
 				checkCudaErrors(cudaStreamWaitEvent(streamB[device_id], eventA[device_id], 0));
 				checkCudaErrors(cudaEventRecord(eventStart1[device_id], streamB[device_id]));
-
 				if (atten_flag_fp){
-
 					_fproj_atten_lst_cuda_x_kernel << <dimGrid_f_x, dimBlock_f_x, 0, streamB[device_id] >> >(_current2_image_device[device_id], _fp_value2_x_device[device_id], _events_x_dominant_global_mem[device_id], _parameters_device[device_id]);
-					
-
 					_TOF_fproj_lst_cuda_x_kernel_atten << <dimGrid_f_x, dimBlock_f_x, 0, streamB[device_id] >> >(_current_image_device[device_id], _fp_value_x_device[device_id], _fp_value2_x_device[device_id], _events_x_dominant_global_mem[device_id], _parameters_device[device_id]);
 					if (export_likelihood_flag){
 						//_fproj_atten_lst_cuda_x_kernel << <dimGrid_f_x, dimBlock_f_x, 0, streamB[device_id] >> >(_atten_image_device[device_id], _fp_value2_x_device[device_id], _events_x_dominant_global_mem[device_id], _parameters_device[device_id]);
@@ -7770,8 +8138,6 @@ cuda_em_recon::ComputeUpdateFactor(PET_geometry& detector, PET_movement& movemen
 				if (atten_flag_fp){
 
 					_fproj_atten_lst_cuda_y_kernel << <dimGrid_f_y, dimBlock_f_y, 0, streamC[device_id] >> >(_current2_image_device[device_id], _fp_value2_y_device[device_id], _events_y_dominant_global_mem[device_id], _parameters_device[device_id]);
-					
-
 					_TOF_fproj_lst_cuda_y_kernel_atten << <dimGrid_f_y, dimBlock_f_y, 0, streamC[device_id] >> >(_current_image_device[device_id], _fp_value_y_device[device_id], _fp_value2_y_device[device_id], _events_y_dominant_global_mem[device_id], _parameters_device[device_id]);
 					if (export_likelihood_flag){
 						//_fproj_atten_lst_cuda_y_kernel << <dimGrid_f_y, dimBlock_f_y, 0, streamC[device_id] >> >(_atten_image_device[device_id], _fp_value2_y_device[device_id], _events_y_dominant_global_mem[device_id], _parameters_device[device_id]);
@@ -7783,7 +8149,7 @@ cuda_em_recon::ComputeUpdateFactor(PET_geometry& detector, PET_movement& movemen
 				}
 
 				if (atten_flag_bp){
-					_TOF_b_ratio_proj_lst_cuda_x_kernel_atten << <dimGrid_b_x, dimBlock_b_x, 0, streamB[device_id] >> >(_update_factor_device[device_id], _fp_value_x_device[device_id], _fp_value2_x_device[device_id], _events_x_dominant_global_mem[device_id], _parameters_device[device_id]);
+					_TOF_b_ratio_proj_lst_cuda_x_kernel_atten<<<dimGrid_b_x, dimBlock_b_x, 0, streamB[device_id]>>>(_update_factor_device[device_id], _fp_value_x_device[device_id], _fp_value2_x_device[device_id], _events_x_dominant_global_mem[device_id], _parameters_device[device_id]);
 					//cudaEventRecord(eventB[device_id], streamB[device_id]);
 					checkCudaErrors(cudaEventRecord(eventStop1[device_id], streamB[device_id]));
 
@@ -7887,7 +8253,6 @@ cuda_em_recon::ComputeUpdateFactor(PET_geometry& detector, PET_movement& movemen
 			//cudaDeviceSynchronize();
 		}
 		
-
 		// Check forward projected values
 		for (device_id = _num_gpu_start; device_id <= _num_gpu_end; device_id++){
 			int size1 = _event_count_y[device_id];
@@ -7896,30 +8261,34 @@ cuda_em_recon::ComputeUpdateFactor(PET_geometry& detector, PET_movement& movemen
 			float max_fp = 0;
 			float* fpvalue1_hosty = new float[size1]();
 			float* fpvalue1_hostx = new float[size2]();
+			int n_nan=0;
+			int n_inf=0;
 			cudaSetDevice(device_id);
 			cudaDeviceSynchronize();
 
 			checkCudaErrors(cudaMemcpy(fpvalue1_hosty, _fp_value_y_device[device_id], size1*sizeof(float), cudaMemcpyDefault));
 			checkCudaErrors(cudaMemcpy(fpvalue1_hostx, _fp_value_x_device[device_id], size2*sizeof(float), cudaMemcpyDefault));
 			for (int i = 0; i < size1; i++){
-				
+				if(i<50)
+					cout << "\n fpvalues y " << fpvalue1_hosty[i];
 				sum_fp += fpvalue1_hosty[i];
-				if (max_fp < fpvalue1_hosty[i]){
-					max_fp = fpvalue1_hosty[i];
-				}
+				if(isnan(fpvalue1_hosty[i]))
+					n_nan++;
+				if(isinf(fpvalue1_hosty[i]))
+					n_inf++;
 			}
 			for (int j = 0; j < size2; j++){
-				//cout << "\n fpvalues1 x " << fpvalue1_hostx[j];
+				if(j<50)
+					cout << "\n fpvalues x " << fpvalue1_hostx[j];
+				if(isnan(fpvalue1_hostx[j]))
+					n_nan++;
+				if(isinf(fpvalue1_hostx[j]))
+					n_inf++;
 				sum_fp += fpvalue1_hostx[j];
-				if (max_fp < fpvalue1_hostx[j]){
-					max_fp = fpvalue1_hostx[j];
-				}
-			}
-			for (int i = 0; i < 100; i++){
-				cout << "\n fpvalues x " << fpvalue1_hostx[i] << " fpvalues y " << fpvalue1_hosty[i];
 			}
 			mean_fp = sum_fp / (size1 + size2);
-			cout << "\n Sum fp for device " << device_id << " : " << sum_fp << " Mean fp : " << mean_fp<<" Max fp : "<<max_fp;
+			cout << "\n Sum fp2 for device " << device_id << " : " << sum_fp << " Mean fp : " << mean_fp;
+			cout << "\n number of Nan value " << n_nan<<", number of Inf value:"<<n_inf<<endl;
 		}
 
 		for (device_id = _num_gpu_start; device_id <= _num_gpu_end; device_id++){
@@ -7928,6 +8297,8 @@ cuda_em_recon::ComputeUpdateFactor(PET_geometry& detector, PET_movement& movemen
 			float sum_fp = 0, mean_fp = 0;
 			float* fpvalue2_hosty = new float[size1];
 			float* fpvalue2_hostx = new float[size2];
+			int n_ana=0;
+			int n_inf=0;
 			cudaSetDevice(device_id);
 			cudaDeviceSynchronize();
 
@@ -8144,10 +8515,10 @@ cuda_em_recon::ComputeUpdateFactor(PET_geometry& detector, PET_movement& movemen
 
 		parameters_host.FWHM_alpha = parameters_host.FWHM_alpha_ii;
 		parameters_host.FWHM_sigma_inv = parameters_host.FWHM_sigma_inv_ii;
-		//parameters_host.RANGE1 = (int)(parameters_host.FWHM_ii / parameters_host.X_SAMP);
-		//parameters_host.RANGE2 = (int)(parameters_host.FWHM_ii / parameters_host.Z_SAMP);
-		parameters_host.RANGE1 = (int)(CRYSTAL_THICKNESS_INSERT/2/parameters_host.X_SAMP);
-		parameters_host.RANGE2 = (int)(CRYSTAL_THICKNESS_INSERT/2/parameters_host.Z_SAMP);
+		parameters_host.RANGE1 = (int)(parameters_host.FWHM_ii / parameters_host.X_SAMP);
+		parameters_host.RANGE2 = (int)(parameters_host.FWHM_ii / parameters_host.Z_SAMP);
+		//parameters_host.RANGE1 = (int)(CRYSTAL_THICKNESS_INSERT/2/parameters_host.X_SAMP);
+		//parameters_host.RANGE2 = (int)(CRYSTAL_THICKNESS_INSERT/2/parameters_host.Z_SAMP);
 		if (parameters_host.RANGE1 < 1)
 			parameters_host.RANGE1 = 1;
 		if (parameters_host.RANGE2 < 1)
@@ -10597,19 +10968,23 @@ cuda_em_recon::Backward_Projection_Attenuation(PET_geometry& detector, PET_movem
 
 	Norm_Image.SetValue(0.0f);
 	image_host = (float*)malloc(parameters_host.NUM_XYZ*sizeof(float));
+	float maxUpdate = 0.0f;
+	float meanUpdate = 0.0f;
 	//copy the update factor back to host memory
 	for (device_id = _num_gpu_start; device_id <= _num_gpu_end; device_id++){
 		cudaSetDevice(device_id);
 		cudaDeviceSynchronize();
 		cudaMemcpy(image_host, _update_factor_device[device_id], parameters_host.NUM_XYZ*sizeof(float), cudaMemcpyDefault);
 		Norm_Image.AddFromMem(image_host);
-		/*
-		sstm.str("");
-		sstm << _output_path << _output_filename_prefix << "_device_"<< device_id<<".img";
-		Atten_Image.ReadFromMem(image_host);
-		Atten_Image.WriteToFile(sstm.str());
-		*/
+		
 	}
+	for(size_t i=0;i<parameters_host.NUM_XYZ;i++){
+		meanUpdate += image_host[i];
+		maxUpdate = max(maxUpdate,image_host[i]);
+	}
+
+	printf("max Update factor: %f \n",maxUpdate);
+	printf("mean Update factor: %f \n",maxUpdate);
 
 
 	printf("\n\n\n\n.......................End projection.........................\n");
