@@ -34,11 +34,7 @@ public:
 	void CreateFullCoincidenceData_normblock(PET_geometry geometry, PET_coincidence_type type, int lower1, int upper1, int lower2, int upper2, float time, int** det1);
 	int GetDataCount(PET_coincidence_type type);
 	vector<PET_LST_event> PET_LST_event_list;
-
 	vector<pos> PET_LST_events_pos_list;
-	
-
-	
 	vector<pos_32> PET_LST_events_pos_list_1;
 	vector<pos_32> PET_LST_events_pos_list_2;
 	PET_data_source _source;
@@ -57,6 +53,7 @@ private:
 	float _acq_time_end;
 	float _acq_time_length;
 	int _acq_time_gap;
+	float _initial_bed_position=0.0f;
 	string _data_source;
 	string _scan_protocol;
 

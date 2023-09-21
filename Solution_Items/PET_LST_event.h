@@ -50,7 +50,7 @@ public:
 	float bed_position;
 	int src_id;
 	int dest_id;
-	double TOF_dist;		//0.5*c*t in mm
+	float TOF_dist;		//0.5*c*t in mm
 	float t0;		//time of arrival in seconds
 	PET_LST_event_type type;
 	int normfact;

@@ -3,7 +3,7 @@ INCLUDE2= ../image_update_CUDA
 INCLUDE3= ../proj_functions_CUDA
 
 OBJ=../Objects
-TARGET = sen_ss_siemense_psf
+TARGET = sen_SS_with_effective_DOI
 
 CXX = g++
 NVCC = nvcc 

@@ -718,7 +718,7 @@ image_update_CUDA::DoImageUpdateML_CUDA(ImageArray<float>& new_image, ImageArray
 	int z_ind;
 	int xy_ind;
 	int xyz_ind;
-
+	int n_nan=0;
 	/*
 	omp_set_num_threads(16);
 #pragma omp parallel for schedule(dynamic) collapse(2) private(xy_ind, xyz_ind) schedule(dynamic)
@@ -732,17 +732,17 @@ image_update_CUDA::DoImageUpdateML_CUDA(ImageArray<float>& new_image, ImageArray
 			xyz_ind = (z_ind - 1)*g.NUM_XY + xy_ind;
 
 			if (mask_image[xyz_ind] > 0.5f){
-				new_image[xyz_ind] = current_image[xyz_ind] * update_factor[xyz_ind] / sensitivity_image[xyz_ind];
-				
 
+				
+				new_image[xyz_ind] = current_image[xyz_ind] * update_factor[xyz_ind] / sensitivity_image[xyz_ind];
 				if (isinf(new_image[xyz_ind])){
 					new_image[xyz_ind] = 0.0f;
 				}
 
 
 				if (isnan(new_image[xyz_ind])){
-
-					printf("Nan value detected at X %d Y %d Z %d , %f x %f div %10f, mask %f\n", xy_ind % g.NUM_X, xy_ind / g.NUM_X, z_ind, current_image[xyz_ind], update_factor[xyz_ind], sensitivity_image[xyz_ind], mask_image[xyz_ind]);
+					n_nan++;
+					//printf("Nan value detected at X %d Y %d Z %d , %f x %f div %10f, mask %f\n", xy_ind % g.NUM_X, xy_ind / g.NUM_X, z_ind, current_image[xyz_ind], update_factor[xyz_ind], sensitivity_image[xyz_ind], mask_image[xyz_ind]);
 				}
 
 				if (isinf(new_image[xyz_ind])){
@@ -757,6 +757,7 @@ image_update_CUDA::DoImageUpdateML_CUDA(ImageArray<float>& new_image, ImageArray
 			}
 		}
 	}
+	printf("Nan value detected:%d\n",n_nan);
 	printf("Image updated by ML");
 }
 

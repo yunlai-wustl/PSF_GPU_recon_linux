@@ -60,7 +60,6 @@ public:
 
 typedef struct{
 	int num_lines;
-
 	float *src_x;
 	float *src_y;
 	float *src_z;
@@ -68,7 +67,8 @@ typedef struct{
 	float *dest_y;
 	float *dest_z;
 	float *TOF_dist;
-	float *coeff;
+	float *sigma_left;
+	float *sigma_right;
 }LST_LORs;
 
 
@@ -82,7 +82,8 @@ typedef struct{
 	float *dest_y;
 	float *dest_z;
 	float *TOF_dist;
-	float *coeff;
+	float *sigma_left;
+	float *sigma_right;
 	float *sc_coeff;
 }LST_LORs_scatter;
 

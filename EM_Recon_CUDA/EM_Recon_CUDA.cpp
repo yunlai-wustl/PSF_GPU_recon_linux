@@ -585,11 +585,12 @@ int main(int argc, char *argv[]) {
 
 
 
-					/*sstm.str("");
+					/*
+					sstm.str("");
 					sstm << img_path << output_image_filename_prefix << "_UPDATE_cuda_iter_" << iter << ".img";
 
-					update_factor_image.WriteToFile(sstm.str());*/
-
+					update_factor_image.WriteToFile(sstm.str());
+					*/
 
 
 
@@ -749,11 +750,11 @@ int main(int argc, char *argv[]) {
 
 
 
-					/*sstm.str("");
+					sstm.str("");
 					sstm << img_path << output_image_filename_prefix << "_UPDATE_cuda_iter_" << iter << ".img";
 
 					update_factor_image.WriteToFile(sstm.str());
-					*/
+					
 
 
 

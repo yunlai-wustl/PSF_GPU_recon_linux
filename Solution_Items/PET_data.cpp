@@ -211,6 +211,7 @@ PET_data::Setup(const std::string config_file_name, PET_data_type type){
 	config.GetValue<int>("Time gap", _acq_time_gap);
 	config.GetValue<string>("Data source", _data_source);
 	config.GetValue<string>("Scan protocol", _scan_protocol);
+	config.GetValue<float>("Initial bed position", _initial_bed_position);
 
 	_acq_time_length = _acq_time_end - _acq_time_start;
 	if (_acq_time_length < 0.001){
@@ -222,15 +223,16 @@ PET_data::Setup(const std::string config_file_name, PET_data_type type){
 	}
 	if (_scan_protocol == "Static"){
 		_protocol = STATIC;
+		std::cout<<"static scan"<<endl;
 	}
 	if (_scan_protocol == "CBM"){
 		_protocol = CBM;
+		std::cout<<"CBM scan"<<endl;
 	}
 	if (_scan_protocol == "Step and Shoot"){
 		_protocol = STEP_AND_SHOOT;
+		std::cout<<"Step and shoot scan, initial bed position = "<<_initial_bed_position <<endl;
 	}
-
-
 
 
 	if (_data_source == "Inveon"){
@@ -750,7 +752,7 @@ PET_data::_read_compact_coincidence_LST_data(const std::string inputfile_name, i
 		
 		if (MAX_NUM_LST_EVENT > event_ptr && time_tag >= _acq_time_start && time_tag <= _acq_time_end && (int(time_tag) % _acq_time_gap) < 1 ){
 			if (_protocol != STATIC)
-				_current_bed_poistion = compact_coincidence_data[i].bed_position;
+				_current_bed_poistion = compact_coincidence_data[i].bed_position-_initial_bed_position;
 			PET_LST_event current_event(compact_coincidence_data[i].crystal_index_1, compact_coincidence_data[i].crystal_index_2, (float)(1.5e11 * compact_coincidence_data[i].diff_time), (float)(compact_coincidence_data[i].time_1), 1, _current_bed_poistion);
 			//printf("%d %d\n", compact_coincidence_data[i].crystal_index_1, compact_coincidence_data[i].crystal_index_2);
 			if (compact_coincidence_data[i].crystal_index_1 < 0 || compact_coincidence_data[i].crystal_index_2 < 0|| \

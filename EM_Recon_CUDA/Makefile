@@ -3,8 +3,7 @@ INCLUDE2= ../image_update_CUDA
 INCLUDE3= ../proj_functions_CUDA
 
 OBJ=../Objects
-TARGET = EM_recon_psf
-
+TARGET = EM_recon_psf_generic_no_effective_DOI_half_TOR_width_test
 CXX = g++
 NVCC = nvcc 
 
@@ -14,7 +13,7 @@ objects = $(patsubst %.cpp, ${OBJ}/%.o, $(notdir ${src}))
 objects2 = $(patsubst %.cu, ${OBJ}/%.o, $(notdir ${src2}))
 objects += $(objects2)
 
-NVCC_OPTS=-g -pg -Xcompiler -Wextra -m64 -l cuda -std=c++11 -I$(INCLUDE1) -D_GLIBCXX_USE_CXX11_ABI=0 --expt-relaxed-constexpr
+NVCC_OPTS=-g -pg -Xcompiler -Wextra -m64 -l cuda -std=c++11  -I$(INCLUDE1) -D_GLIBCXX_USE_CXX11_ABI=0 --expt-relaxed-constexpr
 GCC_OPTS=-m64 -g -Wall -Wextra -m64 -I$(INCLUDE1) -std=c++11
 
 

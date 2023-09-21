@@ -720,8 +720,8 @@ int main(int argc, char *argv[]) {
 		int fn2 = NUM_SCANNER_CRYSTALS;
 		int tot_crystals1 = fn1 - sn1;
 		int tot_crystals2 = fn2 - sn2;
-		int num_steps1 = 2;
-		int num_steps2 = 2;
+		int num_steps1 = 5;
+		int num_steps2 = 5;
 		int step1 = tot_crystals1 / num_steps1;
 		int step2 = tot_crystals2 / num_steps2;
 		int* idx1 = new int[num_steps1];
@@ -758,25 +758,16 @@ int main(int argc, char *argv[]) {
 
 					recon.Setup_image();
 
-					int GPU_step = 5;
+					int GPU_step = 10;
 					for (int n = 1; n <= GPU_step; n++){
-
-
 						PET_data sub_ss_events(ss_events, GPU_step, n);
-
 						recon.Backward_Projection_Attenuation(geometry, movement, sub_ss_events, atten_image, sub_sensitivity_image);
 						sensitivity_image.AddFromImageArray(sub_sensitivity_image);
-
 					}
-
 					sstm.str("");
-					sstm << img_path << output_image_filename_prefix << "_nonorm_sensitivity_SS_timestamp_" << i<<"_"<<j << ".img";
-					sensitivity_image.WriteToFile(sstm.str());
-				
-				
-					recon.Release_image();
-
-				
+					sstm << img_path << output_image_filename_prefix << "_nonorm_sensitivity_" << i<<"_"<<j << ".img";
+					sensitivity_image.WriteToFile(sstm.str());				
+					recon.Release_image();				
 				}
 			}
 		}
@@ -788,18 +779,11 @@ int main(int argc, char *argv[]) {
 					ss_events.Setup(config_filename, PROMPT);
 					ss_events.CreateFullCoincidenceData(geometry, SS, idx1[i], idx2[i], idx3[j], idx4[j], time);
 					cout << "\n Events from " << idx1[i] << " --> " << idx2[i] << "and" << idx3[j] << " --> " << idx4[j] << " are created" << "\n";
-
-
 					cuda_em_recon recon(global_parameters, output_image_filename_prefix, img_path);
-
 					recon.Setup_image();
-
-					int GPU_step = 5;
+					int GPU_step = 10;
 					for (int n = 1; n <= GPU_step; n++){
-
-
 						PET_data sub_ss_events(ss_events, GPU_step, n);
-
 						recon.Backward_Projection_Attenuation(geometry, movement, sub_ss_events, atten_image, sub_sensitivity_image);
 						sensitivity_image.AddFromImageArray(sub_sensitivity_image);
 
@@ -808,7 +792,7 @@ int main(int argc, char *argv[]) {
 
 					//recon.Backward_Projection_Attenuation(geometry, movement, ss_events, atten_image, sensitivity_image);
 					sstm.str("");
-					sstm << img_path << output_image_filename_prefix << "_nonorm_sensitivity_OO_timestamp_" << time << ".img";
+					sstm << img_path << output_image_filename_prefix << "_nonorm_sensitivity_" << i <<"_"<<j << ".img";
 					sensitivity_image.WriteToFile(sstm.str());
 					recon.Release_image();
 				}
